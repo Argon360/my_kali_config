@@ -1,0 +1,175 @@
+2025-12-15 09:58:58.806 [warning] Missing property "rpcFileLoggerFolder" in oldValue. Filling with value from initValue. Please add a migration if necessary.
+2025-12-15 09:58:58.811 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-toolsai.datawrangler' wants API proposal 'debugFocus' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:58:58.811 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-vscode.vscode-copilot-data-analysis' wants API proposal 'chatVariableResolver' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:58:58.811 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-python.python' wants API proposal 'terminalShellType' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:58:58.811 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-python.vscode-python-envs' wants API proposal 'terminalShellType' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:58:58.811 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'github.copilot-chat' wants API proposal 'chatReadonlyPromptReference' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:58:58.812 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-azuretools.vscode-azure-github-copilot' wants API proposal 'lmTools' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:58:58.812 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'vscjava.vscode-java-pack' wants API proposal 'lmTools' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:58:58.812 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'apidev.azure-api-center' wants API proposal 'chatParticipant' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:58:58.812 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'apidev.azure-api-center' wants API proposal 'languageModels' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:58:59.441 [info] Started local extension host with pid 15404.
+2025-12-15 09:59:00.139 [warning] [ms-python.python]: Cannot register 'python.venvPath'. This property is already registered.
+2025-12-15 09:59:00.607 [info] [LocalProcessExtensionHost] getDefaultShell result: /usr/bin/fish
+2025-12-15 09:59:00.691 [info] [LocalProcessExtensionHost] Final userTerminalHint: /usr/bin/fish
+2025-12-15 09:59:01.449 [info] [ShellExec] Created session b47b1465-6693-4e81-b1be-ed0b8f037a7f on LocalProcess host
+2025-12-15 09:59:01.550 [info] [WorktreeCleanupCron] Registering cleanup task with interval of 6 hours
+2025-12-15 09:59:01.550 [info] [WorktreeCleanupCron] Cleanup task registered with interval of 6 hours (21600000ms)
+2025-12-15 09:59:01.955 [error] [Extension Host] (node:15404) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `exe --trace-deprecation ...` to show where the warning was created)
+2025-12-15 09:59:02.337 [info] [Debug] Registered command palette action: debug.getApplicationProperty
+2025-12-15 09:59:02.338 [info] [Debug] Registered command palette action: debug.logComposer
+2025-12-15 09:59:02.338 [info] [Debug] Registered command palette action: debug.getContextKeyValue
+2025-12-15 09:59:02.338 [info] [Debug] Registered command palette action: debug.testLinearIssues
+2025-12-15 09:59:02.452 [info] [RepositoryTracker] Stored repository path: github.com/argon360/wiki_crawler -> file:///home/argon/Wiki_Crawler
+2025-12-15 09:59:02.463 [info] OpenInBrowserWatcher: Initializing terminal log watcher
+2025-12-15 09:59:02.570 [info] [perf] Render performance baseline is 21ms
+2025-12-15 09:59:02.590 [info] [Cursor Proclist Polling] Config applied to Main process
+2025-12-15 09:59:02.591 [info] [Cursor Proclist Polling] Started polling (every 5 min)
+2025-12-15 09:59:13.768 [info] [Cursor Proclist Polling] Stopped polling
+2025-12-15 09:59:14.285 [warning] Missing property "rpcFileLoggerFolder" in oldValue. Filling with value from initValue. Please add a migration if necessary.
+2025-12-15 09:59:14.290 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-toolsai.datawrangler' wants API proposal 'debugFocus' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:59:14.290 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-vscode.vscode-copilot-data-analysis' wants API proposal 'chatVariableResolver' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:59:14.290 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-python.python' wants API proposal 'terminalShellType' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:59:14.290 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-python.vscode-python-envs' wants API proposal 'terminalShellType' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:59:14.291 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'github.copilot-chat' wants API proposal 'chatReadonlyPromptReference' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:59:14.291 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'ms-azuretools.vscode-azure-github-copilot' wants API proposal 'lmTools' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:59:14.291 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'vscjava.vscode-java-pack' wants API proposal 'lmTools' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:59:14.291 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'apidev.azure-api-center' wants API proposal 'chatParticipant' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:59:14.291 [warning] Via 'product.json#extensionEnabledApiProposals' extension 'apidev.azure-api-center' wants API proposal 'languageModels' but that proposal DOES NOT EXIST. Likely, the proposal has been finalized (check 'vscode.d.ts') or was abandoned.
+2025-12-15 09:59:14.647 [info] Started local extension host with pid 16236.
+2025-12-15 09:59:14.865 [warning] [ms-python.python]: Cannot register 'python.venvPath'. This property is already registered.
+2025-12-15 09:59:15.079 [info] [WorktreeCleanupCron] Registering cleanup task with interval of 6 hours
+2025-12-15 09:59:15.079 [info] [WorktreeCleanupCron] Cleanup task registered with interval of 6 hours (21600000ms)
+2025-12-15 09:59:15.565 [info] [LocalProcessExtensionHost] getDefaultShell result: /usr/bin/fish
+2025-12-15 09:59:15.565 [info] [LocalProcessExtensionHost] Final userTerminalHint: /usr/bin/fish
+2025-12-15 09:59:15.628 [warning] No search provider registered for scheme: file, waiting
+2025-12-15 09:59:16.120 [error] [Extension Host] (node:16236) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `exe --trace-deprecation ...` to show where the warning was created)
+2025-12-15 09:59:16.127 [info] [ShellExec] Created session 045d1751-658b-438a-a22b-cfea84949f17 on LocalProcess host
+2025-12-15 09:59:17.053 [info] [Debug] Registered command palette action: debug.logComposer
+2025-12-15 09:59:17.053 [info] [Debug] Registered command palette action: debug.getContextKeyValue
+2025-12-15 09:59:17.054 [info] [Debug] Registered command palette action: debug.getApplicationProperty
+2025-12-15 09:59:17.054 [info] [Debug] Registered command palette action: debug.testLinearIssues
+2025-12-15 09:59:17.077 [info] OpenInBrowserWatcher: Initializing terminal log watcher
+2025-12-15 09:59:17.096 [info] [Cursor Proclist Polling] Config applied to Main process
+2025-12-15 09:59:17.096 [info] [Cursor Proclist Polling] Started polling (every 5 min)
+2025-12-15 09:59:17.228 [info] [perf] Render performance baseline is 16ms
+2025-12-15 09:59:28.410 [info] [Extensions]: Checking for updates. Reason: Product update
+2025-12-15 10:04:17.104 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:05:27.580 [error] Illegal value for lineNumber: Error: Illegal value for lineNumber
+    at aF.getLineContent (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:283:5426)
+    at PDo.shouldTabInsteadOfAccepting (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9015:25070)
+    at PDo.updateShouldAcceptTabContextKey (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9025:5716)
+    at jPt.value (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9015:11752)
+    at _e._deliver (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:2962)
+    at _e._deliverQueue (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:3053)
+    at _e.fire (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:3390)
+    at Zb.change (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:439:1126)
+    at PDo.clearSuggestions (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9024:14543)
+    at PDo.rejectAndResetAllCppSuggestions (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9024:12969)
+    at PDo.continueModelChangeListener (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9017:843)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9019:775
+    at jPt.value (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:280:7580)
+    at _e._deliver (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:2962)
+    at _e._deliverQueue (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:3053)
+    at _e.fire (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:3390)
+    at x3a.endDeferredEmit (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:289:20843)
+    at aF.pushEditOperations (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:287:867)
+    at lNt._innerExecuteCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:5492)
+    at lNt.executeCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:4910)
+    at zdr._executeEditOperation (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:289:46837)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:3234
+    at zdr._executeEdit (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:1061)
+    at zdr.executeCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:3211)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:3690
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:4727
+    at Object.batchChanges (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:293:18639)
+    at R9a._withViewEventsCollector (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:4646)
+    at R9a._executeCursorEdit (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:2986)
+    at R9a.executeCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:3655)
+    at cC.executeCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:293:11296)
+    at e.runCoreEditingCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:92:37344)
+    at e.runEditorCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:92:35801)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:11975
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:11884
+    at yMo.invokeFunction (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7398:960)
+    at cC.invokeWithinContext (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:17463)
+    at qPo.runEditorCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:11809)
+    at e.runCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:11922)
+    at handler (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:10323)
+    at yMo.invokeFunction (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7398:960)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7007:2850
+    at zor (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:52:44328)
+    at fq (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:52:44289)
+    at Voo._tryExecuteCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7007:2703)
+    at Voo.executeCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7007:2050)
+    at Hzt._doDispatch (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:6990:23396)
+    at Hzt._dispatch (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:6990:19819)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:6991:3248 Illegal value for lineNumber
+2025-12-15 10:05:27.580 [error] Illegal value for lineNumber: Error: Illegal value for lineNumber
+    at aF.getLineContent (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:283:5426)
+    at H2e._getRangeOfSelectionUnlessWhitespaceEnclosed (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:2812:39922)
+    at H2e.update (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:2812:40731)
+    at jPt.value (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:2812:39454)
+    at _e._deliver (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:2962)
+    at _e._deliverQueue (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:3053)
+    at _e.fire (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:3390)
+    at Zb.change (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:439:1126)
+    at PDo.clearSuggestions (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9024:14543)
+    at PDo.rejectAndResetAllCppSuggestions (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9024:12969)
+    at PDo.continueModelChangeListener (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9017:843)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:9019:775
+    at jPt.value (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:280:7580)
+    at _e._deliver (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:2962)
+    at _e._deliverQueue (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:3053)
+    at _e.fire (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:49:3390)
+    at x3a.endDeferredEmit (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:289:20843)
+    at aF.pushEditOperations (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:287:867)
+    at lNt._innerExecuteCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:5492)
+    at lNt.executeCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:4910)
+    at zdr._executeEditOperation (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:289:46837)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:3234
+    at zdr._executeEdit (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:1061)
+    at zdr.executeCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:290:3211)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:3690
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:4727
+    at Object.batchChanges (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:293:18639)
+    at R9a._withViewEventsCollector (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:4646)
+    at R9a._executeCursorEdit (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:2986)
+    at R9a.executeCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:3655)
+    at cC.executeCommands (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:293:11296)
+    at e.runCoreEditingCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:92:37344)
+    at e.runEditorCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:92:35801)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:11975
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:11884
+    at yMo.invokeFunction (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7398:960)
+    at cC.invokeWithinContext (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:291:17463)
+    at qPo.runEditorCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:11809)
+    at e.runCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:11922)
+    at handler (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:55:10323)
+    at yMo.invokeFunction (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7398:960)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7007:2850
+    at zor (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:52:44328)
+    at fq (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:52:44289)
+    at Voo._tryExecuteCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7007:2703)
+    at Voo.executeCommand (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:7007:2050)
+    at Hzt._doDispatch (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:6990:23396)
+    at Hzt._dispatch (vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:6990:19819)
+    at vscode-file://vscode-app/usr/share/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js:6991:3248 Illegal value for lineNumber
+2025-12-15 10:09:17.505 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:14:17.505 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:19:17.509 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:24:17.506 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:29:17.507 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:34:25.541 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:39:25.511 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:44:25.550 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:49:25.509 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:54:25.544 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 10:59:25.509 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 11:04:25.508 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 11:09:25.541 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 11:14:25.508 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 11:19:25.508 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes
+2025-12-15 11:24:25.542 [info] [Cursor Proclist] Samples written: 10 local processes, 0 remote processes

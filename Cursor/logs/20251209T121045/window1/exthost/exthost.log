@@ -1,0 +1,34 @@
+2025-12-09 12:10:48.830 [info] Extension host with pid 25879 started
+2025-12-09 12:10:48.830 [info] [ExtHostShellExec] Initializing terminal executor with userTerminalHint: /usr/bin/fish
+2025-12-09 12:10:48.849 [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onLanguage'
+2025-12-09 12:10:48.870 [info] ExtensionService#_doActivateExtension vscode.configuration-editing, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-12-09 12:10:48.877 [info] ExtensionService#_doActivateExtension vscode.json-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-12-09 12:10:48.936 [info] ExtensionService#_doActivateExtension vscode.typescript-language-features, startup: false, activationEvent: 'onLanguage:jsonc'
+2025-12-09 12:10:49.219 [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: anysphere.cursor-agent-exec
+2025-12-09 12:10:49.223 [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*', root cause: anysphere.cursor-agent-exec
+2025-12-09 12:10:49.262 [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+2025-12-09 12:10:49.355 [info] ExtensionService#_doActivateExtension anysphere.cursor-retrieval, startup: true, activationEvent: '*', root cause: anysphere.cursor-agent-exec
+2025-12-09 12:10:49.590 [info] ExtensionService#_doActivateExtension anysphere.cursor-agent-exec, startup: true, activationEvent: '*'
+2025-12-09 12:10:49.866 [info] ExtensionService#_doActivateExtension anysphere.cursor-mcp, startup: false, activationEvent: 'api', root cause: anysphere.cursor-agent-exec
+2025-12-09 12:10:50.093 [info] Eager extensions activated
+2025-12-09 12:10:50.117 [info] ExtensionService#_doActivateExtension anysphere.cursor-always-local, startup: false, activationEvent: 'onStartupFinished'
+2025-12-09 12:10:50.357 [info] ExtensionService#_doActivateExtension cursor.cursor-browser-automation, startup: false, activationEvent: 'onStartupFinished'
+2025-12-09 12:10:50.370 [info] ExtensionService#_doActivateExtension anysphere.cursor-browser-connect, startup: false, activationEvent: 'onStartupFinished'
+2025-12-09 12:10:50.394 [info] ExtensionService#_doActivateExtension anysphere.cursor-browser-extension, startup: false, activationEvent: 'onStartupFinished'
+2025-12-09 12:10:50.602 [info] ExtensionService#_doActivateExtension anysphere.cursor-deeplink, startup: false, activationEvent: 'onStartupFinished'
+2025-12-09 12:10:50.687 [info] ExtensionService#_doActivateExtension anysphere.cursor-shadow-workspace, startup: false, activationEvent: 'onStartupFinished'
+2025-12-09 12:10:50.780 [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: false, activationEvent: 'onStartupFinished'
+2025-12-09 12:10:50.783 [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+2025-12-09 12:11:54.875 [info] ExtensionService#_doActivateExtension vscode.github-authentication, startup: false, activationEvent: 'onAuthenticationRequest:github'
+2025-12-09 12:17:48.451 [info] Extension host terminating: renderer closed the MessagePort
+2025-12-09 12:17:48.486 [error] Error: Channel has been closed
+	at r (file:///usr/share/cursor/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:142:3270)
+	at Object.appendLine (file:///usr/share/cursor/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:142:3409)
+	at m (/usr/share/cursor/resources/app/extensions/cursor-always-local/dist/main.js:2:244518)
+	at t.deactivate (/usr/share/cursor/resources/app/extensions/cursor-always-local/dist/main.js:2:244377)
+	at /usr/share/cursor/resources/app/extensions/cursor-always-local/dist/main.js:2:3158351
+	at t.deactivate (/usr/share/cursor/resources/app/extensions/cursor-always-local/dist/main.js:2:3158409)
+	at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+	at async Promise.all (index 2)
+	at async vjt._deactivateAll (file:///usr/share/cursor/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:140:12476)
+2025-12-09 12:17:48.489 [info] Extension host with pid 25879 exiting with code 0

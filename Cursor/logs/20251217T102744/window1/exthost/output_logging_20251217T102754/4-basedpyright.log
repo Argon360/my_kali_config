@@ -1,0 +1,16 @@
+[Info  - 10:28:33] basedpyright language server 1.32.1 starting
+[Info  - 10:28:33] Server root directory: file:///home/argon/.cursor/extensions/anysphere.cursorpyright-1.0.10/dist
+[Info  - 10:28:33] Starting service instance ".config"
+Received pythonPath from Python extension: /bin/python
+[Info  - 10:28:33] Setting pythonPath for service ".config": "/bin/python"
+[Info  - 10:28:33] No include entries specified; assuming /home/argon/.config
+[Info  - 10:28:33] Auto-excluding **/node_modules
+[Info  - 10:28:33] Auto-excluding **/__pycache__
+[Info  - 10:28:33] Auto-excluding **/.*
+[Info  - 10:28:33] Assuming Python version 3.13.9.final.0
+[Info  - 10:28:38] BG: Background analysis(1) root directory: file:///home/argon/.cursor/extensions/anysphere.cursorpyright-1.0.10/dist
+[Info  - 10:28:38] BG: Background analysis(1) started
+[Info  - 10:28:39] Found 6 source files
+[Info  - 10:28:40] BG: [BG(1)] Long operation: analyzing: untitled:Untitled-1 (2277ms)
+[Info  - 10:28:43] BG: [BG(1)] Long operation: checking: untitled:Untitled-1 (2916ms)
+[Info  - 10:28:43] BG: [BG(1)] Long operation: analyzing: untitled:Untitled-1 (2917ms)

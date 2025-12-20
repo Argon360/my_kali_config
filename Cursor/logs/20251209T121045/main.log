@@ -1,0 +1,14 @@
+2025-12-09 12:10:45.323 [info] [CursorProclistService] Native module loaded successfully
+2025-12-09 12:10:45.440 [info] [storage] Running database optimization (VACUUM) - last run was 20431 days ago
+2025-12-09 12:10:45.565 [info] updateURL https://api2.cursor.sh/updates/api/update/linux-x64/cursor/2.1.50/48f018bc7e5cc1d253922ea4a6592298b624a4f919a4e5fddb87f1b79c11eb58/stable
+2025-12-09 12:10:45.565 [info] update#setState idle
+2025-12-09 12:10:45.677 [info] [storage] Database optimization (VACUUM) completed successfully
+2025-12-09 12:10:50.856 [warning] [BrowserViewMainService] Cannot execute JavaScript: browser view not created for window 1
+2025-12-09 12:10:52.611 [info] [CursorProclistService] Config enabled feature (subsample every 10s)
+2025-12-09 12:11:15.566 [info] update#setState checking for updates
+2025-12-09 12:11:20.035 [info] update#setState idle
+2025-12-09 12:15:52.658 [info] [CursorProclistService] Sample 0 created: 10 processes, 31 subsamples
+2025-12-09 12:17:48.458 [warning] [BrowserViewMainService] Cannot flush storage data: browser view not created for window 1
+2025-12-09 12:17:48.461 [warning] [BrowserViewMainService] Cannot set visibility: browser view not created for window 1
+2025-12-09 12:17:48.490 [info] Extension host with pid 25879 exited with code: 0, signal: unknown.
+2025-12-09 12:17:48.524 [error] [UtilityProcess id: 1, type: fileWatcher, pid: 25854]: crashed with code 15 and reason 'killed'

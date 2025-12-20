@@ -1,0 +1,104 @@
+# =========================================
+# Kitty Terminal Configuration
+# Optimized for Fish + Starship + Fastfetch
+# =========================================
+#Ensures kitty always spawns Fish
+shell                    fish
+
+# ============================================================
+# Modern Minimal Kitty — Dark | Purple Accent | Compact
+# Transparency + Blur | No Borders | Ligatures | Glyphs
+# Cursor Trail Enabled | Kitten-Themes Ready
+# ============================================================
+
+# ----------------------------
+# Fonts & Text Rendering
+# ----------------------------
+font_family      JetBrainsMono Nerd Font
+font_size        10.0
+enable_ligatures yes
+line_height      1.0
+
+# ----------------------------
+# Window Chrome & Behavior
+# ----------------------------
+window_decorations none
+show_tab_bar yes
+allow_remote_control yes
+shell_integration yes
+visual_bell no
+
+# ----------------------------
+# Transparency
+# ----------------------------
+background_opacity 0.75
+
+# ----------------------------
+# Cursor Styling & Motion Blur
+# ----------------------------
+# cursor #CDB4FF
+# cursor_text_color #0B0B10
+
+cursor_trail_enable yes
+cursor_trail_duration 0.70
+cursor_trail_fade 0.70
+
+# ============================================================
+# Color Scheme — managed by Kitten Themes
+# DO NOT MODIFY if using `kitty +kitten themes`
+# ============================================================
+# BEGIN_KITTY_THEME
+# Slate
+include current-theme.conf
+# END_KITTY_THEME
+
+# ----------------------------
+# Scrollback & Performance
+# ----------------------------
+scrollback_lines 10000
+history_limit   10000
+
+# ----------------------------
+# Clipboard, Mouse, and Selection
+# ----------------------------
+select_to_clipboard yes
+mouse_reporting yes
+map_button1_to_selection yes
+
+# ----------------------------
+# Keybindings — Fast Workflow
+# ----------------------------
+# Tabs
+map ctrl+tab          next_tab
+map ctrl+shift+tab    previous_tab
+map ctrl+t            new_tab
+map ctrl+w            close_tab
+
+# Windows
+map ctrl+shift+n      new_window
+map ctrl+shift+q      close_window
+
+# Font scaling
+map ctrl+plus         increase_font_size
+map ctrl+minus        decrease_font_size
+map ctrl+0            reset_font_size
+
+# Copy/paste
+map ctrl+shift+c      copy_to_clipboard
+map ctrl+shift+v      paste_from_clipboard
+
+# Fullscreen
+map ctrl+shift+f      toggle_fullscreen
+
+# ----------------------------
+# Rendering & Stability Tweaks
+# ----------------------------
+enable_audio_bell no
+sync_to_monitor yes
+adjust_column_width   0
+adjust_line_height    0
+
+# ----------------------------
+# Quality-of-Life
+# ----------------------------
+# Use Kitty's builtin: kitty +kitten icat image.png

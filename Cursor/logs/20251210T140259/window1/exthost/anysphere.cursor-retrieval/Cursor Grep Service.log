@@ -1,0 +1,9 @@
+2025-12-10 14:03:04.756 [info] Initializing GrepClient
+2025-12-10 14:03:04.756 [info] Watching filesystem...
+2025-12-10 14:03:04.756 [info] GrepClient initialized successfully
+2025-12-10 14:03:04.756 [info] bootstrapping repository index at '/home/argon/Wiki_Crawler' (cache_path=/home/argon/Wiki_Crawler/.git/cursor/crepe)
+2025-12-10 14:03:04.756 [info] looking for best possible index (current_sha=f3d574e79ba85642eacde8ff0d4d1a0d701c232d)
+2025-12-10 14:03:04.756 [info] candidate index /home/argon/Wiki_Crawler/.git/cursor/crepe/f3d574e79ba85642eacde8ff0d4d1a0d701c232d is 0 commits away
+2025-12-10 14:03:04.756 [info] loading index for commit f3d574e79ba85642eacde8ff0d4d1a0d701c232d
+2025-12-10 14:03:04.756 [info] reset index to head in 5.830404ms: 0 documents in commit, 2 in worktree
+2025-12-10 14:03:04.756 [info] index OK in 9.069033ms

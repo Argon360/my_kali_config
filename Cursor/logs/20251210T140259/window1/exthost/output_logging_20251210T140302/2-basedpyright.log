@@ -1,0 +1,13 @@
+[Info  - 14:03:03] basedpyright language server 1.32.1 starting
+[Info  - 14:03:03] Server root directory: file:///home/argon/.cursor/extensions/anysphere.cursorpyright-1.0.10/dist
+[Info  - 14:03:03] Starting service instance "Wiki_Crawler"
+[Info  - 14:03:03] BG: Background analysis(1) root directory: file:///home/argon/.cursor/extensions/anysphere.cursorpyright-1.0.10/dist
+[Info  - 14:03:03] BG: Background analysis(1) started
+Received pythonPath from Python extension: /bin/python
+[Info  - 14:03:03] Setting pythonPath for service "Wiki_Crawler": "/bin/python"
+[Info  - 14:03:03] No include entries specified; assuming /home/argon/Wiki_Crawler
+[Info  - 14:03:03] Auto-excluding **/node_modules
+[Info  - 14:03:03] Auto-excluding **/__pycache__
+[Info  - 14:03:03] Auto-excluding **/.*
+[Info  - 14:03:04] Assuming Python version 3.13.9.final.0
+[Info  - 14:03:04] Found 1 source file

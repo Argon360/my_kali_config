@@ -1,0 +1,10 @@
+[2025-12-10T08:33:01.889Z] Initializing Cursor Hooks Service...
+[2025-12-10T08:33:01.889Z] User config path: /home/argon/.cursor/hooks.json
+[2025-12-10T08:33:01.889Z] Project config path: /home/argon/Wiki_Crawler/.cursor/hooks.json
+[2025-12-10T08:33:01.889Z] Enterprise config path: file:///etc/cursor/hooks.json
+[2025-12-10T08:33:01.890Z] Reloading hooks configuration...
+[2025-12-10T08:33:01.891Z] No enterprise hooks configuration found
+[2025-12-10T08:33:01.892Z] No user hooks configuration found
+[2025-12-10T08:33:01.892Z] No project hooks configuration found
+[2025-12-10T08:33:01.893Z] Refreshing team hooks...
+[2025-12-10T08:33:01.893Z] Cursor Hooks Service initialized successfully

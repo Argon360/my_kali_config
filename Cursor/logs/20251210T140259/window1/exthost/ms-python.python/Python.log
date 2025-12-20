@@ -1,0 +1,8 @@
+2025-12-10 14:03:02.632 [warning] Dir "/home/argon/Wiki_Crawler/.pixi/envs" is not watchable (directory does not exist)
+2025-12-10 14:03:02.632 [info] Python interpreter path: /bin/python
+2025-12-10 14:03:02.645 [info] > pyenv which python
+2025-12-10 14:03:02.645 [info] cwd: .
+2025-12-10 14:03:02.699 [info] Editor support is inactive since language server is set to None.
+2025-12-10 14:04:24.431 [info] Discover tests for workspace name: Wiki_Crawler - uri: /home/argon/Wiki_Crawler/wiki_crawler.py
+2025-12-10 14:04:27.812 [info] CreateEnv Trigger - Skipping for /home/argon/Wiki_Crawler/wiki_crawler.py
+2025-12-10 14:04:28.084 [info] Send text to terminal: /bin/python /home/argon/Wiki_Crawler/wiki_crawler.py

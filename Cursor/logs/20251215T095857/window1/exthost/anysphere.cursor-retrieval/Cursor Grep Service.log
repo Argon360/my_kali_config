@@ -1,0 +1,12 @@
+2025-12-15 09:59:03.720 [info] Initializing GrepClient
+2025-12-15 09:59:03.720 [info] Watching filesystem...
+2025-12-15 09:59:03.720 [info] GrepClient initialized successfully
+2025-12-15 09:59:03.720 [info] bootstrapping repository index at '/home/argon/Wiki_Crawler' (cache_path=/home/argon/Wiki_Crawler/.git/cursor/crepe)
+2025-12-15 09:59:03.720 [info] looking for best possible index (current_sha=f3d574e79ba85642eacde8ff0d4d1a0d701c232d)
+2025-12-15 09:59:03.720 [info] candidate index /home/argon/Wiki_Crawler/.git/cursor/crepe/f3d574e79ba85642eacde8ff0d4d1a0d701c232d is 0 commits away
+2025-12-15 09:59:03.720 [info] loading index for commit f3d574e79ba85642eacde8ff0d4d1a0d701c232d
+2025-12-15 09:59:03.720 [info] reset index to head in 10.308313ms: 0 documents in commit, 2 in worktree
+2025-12-15 09:59:03.720 [info] index OK in 16.285084ms
+2025-12-15 09:59:16.496 [info] Initializing GrepClient
+2025-12-15 09:59:16.496 [info] Watching filesystem...
+2025-12-15 09:59:16.496 [error] Failed to initialize GrepClient cannot index repository without Git

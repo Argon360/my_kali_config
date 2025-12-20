@@ -1,0 +1,35 @@
+2025-12-10 14:03:04.756 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-12-10 14:03:04.756 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-12-10 14:03:04.756 [info] Using existing keys for an index
+2025-12-10 14:03:04.756 [info] InternalRepoInfo constructor with preferredEmbeddingModel 0
+2025-12-10 14:03:04.756 [info] Using existing keys for an index
+2025-12-10 14:03:04.756 [info] InternalRepoInfo constructor with preferredEmbeddingModel 0
+2025-12-10 14:03:04.756 [info] Starting RepoIndexWatcher for repo: 0633c2a5-8995-44b5-b2e9-6d45b7512f09, owner: auth0|user_01KA0MWZADE9XEBD3P957GVKXE
+2025-12-10 14:03:04.756 [info] Setting global status from status tracker: synced
+2025-12-10 14:03:04.756 [info] Doing a startup handshake.
+2025-12-10 14:03:04.840 [info] Finished computing merkle tree in 45.833022000000256 ms.
+2025-12-10 14:03:04.841 [info] Doing the initial handshake with hash: 9716143f0a1874cc0d6c37bfb4729dddb1276604df2aeabecc7a23a149017575
+2025-12-10 14:03:04.854 [info] Computed simhash vector of length: 256
+2025-12-10 14:03:04.854 [info] Path key hash: 54844ed4b6879548a215354ff151c770bbadc817a13ec93bb8fa5be1e052f25f
+2025-12-10 14:03:04.854 [info] Handshake start
+2025-12-10 14:03:05.916 [info] Handshake timing: 1063.591485, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"f3cd5b3f-a5c1-48ed-a281-d737c2922d6e","status":"STATUS_EMPTY","copyTaskHandle":""}]}
+2025-12-10 14:03:05.916 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"f3cd5b3f-a5c1-48ed-a281-d737c2922d6e","status":"STATUS_EMPTY","copyTaskHandle":""}]}
+2025-12-10 14:03:05.916 [info] Starting fast remote sync.
+2025-12-10 14:03:05.916 [info] Total num embeddable files: 4
+2025-12-10 14:03:05.917 [info] Root hash: 9716143f0a1874cc0d6c37bfb4729dddb1276604df2aeabecc7a23a149017575
+2025-12-10 14:03:05.917 [info] Starting repository upload from scratch.
+2025-12-10 14:03:05.918 [info] Uploading 4 files.
+2025-12-10 14:03:05.918 [info] Total number of files to embed: 4
+2025-12-10 14:03:05.918 [info] Not aborted
+2025-12-10 14:03:05.918 [info] Starting while loop.
+2025-12-10 14:03:05.923 [info] syncing batch of 2 files and 35185 bytes
+2025-12-10 14:03:06.493 [info] Completed job successfully: f3cd5b3f-a5c1-48ed-a281-d737c2922d6e ./.cursor/environment.json
+2025-12-10 14:03:06.493 [info] Completed job successfully: f3cd5b3f-a5c1-48ed-a281-d737c2922d6e ./LICENSE
+2025-12-10 14:03:06.494 [info] syncing batch of 2 files and 56108 bytes
+2025-12-10 14:03:07.501 [info] Completed job successfully: f3cd5b3f-a5c1-48ed-a281-d737c2922d6e ./README.md
+2025-12-10 14:03:07.501 [info] Completed job successfully: f3cd5b3f-a5c1-48ed-a281-d737c2922d6e ./wiki_crawler.py
+2025-12-10 14:03:07.769 [info] Finishing sync (hasUpdates: true, isErr: false)
+2025-12-10 14:03:08.229 [info] Finished indexing repository.
+2025-12-10 14:03:08.229 [info] Indexing job successfully done or aborted.
+2025-12-10 14:05:54.916 [info] multiCodebaseIndexingJob dispose
+2025-12-10 14:05:54.916 [info] Aborting indexing job.

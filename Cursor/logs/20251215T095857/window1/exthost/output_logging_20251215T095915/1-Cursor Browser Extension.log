@@ -1,0 +1,13 @@
+[2025-12-15T04:29:15.856Z] [INFO] [general] Activating Cursor Browser Extension MCP Provider
+[2025-12-15T04:29:15.857Z] [INFO] [general] Initializing Playwright Browser Tools
+[2025-12-15T04:29:15.858Z] [INFO] [general] Using configuration: {"connectionType":"default"}
+[2025-12-15T04:29:15.858Z] [INFO] [general] Using workspace storage directory: /home/argon/.config/Cursor/User/workspaceStorage/f230945d69fd591050c2d3b9dec04e11/anysphere.cursor-browser-extension/browser-session
+[2025-12-15T04:29:15.859Z] [INFO] [general] Playwright Browser Tools initialized successfully
+[2025-12-15T04:29:15.859Z] [INFO] [general] Cursor Browser Extension MCP Provider initialized successfully
+[2025-12-15T04:29:15.859Z] [INFO] [general] Cursor Browser Extension MCP Provider registered successfully
+[2025-12-15T04:29:15.929Z] [INFO] [general] Listing available browser tools
+[2025-12-15T04:29:16.127Z] [INFO] [general] Found Chrome executable at: /usr/bin/chromium
+[2025-12-15T04:29:16.127Z] [INFO] [general] Found Chrome executable at: /usr/bin/chromium
+[2025-12-15T04:29:16.127Z] [INFO] [general] Found Chrome executable at: /usr/bin/chromium
+[2025-12-15T04:29:16.944Z] [INFO] [general] Listing available browser tools
+[2025-12-15T04:29:17.310Z] [INFO] [general] Listing available browser tools

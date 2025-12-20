@@ -1,0 +1,6 @@
+2025/12/13-20:08:07.420 5 Reusing MANIFEST /home/argon/.config/chromium/Default/Local Storage/leveldb/MANIFEST-000001
+2025/12/13-20:08:07.428 5 Recovering log #3
+2025/12/13-20:08:07.428 5 Reusing old log /home/argon/.config/chromium/Default/Local Storage/leveldb/000003.log 
+2025/12/13-20:09:07.431 5 Level-0 table #5: started
+2025/12/13-20:09:07.436 5 Level-0 table #5: 89379 bytes OK
+2025/12/13-20:09:07.440 5 Delete type=0 #3

@@ -1,0 +1,76 @@
+{
+    "telemetry.sqmId": "",
+    "telemetry.macMachineId": "7b38cbfec9f65cabce14f5ed306b9057440f4170341d0beb2dd783e44c442aa6",
+    "telemetry.machineId": "48f018bc7e5cc1d253922ea4a6592298b624a4f919a4e5fddb87f1b79c11eb58",
+    "telemetry.devDeviceId": "65dd9288-78a7-429e-bc7b-fda1a515922c",
+    "backupWorkspaces": {
+        "workspaces": [],
+        "folders": [
+            {
+                "folderUri": "file:///home/argon/.config"
+            }
+        ],
+        "emptyWindows": []
+    },
+    "windowControlHeight": 35,
+    "profileAssociations": {
+        "workspaces": {
+            "file:///home/argon/Wiki_Crawler": "__default__profile__",
+            "file:///home/argon/.config": "__default__profile__"
+        },
+        "emptyWindows": {}
+    },
+    "theme": "hc-black",
+    "themeBackground": "#0a0a0a",
+    "windowSplash": {
+        "zoomLevel": 0,
+        "baseTheme": "hc-black",
+        "colorInfo": {
+            "foreground": "#cccccc",
+            "background": "#0a0a0a",
+            "editorBackground": "#0a0a0a",
+            "titleBarBackground": "#0a0a0a",
+            "titleBarBorder": "rgba(255, 255, 255, 0.1)",
+            "activityBarBackground": "#0a0a0a",
+            "activityBarBorder": "#6fc3df",
+            "sideBarBackground": "#0a0a0a",
+            "sideBarBorder": "rgba(255, 255, 255, 0.1)",
+            "statusBarBackground": "#0a0a0a",
+            "statusBarBorder": "rgba(42, 42, 42, 0)",
+            "statusBarNoFolderBackground": "#0a0a0a",
+            "windowBorder": "#6fc3df"
+        },
+        "layoutInfo": {
+            "sideBarSide": "left",
+            "editorPartMinWidth": 220,
+            "titleBarHeight": 35,
+            "activityBarWidth": 0,
+            "sideBarWidth": 300,
+            "auxiliarySideBarWidth": 0,
+            "statusBarHeight": 22,
+            "windowBorder": false
+        }
+    },
+    "windowsState": {
+        "lastActiveWindow": {
+            "folder": "file:///home/argon/.config",
+            "backupPath": "/home/argon/.config/Cursor/Backups/ccae2ac73eb27f15e2312b9a4f449218",
+            "uiState": {
+                "mode": 0,
+                "x": 0,
+                "y": 29,
+                "width": 960,
+                "height": 1051
+            }
+        },
+        "openedWindows": []
+    },
+    "windowSplashWorkspaceOverride": {
+        "layoutInfo": {
+            "auxiliarySideBarWidth": [
+                768,
+                []
+            ]
+        }
+    }
+}

@@ -1,0 +1,219 @@
+2025-12-09 12:20:29.298 [error] Error getting repo info: Failed to execute git
+2025-12-09 12:20:29.298 [error] Error: Failed to execute git
+	at t.Git._exec (/usr/share/cursor/resources/app/extensions/git/dist/main.js:2:34772)
+	at async t.Git.exec (/usr/share/cursor/resources/app/extensions/git/dist/main.js:2:33895)
+	at async t.GitProvider.executeGitCommandStable (/usr/share/cursor/resources/app/extensions/cursor-retrieval/dist/main.js:2:1444916)
+	at async t.GitProvider.getRepoInfo (/usr/share/cursor/resources/app/extensions/cursor-retrieval/dist/main.js:2:1420845)
+2025-12-09 12:20:29.298 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-12-09 12:20:29.298 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-12-09 12:20:29.298 [error] Error getting repo info: Failed to execute git
+2025-12-09 12:20:29.298 [error] NoWorkspaceUriError
+2025-12-09 12:20:29.298 [warning] Failed to get symbolic ref: Failed to execute git
+2025-12-09 12:20:29.298 [warning] Failed to read .git/HEAD: A system error occurred (ENOENT: no such file or directory, open '.git/HEAD')
+2025-12-09 12:20:29.342 [warning] Failed to get branches from remote: Failed to execute git
+2025-12-09 12:20:29.351 [warning] Failed to get default branch from git config: Failed to execute git
+2025-12-09 12:21:36.129 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-12-09 12:21:36.129 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-12-09 12:21:36.129 [info] Making keys for a new index
+2025-12-09 12:21:36.129 [info] Making keys for a new index
+2025-12-09 12:21:36.146 [info] Using the default key from the server for a new index
+2025-12-09 12:21:36.147 [info] InternalRepoInfo constructor with preferredEmbeddingModel 0
+2025-12-09 12:21:36.147 [info] Using the default key from the server for a new index
+2025-12-09 12:21:36.147 [info] InternalRepoInfo constructor with preferredEmbeddingModel 0
+2025-12-09 12:21:36.626 [info] Starting RepoIndexWatcher for repo: 369d5732-eba8-4a3f-9515-196e1f2852f2, owner: auth0|user_01KA0MWZADE9XEBD3P957GVKXE
+2025-12-09 12:21:36.626 [info] Doing a startup handshake.
+2025-12-09 12:21:36.927 [info] Finished computing merkle tree in 66.1922810000001 ms.
+2025-12-09 12:21:36.949 [info] Doing the initial handshake with hash: 102eea2aada593147d7c9420c0a8db587e460ab9a6505dd0dc0c2dc9f4e66ce3
+2025-12-09 12:21:36.955 [warning] Error reading high level folder description. Ignoring. Error: ENOENT: no such file or directory, open '/home/argon/.config/Cursor/User/workspaceStorage/c99ee0cbeb506d1c0d653208d2fb1602/anysphere.cursor-retrieval/high_level_folder_description.txt'
+2025-12-09 12:21:36.957 [info] Computed simhash vector of length: 256
+2025-12-09 12:21:36.957 [info] Path key hash: 54844ed4b6879548a215354ff151c770bbadc817a13ec93bb8fa5be1e052f25f
+2025-12-09 12:21:36.957 [info] Handshake start
+2025-12-09 12:21:38.192 [info] Handshake timing: 1235.9673909999997, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_EMPTY","copyTaskHandle":""}]}
+2025-12-09 12:21:38.192 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_EMPTY","copyTaskHandle":""}]}
+2025-12-09 12:21:38.192 [info] Starting fast remote sync.
+2025-12-09 12:21:38.193 [info] Total num embeddable files: 4
+2025-12-09 12:21:38.193 [info] Root hash: 102eea2aada593147d7c9420c0a8db587e460ab9a6505dd0dc0c2dc9f4e66ce3
+2025-12-09 12:21:38.193 [info] Starting repository upload from scratch.
+2025-12-09 12:21:38.194 [info] Uploading 4 files.
+2025-12-09 12:21:38.196 [info] Total number of files to embed: 4
+2025-12-09 12:21:38.196 [info] Not aborted
+2025-12-09 12:21:38.196 [info] Starting while loop.
+2025-12-09 12:21:38.198 [info] syncing batch of 2 files and 36786 bytes
+2025-12-09 12:21:39.356 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./LICENSE
+2025-12-09 12:21:39.356 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./README.md
+2025-12-09 12:21:39.357 [info] syncing batch of 2 files and 27664 bytes
+2025-12-09 12:21:41.980 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./wiki_crawler.py
+2025-12-09 12:21:41.981 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./.git/config
+2025-12-09 12:21:42.230 [info] Finishing sync (hasUpdates: true, isErr: false)
+2025-12-09 12:21:42.644 [info] Finished indexing repository.
+2025-12-09 12:21:42.644 [info] Indexing job successfully done or aborted.
+2025-12-09 12:26:56.627 [info] multiCodebaseIndexingJob dispose
+2025-12-09 12:26:56.627 [info] Aborting indexing job.
+2025-12-09 12:26:56.627 [info] Setting global status from status tracker: synced
+2025-12-09 12:26:56.627 [info] Doing a startup handshake.
+2025-12-09 12:26:56.631 [info] Finished computing merkle tree in 1.8698659999645315 ms.
+2025-12-09 12:26:56.632 [info] Doing the initial handshake with hash: bb28ef291898a0b39f2b14b1531be3b3ed92e11b48330f91893a746ea2d88ac1
+2025-12-09 12:26:56.633 [info] Computed simhash vector of length: 256
+2025-12-09 12:26:56.633 [info] Path key hash: 54844ed4b6879548a215354ff151c770bbadc817a13ec93bb8fa5be1e052f25f
+2025-12-09 12:26:56.633 [info] Handshake start
+2025-12-09 12:26:57.490 [info] Handshake timing: 857.1750100000063, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_OUT_OF_SYNC","copyTaskHandle":""}]}
+2025-12-09 12:26:57.490 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_OUT_OF_SYNC","copyTaskHandle":""}]}
+2025-12-09 12:26:57.490 [info] Starting fast remote sync.
+2025-12-09 12:26:57.490 [info] Total num embeddable files: 5
+2025-12-09 12:26:57.491 [info] Root hash: bb28ef291898a0b39f2b14b1531be3b3ed92e11b48330f91893a746ea2d88ac1
+2025-12-09 12:26:57.491 [info] In the out of sync case.
+2025-12-09 12:26:57.493 [info] Waiting on semaphore to be released 1
+2025-12-09 12:26:57.692 [info] Waiting on semaphore to be released 1
+2025-12-09 12:26:57.893 [info] Waiting on semaphore to be released 1
+2025-12-09 12:26:58.093 [info] Waiting on semaphore to be released 1
+2025-12-09 12:26:58.293 [info] setting numJobsToGo to 2
+2025-12-09 12:26:58.294 [info] [startSync]: numJobs: 2
+2025-12-09 12:26:58.294 [info] Uploading 2 files.
+2025-12-09 12:26:58.295 [info] Total number of files to embed: 5
+2025-12-09 12:26:58.295 [info] Not aborted
+2025-12-09 12:26:58.295 [info] Starting while loop.
+2025-12-09 12:26:58.300 [info] syncing batch of 2 files and 42171 bytes
+2025-12-09 12:26:59.832 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./wiki_crawler.py
+2025-12-09 12:26:59.832 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./.git/index
+2025-12-09 12:27:00.093 [info] Finishing sync (hasUpdates: true, isErr: false)
+2025-12-09 12:27:00.494 [info] Finished indexing repository.
+2025-12-09 12:27:00.494 [info] Indexing job successfully done or aborted.
+2025-12-09 12:31:35.733 [error] Error getting submodules: A system error occurred (ENOENT: no such file or directory, open '/home/argon/Wiki_Crawler/.gitmodules')
+2025-12-09 12:32:16.629 [info] multiCodebaseIndexingJob dispose
+2025-12-09 12:32:16.629 [info] Aborting indexing job.
+2025-12-09 12:32:16.629 [info] Setting global status from status tracker: synced
+2025-12-09 12:32:16.629 [info] Doing a startup handshake.
+2025-12-09 12:32:16.634 [info] Finished computing merkle tree in 1.9805799999739975 ms.
+2025-12-09 12:32:16.635 [info] Doing the initial handshake with hash: bb28ef291898a0b39f2b14b1531be3b3ed92e11b48330f91893a746ea2d88ac1
+2025-12-09 12:32:16.637 [info] Computed simhash vector of length: 256
+2025-12-09 12:32:16.637 [info] Path key hash: 54844ed4b6879548a215354ff151c770bbadc817a13ec93bb8fa5be1e052f25f
+2025-12-09 12:32:16.637 [info] Handshake start
+2025-12-09 12:32:17.936 [info] Handshake timing: 1299.5383960000472, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_UP_TO_DATE","copyTaskHandle":""}]}
+2025-12-09 12:32:17.936 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_UP_TO_DATE","copyTaskHandle":""}]}
+2025-12-09 12:32:17.936 [info] Starting fast remote sync.
+2025-12-09 12:32:17.937 [info] Total num embeddable files: 5
+2025-12-09 12:32:17.937 [info] Root hash: bb28ef291898a0b39f2b14b1531be3b3ed92e11b48330f91893a746ea2d88ac1
+2025-12-09 12:32:17.939 [info] Finishing sync (hasUpdates: false, isErr: false)
+2025-12-09 12:32:18.238 [info] Finished indexing repository.
+2025-12-09 12:32:18.238 [info] Indexing job successfully done or aborted.
+2025-12-09 12:37:36.629 [info] multiCodebaseIndexingJob dispose
+2025-12-09 12:37:36.629 [info] Aborting indexing job.
+2025-12-09 12:37:36.629 [info] Setting global status from status tracker: synced
+2025-12-09 12:37:36.629 [info] Doing a startup handshake.
+2025-12-09 12:37:36.634 [info] Finished computing merkle tree in 2.1688629999989644 ms.
+2025-12-09 12:37:36.635 [info] Doing the initial handshake with hash: e06dc0d4934d09c1de011aaaa31d5425713229961b44458ae12ab0e961e25f84
+2025-12-09 12:37:36.637 [info] Computed simhash vector of length: 256
+2025-12-09 12:37:36.637 [info] Path key hash: 54844ed4b6879548a215354ff151c770bbadc817a13ec93bb8fa5be1e052f25f
+2025-12-09 12:37:36.637 [info] Handshake start
+2025-12-09 12:37:37.649 [info] Handshake timing: 1012.7919289999409, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_OUT_OF_SYNC","copyTaskHandle":""}]}
+2025-12-09 12:37:37.649 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_OUT_OF_SYNC","copyTaskHandle":""}]}
+2025-12-09 12:37:37.649 [info] Starting fast remote sync.
+2025-12-09 12:37:37.650 [info] Total num embeddable files: 5
+2025-12-09 12:37:37.651 [info] Root hash: e06dc0d4934d09c1de011aaaa31d5425713229961b44458ae12ab0e961e25f84
+2025-12-09 12:37:37.651 [info] In the out of sync case.
+2025-12-09 12:37:37.652 [info] Waiting on semaphore to be released 1
+2025-12-09 12:37:37.851 [info] Waiting on semaphore to be released 1
+2025-12-09 12:37:38.052 [info] setting numJobsToGo to 1
+2025-12-09 12:37:38.052 [info] [startSync]: numJobs: 1
+2025-12-09 12:37:38.053 [info] Uploading 1 files.
+2025-12-09 12:37:38.054 [info] Total number of files to embed: 5
+2025-12-09 12:37:38.054 [info] Not aborted
+2025-12-09 12:37:38.054 [info] Starting while loop.
+2025-12-09 12:37:47.567 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./wiki_crawler.py
+2025-12-09 12:37:47.875 [info] Finishing sync (hasUpdates: true, isErr: false)
+2025-12-09 12:37:48.567 [info] Finished indexing repository.
+2025-12-09 12:37:48.567 [info] Indexing job successfully done or aborted.
+2025-12-09 12:41:35.733 [error] Error getting submodules: A system error occurred (ENOENT: no such file or directory, open '/home/argon/Wiki_Crawler/.gitmodules')
+2025-12-09 12:42:56.631 [info] multiCodebaseIndexingJob dispose
+2025-12-09 12:42:56.632 [info] Aborting indexing job.
+2025-12-09 12:42:56.632 [info] Setting global status from status tracker: synced
+2025-12-09 12:42:56.632 [info] Doing a startup handshake.
+2025-12-09 12:42:56.636 [info] Finished computing merkle tree in 1.8028619999531657 ms.
+2025-12-09 12:42:56.637 [info] Doing the initial handshake with hash: e06dc0d4934d09c1de011aaaa31d5425713229961b44458ae12ab0e961e25f84
+2025-12-09 12:42:56.638 [info] Computed simhash vector of length: 256
+2025-12-09 12:42:56.638 [info] Path key hash: 54844ed4b6879548a215354ff151c770bbadc817a13ec93bb8fa5be1e052f25f
+2025-12-09 12:42:56.638 [info] Handshake start
+2025-12-09 12:42:57.449 [info] Handshake timing: 811.4731630000751, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_UP_TO_DATE","copyTaskHandle":""}]}
+2025-12-09 12:42:57.450 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_UP_TO_DATE","copyTaskHandle":""}]}
+2025-12-09 12:42:57.450 [info] Starting fast remote sync.
+2025-12-09 12:42:57.450 [info] Total num embeddable files: 5
+2025-12-09 12:42:57.450 [info] Root hash: e06dc0d4934d09c1de011aaaa31d5425713229961b44458ae12ab0e961e25f84
+2025-12-09 12:42:57.451 [info] Finishing sync (hasUpdates: false, isErr: false)
+2025-12-09 12:42:57.705 [info] Finished indexing repository.
+2025-12-09 12:42:57.706 [info] Indexing job successfully done or aborted.
+2025-12-09 12:48:16.632 [info] multiCodebaseIndexingJob dispose
+2025-12-09 12:48:16.632 [info] Aborting indexing job.
+2025-12-09 12:48:16.633 [info] Setting global status from status tracker: synced
+2025-12-09 12:48:16.633 [info] Doing a startup handshake.
+2025-12-09 12:48:16.639 [info] Finished computing merkle tree in 3.6608229998964816 ms.
+2025-12-09 12:48:16.639 [info] Doing the initial handshake with hash: e06dc0d4934d09c1de011aaaa31d5425713229961b44458ae12ab0e961e25f84
+2025-12-09 12:48:16.641 [info] Computed simhash vector of length: 256
+2025-12-09 12:48:16.641 [info] Path key hash: 54844ed4b6879548a215354ff151c770bbadc817a13ec93bb8fa5be1e052f25f
+2025-12-09 12:48:16.641 [info] Handshake start
+2025-12-09 12:48:17.650 [info] Handshake timing: 1009.4669800000265, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_UP_TO_DATE","copyTaskHandle":""}]}
+2025-12-09 12:48:17.650 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_UP_TO_DATE","copyTaskHandle":""}]}
+2025-12-09 12:48:17.650 [info] Starting fast remote sync.
+2025-12-09 12:48:17.651 [info] Total num embeddable files: 5
+2025-12-09 12:48:17.651 [info] Root hash: e06dc0d4934d09c1de011aaaa31d5425713229961b44458ae12ab0e961e25f84
+2025-12-09 12:48:17.652 [info] Finishing sync (hasUpdates: false, isErr: false)
+2025-12-09 12:48:17.957 [info] Finished indexing repository.
+2025-12-09 12:48:17.957 [info] Indexing job successfully done or aborted.
+2025-12-09 12:51:35.730 [error] Error getting submodules: A system error occurred (ENOENT: no such file or directory, open '/home/argon/Wiki_Crawler/.gitmodules')
+2025-12-09 12:53:36.633 [info] multiCodebaseIndexingJob dispose
+2025-12-09 12:53:36.633 [info] Aborting indexing job.
+2025-12-09 12:53:36.633 [info] Setting global status from status tracker: synced
+2025-12-09 12:53:36.633 [info] Doing a startup handshake.
+2025-12-09 12:53:36.636 [info] Finished computing merkle tree in 1.2098330000881106 ms.
+2025-12-09 12:53:36.637 [info] Doing the initial handshake with hash: 67c91bbbfcad58e70c1a4a21899fc2642d352f7ce30e3c57b40b3c24400605be
+2025-12-09 12:53:36.637 [info] Computed simhash vector of length: 256
+2025-12-09 12:53:36.638 [info] Path key hash: 54844ed4b6879548a215354ff151c770bbadc817a13ec93bb8fa5be1e052f25f
+2025-12-09 12:53:36.638 [info] Handshake start
+2025-12-09 12:53:37.653 [info] Handshake timing: 1015.3912120000459, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_OUT_OF_SYNC","copyTaskHandle":""}]}
+2025-12-09 12:53:37.653 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_OUT_OF_SYNC","copyTaskHandle":""}]}
+2025-12-09 12:53:37.653 [info] Starting fast remote sync.
+2025-12-09 12:53:37.653 [info] Total num embeddable files: 5
+2025-12-09 12:53:37.654 [info] Root hash: 67c91bbbfcad58e70c1a4a21899fc2642d352f7ce30e3c57b40b3c24400605be
+2025-12-09 12:53:37.654 [info] In the out of sync case.
+2025-12-09 12:53:37.655 [info] Waiting on semaphore to be released 1
+2025-12-09 12:53:37.854 [info] Waiting on semaphore to be released 1
+2025-12-09 12:53:38.055 [info] setting numJobsToGo to 1
+2025-12-09 12:53:38.055 [info] [startSync]: numJobs: 1
+2025-12-09 12:53:38.055 [info] Uploading 1 files.
+2025-12-09 12:53:38.055 [info] Total number of files to embed: 5
+2025-12-09 12:53:38.055 [info] Not aborted
+2025-12-09 12:53:38.055 [info] Starting while loop.
+2025-12-09 12:53:39.806 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./wiki_crawler.py
+2025-12-09 12:53:40.213 [info] Finishing sync (hasUpdates: true, isErr: false)
+2025-12-09 12:53:40.724 [info] Finished indexing repository.
+2025-12-09 12:53:40.724 [info] Indexing job successfully done or aborted.
+2025-12-09 12:57:43.609 [error] Error getting submodules: A system error occurred (ENOENT: no such file or directory, open '/home/argon/Wiki_Crawler/.gitmodules')
+2025-12-09 12:58:17.647 [error] Error getting submodules: A system error occurred (ENOENT: no such file or directory, open '/home/argon/Wiki_Crawler/.gitmodules')
+2025-12-09 12:58:56.634 [info] multiCodebaseIndexingJob dispose
+2025-12-09 12:58:56.634 [info] Aborting indexing job.
+2025-12-09 12:58:56.634 [info] Setting global status from status tracker: synced
+2025-12-09 12:58:56.634 [info] Doing a startup handshake.
+2025-12-09 12:58:56.671 [info] Finished computing merkle tree in 11.622107999864966 ms.
+2025-12-09 12:58:56.672 [info] Doing the initial handshake with hash: 9716143f0a1874cc0d6c37bfb4729dddb1276604df2aeabecc7a23a149017575
+2025-12-09 12:58:56.673 [info] Computed simhash vector of length: 256
+2025-12-09 12:58:56.673 [info] Path key hash: 54844ed4b6879548a215354ff151c770bbadc817a13ec93bb8fa5be1e052f25f
+2025-12-09 12:58:56.673 [info] Handshake start
+2025-12-09 12:58:57.735 [info] Handshake timing: 1062.2997459997423, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_OUT_OF_SYNC","copyTaskHandle":""}]}
+2025-12-09 12:58:57.735 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"dca52811-ea5f-43bd-9533-ee2cc9d64622","status":"STATUS_OUT_OF_SYNC","copyTaskHandle":""}]}
+2025-12-09 12:58:57.735 [info] Starting fast remote sync.
+2025-12-09 12:58:57.736 [info] Total num embeddable files: 4
+2025-12-09 12:58:57.736 [info] Root hash: 9716143f0a1874cc0d6c37bfb4729dddb1276604df2aeabecc7a23a149017575
+2025-12-09 12:58:57.736 [info] In the out of sync case.
+2025-12-09 12:58:57.737 [info] Waiting on semaphore to be released 1
+2025-12-09 12:58:57.938 [info] Waiting on semaphore to be released 1
+2025-12-09 12:58:58.139 [info] setting numJobsToGo to 2
+2025-12-09 12:58:58.140 [info] [startSync]: numJobs: 2
+2025-12-09 12:58:58.562 [info] Uploading 2 files.
+2025-12-09 12:58:58.563 [info] Total number of files to embed: 4
+2025-12-09 12:58:58.563 [info] Not aborted
+2025-12-09 12:58:58.563 [info] Starting while loop.
+2025-12-09 12:58:58.568 [info] syncing batch of 2 files and 54507 bytes
+2025-12-09 12:59:00.559 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./wiki_crawler.py
+2025-12-09 12:59:00.559 [info] Completed job successfully: dca52811-ea5f-43bd-9533-ee2cc9d64622 ./.cursor/environment.json
+2025-12-09 12:59:00.826 [info] Finishing sync (hasUpdates: true, isErr: false)
+2025-12-09 12:59:01.338 [info] Finished indexing repository.
+2025-12-09 12:59:01.338 [info] Indexing job successfully done or aborted.
