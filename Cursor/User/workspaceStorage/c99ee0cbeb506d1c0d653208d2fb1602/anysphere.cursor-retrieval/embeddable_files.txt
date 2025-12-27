@@ -1,4 +1,0 @@
-.cursor/environment.json
-LICENSE
-README.md
-wiki_crawler.py

@@ -1,9 +1,0 @@
-[Info  - 08:03:02.597] [pylance import] Already imported settings globally
-[Info  - 08:03:02.597] [pylance import] No remote authority found, skipping remote settings migration
-[Info  - 08:03:02.597] [pylance import] Already imported settings for workspace Wiki_Crawler
-[Info  - 08:03:02.597] [pylance import] Already imported settings for workspace folder /home/argon/Wiki_Crawler
-[Info  - 08:03:02.608] failed to find pyright executable, falling back to bundled:
-/bin/basedpyright-langserver
-[Info  - 08:03:02.608] using bundled pyright
-[Info  - 08:03:02.608] running node with argzs: --max-old-space-size=7849
-[Info  - 08:03:02.608] using node executable: /usr/share/cursor/resources/app/resources/helpers/node

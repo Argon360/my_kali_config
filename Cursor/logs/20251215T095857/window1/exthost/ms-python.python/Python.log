@@ -1,5 +1,0 @@
-2025-12-15 09:59:01.191 [warning] Dir "/home/argon/Wiki_Crawler/.pixi/envs" is not watchable (directory does not exist)
-2025-12-15 09:59:01.254 [info] Python interpreter path: /bin/python
-2025-12-15 09:59:01.291 [info] > pyenv which python
-2025-12-15 09:59:01.291 [info] cwd: .
-2025-12-15 09:59:01.421 [info] Editor support is inactive since language server is set to None.
