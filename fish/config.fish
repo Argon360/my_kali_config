@@ -12,18 +12,35 @@ set -g fish_greeting
 
 # Path Configuration
 if test -d /home/linuxbrew/.linuxbrew/bin
-    set -gx PATH /home/linuxbrew/.linuxbrew/bin $PATH
+    fish_add_path /home/linuxbrew/.linuxbrew/bin
 end
-set -gx PATH $PATH ~/go/bin
+# Append Go bin to path
+fish_add_path --path --append ~/go/bin
 
 # -----------------------------------------------------------------------------
-# fzf Defaults (UX & Performance)
+#  Integration Configuration (Bat, Delta, FZF)
 # -----------------------------------------------------------------------------
+
+# Bat (Better Cat)
+if type -q bat
+    set -gx BAT_THEME Dracula # Optional: Adjust to preference
+    set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
+    alias cat='bat'
+end
+
+# Delta (Better Diff)
+if type -q delta
+    set -gx GIT_PAGER delta
+end
+
+# FZF Defaults (UX & Performance)
+# Integrated with bat for previewing files
 set -gx FZF_DEFAULT_OPTS "
 --height=40%
 --layout=reverse
 --border
 --inline-info
+--preview 'bat --style=numbers --color=always --line-range :500 {}'
 --preview-window=right:60%
 "
 
@@ -32,7 +49,7 @@ set -gx FZF_DEFAULT_OPTS "
 # -----------------------------------------------------------------------------
 if status is-interactive
 
-    # --- Tool Initialization ---
+    # --- Tool Initialization (Optimized) ---
 
     # Starship Prompt
     if type -q starship
@@ -44,9 +61,39 @@ if status is-interactive
         atuin init fish | source
     end
 
+    # Zoxide (Smarter cd)
+    if type -q zoxide
+        zoxide init fish | source
+    end
+
     # FZF (Fuzzy Finder)
     if type -q fzf
         fzf --fish | source
+
+        # -----------------------------------------------------------------------------
+        #  fzf Key Bindings
+        # -----------------------------------------------------------------------------
+
+        fish_default_key_bindings
+
+        # Ctrl+F → File search (uses fd if available, falls back to find)
+        bind \cf fzf-file-widget
+
+        # Ctrl+R → History search
+        bind \cr fzf-history-widget
+
+        # Ctrl+D → Directory jump
+        function __fzf_cd
+            set dir (find . -type d 2>/dev/null | fzf)
+            test -n "$dir"; and cd "$dir"
+        end
+        bind \cd __fzf_cd
+
+        # Ctrl+K → Process selector → kill
+        function __fzf_kill
+            ps -ef | sed 1d | fzf | awk '{print $2}' | xargs -r kill -9
+        end
+        bind \ck __fzf_kill
     end
 
     # --- Startup Commands ---
@@ -78,6 +125,7 @@ if status is-interactive
     # Navigation
     alias ..='cd ..'
     alias ...='cd ../..'
+    alias home='cd ~'
 
     # Git
     alias g='git'
@@ -98,29 +146,10 @@ if status is-interactive
     alias kreload='killall kitty; kitty &; disown'
     alias reloadall='reload; ffpreview; echo "✔ All configs reloaded"'
 
-    # -----------------------------------------------------------------------------
-    #  fzf Key Bindings (Explicit & Predictable)
-    # -----------------------------------------------------------------------------
-
-    # Ensure default Fish bindings are loaded
-    fish_default_key_bindings
-
-    # Ctrl+F → File search
-    bind \cf fzf-file-widget
-
-    # Ctrl+R → History search
-    bind \cr fzf-history-widget
-
-    # Ctrl+D → Directory jump
-    function __fzf_cd
-        set dir (find . -type d 2>/dev/null | fzf)
-        test -n "$dir"; and cd "$dir"
+    # TheFuck
+    if type -q thefuck
+        thefuck --alias | source
+        thefuck --alias FUCK | source
     end
-    bind \cd __fzf_cd
 
-    # Ctrl+K → Process selector → kill
-    function __fzf_kill
-        ps -ef | sed 1d | fzf | awk '{print $2}' | xargs -r kill -9
-    end
-    bind \ck __fzf_kill
 end
