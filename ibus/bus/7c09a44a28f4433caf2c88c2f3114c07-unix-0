@@ -3,5 +3,5 @@
 # ibus session bus with the below address.
 # If the IBUS_ADDRESS environment variable is set, it will
 # be used rather than this file.
-IBUS_ADDRESS=unix:path=/home/argon/.cache/ibus/dbus-f6APPoNT,guid=fb5615f21e070afbda538747694650cd
-IBUS_DAEMON_PID=3192
+IBUS_ADDRESS=unix:path=/home/argon/.cache/ibus/dbus-9g5cOdrv,guid=2749e2634bc3652a89a02ee8694e1cf2
+IBUS_DAEMON_PID=4094

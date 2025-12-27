@@ -5,12 +5,12 @@
     "telemetry.devDeviceId": "65dd9288-78a7-429e-bc7b-fda1a515922c",
     "backupWorkspaces": {
         "workspaces": [],
-        "folders": [
+        "folders": [],
+        "emptyWindows": [
             {
-                "folderUri": "file:///home/argon/.config"
+                "backupFolder": "1766481626259"
             }
-        ],
-        "emptyWindows": []
+        ]
     },
     "windowControlHeight": 35,
     "profileAssociations": {
@@ -18,7 +18,9 @@
             "file:///home/argon/Wiki_Crawler": "__default__profile__",
             "file:///home/argon/.config": "__default__profile__"
         },
-        "emptyWindows": {}
+        "emptyWindows": {
+            "1766481626259": "__default__profile__"
+        }
     },
     "theme": "hc-black",
     "themeBackground": "#0a0a0a",
@@ -53,13 +55,12 @@
     },
     "windowsState": {
         "lastActiveWindow": {
-            "folder": "file:///home/argon/.config",
-            "backupPath": "/home/argon/.config/Cursor/Backups/ccae2ac73eb27f15e2312b9a4f449218",
+            "backupPath": "/home/argon/.config/Cursor/Backups/1766481626259",
             "uiState": {
                 "mode": 0,
                 "x": 0,
                 "y": 29,
-                "width": 960,
+                "width": 1920,
                 "height": 1051
             }
         },

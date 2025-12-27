@@ -1,103 +1,126 @@
-# ======================================================
+# =============================================================================
 #  Fish Shell Configuration
-#  Designed for Pop!_OS / Debian / Ubuntu + Kitty
-# ======================================================
+#  Environment: Linux (Pop!_OS / Debian / Ubuntu / Kali)
+# =============================================================================
 
-# -----------------------------
-#  Disable default greeting
-# -----------------------------
+# -----------------------------------------------------------------------------
+#  Environment Variables & Path
+# -----------------------------------------------------------------------------
+
+# Disable default greeting
 set -g fish_greeting
 
-# -----------------------------
-#  PATH fixes (cargo + brew)
-# -----------------------------
+# Path Configuration
 if test -d /home/linuxbrew/.linuxbrew/bin
     set -gx PATH /home/linuxbrew/.linuxbrew/bin $PATH
 end
-
 set -gx PATH $PATH ~/go/bin
 
+# -----------------------------------------------------------------------------
+# fzf Defaults (UX & Performance)
+# -----------------------------------------------------------------------------
+set -gx FZF_DEFAULT_OPTS "
+--height=40%
+--layout=reverse
+--border
+--inline-info
+--preview-window=right:60%
+"
 
-# -----------------------------
-#  Atuin (History Manager)
-# -----------------------------
-if type -q atuin
-    atuin init fish | source
-end
-
-# -----------------------------
-#  Aliases (Modern replacements)
-# -----------------------------
-
-# eza = better ls
-alias ls='eza --group-directories-first --color=always --icons'
-alias ll='eza -l --group-directories-first --color=always --icons'
-alias la='eza -la --group-directories-first --color=always --icons'
-alias lt='eza --tree --level=3 --color=always --icons'
-
-# btop = better top
-alias top="btop --utf-force"
-
-# Dust = better du
-alias du="dust"
-alias duh="dust -H"
-
-# -----------------------------
-#  System Update Shortcuts
-# -----------------------------
-alias sysup="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean"
-alias fixdpkg="sudo dpkg --configure -a"
-
-# -----------------------------
-#  Navigation Shortcuts
-# -----------------------------
-alias ..='cd ..'
-alias ...='cd ../..'
-alias g='git'
-alias gs='git status'
-alias gl='git log --oneline --graph --decorate'
-alias please='sudo'
-
-# -----------------------------
-#  Tools & Utilities
-# -----------------------------
-alias cls="clear"
-alias c="clear"
-
-# -----------------------------
-#  Starship Prompt
-# -----------------------------
-if type -q starship
-    starship init fish | source
-end
-
-# -----------------------------
-#  Fastfetch on startup (optional)
-# -----------------------------
-fastfetch
-
-# -----------------------------
-#  Reload things
-# -----------------------------
-# Reload Fish shell (reloads config.fish)
-alias reload='source ~/.config/fish/config.fish'
-
-# Reload Fastfetch config preview
-alias ffpreview='fastfetch --config ~/.config/fastfetch/config.jsonc'
-
-# Restart Kitty completely
-alias kreload='killall kitty; kitty &; disown'
-
-# Reload the terminal font cache
-alias fontreload='fc-cache -fv'
-
-# Restart the current shell session (clean)
-alias restart='exec $SHELL'
-
-# Restart all
-alias reloadall='freload; ffpreview; echo "✔ All configs reloaded"'
-
-
+# -----------------------------------------------------------------------------
+#  Interactive Session Configuration
+# -----------------------------------------------------------------------------
 if status is-interactive
-    # Commands to run in interactive sessions can go here
+
+    # --- Tool Initialization ---
+
+    # Starship Prompt
+    if type -q starship
+        starship init fish | source
+    end
+
+    # Atuin (History Manager)
+    if type -q atuin
+        atuin init fish | source
+    end
+
+    # FZF (Fuzzy Finder)
+    if type -q fzf
+        fzf --fish | source
+    end
+
+    # --- Startup Commands ---
+
+    # Fastfetch (System Info)
+    if type -q fastfetch
+        fastfetch
+    end
+
+    # --- Aliases ---
+
+    # File System (Modern replacements)
+    alias ls='eza --group-directories-first --color=always --icons'
+    alias ll='eza -l --group-directories-first --color=always --icons'
+    alias la='eza -la --group-directories-first --color=always --icons'
+    alias lt='eza --tree --level=3 --color=always --icons'
+
+    alias du='dust'
+    alias duh='dust -H'
+
+    # System Monitoring
+    alias top='btop --utf-force'
+
+    # System Maintenance
+    alias sysup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean'
+    alias fixdpkg='sudo dpkg --configure -a'
+    alias please='sudo'
+
+    # Navigation
+    alias ..='cd ..'
+    alias ...='cd ../..'
+
+    # Git
+    alias g='git'
+    alias gs='git status'
+    alias gl='git log --oneline --graph --decorate'
+
+    # Utilities
+    alias cls='clear'
+    alias c='clear'
+
+    # Shell Management
+    alias reload='source ~/.config/fish/config.fish'
+    alias restart='exec $SHELL'
+    alias fontreload='fc-cache -fv'
+
+    # App Specific
+    alias ffpreview='fastfetch --config ~/.config/fastfetch/config.jsonc'
+    alias kreload='killall kitty; kitty &; disown'
+    alias reloadall='reload; ffpreview; echo "✔ All configs reloaded"'
+
+    # -----------------------------------------------------------------------------
+    #  fzf Key Bindings (Explicit & Predictable)
+    # -----------------------------------------------------------------------------
+
+    # Ensure default Fish bindings are loaded
+    fish_default_key_bindings
+
+    # Ctrl+F → File search
+    bind \cf fzf-file-widget
+
+    # Ctrl+R → History search
+    bind \cr fzf-history-widget
+
+    # Ctrl+D → Directory jump
+    function __fzf_cd
+        set dir (find . -type d 2>/dev/null | fzf)
+        test -n "$dir"; and cd "$dir"
+    end
+    bind \cd __fzf_cd
+
+    # Ctrl+K → Process selector → kill
+    function __fzf_kill
+        ps -ef | sed 1d | fzf | awk '{print $2}' | xargs -r kill -9
+    end
+    bind \ck __fzf_kill
 end
