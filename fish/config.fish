@@ -110,6 +110,10 @@ if status is-interactive
     alias ll='eza -l --group-directories-first --color=always --icons'
     alias la='eza -la --group-directories-first --color=always --icons'
     alias lt='eza --tree --level=3 --color=always --icons'
+    alias rm='shred -u'
+    alias rmd='/bin/rm -r' # Recursive delete (shred fails on dirs)
+
+    alias x='unp' # Extract archive
 
     alias du='dust'
     alias duh='dust -H'
