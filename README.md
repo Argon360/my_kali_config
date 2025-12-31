@@ -31,6 +31,9 @@ Designed and tested on:
 | **fish** | Interactive shell & behavior |
 | **fzf** | Fuzzy selection engine |
 | **fisher** | Fish plugin manager |
+| **starship** | Cross-shell prompt |
+| **fastfetch** | System information fetcher |
+| **neovim** | LazyVim-based IDE |
 
 ---
 
@@ -57,14 +60,20 @@ Paste remains **sacred**:
 ├── docs/              # All documentation
 │   ├── README.md
 │   ├── architecture.md
-│   ├── kitty.md
 │   ├── fish.md
+│   ├── kitty.md
 │   ├── fzf.md
 │   ├── keybindings.md
-│   └── plugins.md
+│   ├── plugins.md
+│   ├── starship.md
+│   ├── fastfetch.md
+│   └── nvim.md
 ├── .config/
 │   ├── kitty/
-│   └── fish/
+│   ├── fish/
+│   ├── fastfetch/
+│   ├── nvim/
+│   └── starship.toml
 ````
 
 ---
@@ -76,7 +85,10 @@ Start here if you want to understand *why* things are configured this way:
 - 📐 [Architecture & Design Principles](docs/architecture.md)
 - 🖥️ [Kitty Terminal Configuration](docs/kitty.md)
 - 🐟 [Fish Shell Configuration](docs/fish.md)
-- 🔍 [fzf Integration](docs/fzf.md)
+- 🔍 [FZF Integration](docs/fzf.md)
+- 🚀 [Starship Prompt](docs/starship.md)
+- ℹ️ [Fastfetch System Info](docs/fastfetch.md)
+- 📝 [Neovim / LazyVim](docs/nvim.md)
 - ⌨️ [Keybindings Reference](docs/keybindings.md)
 - 🔌 [Plugins & Fisher](docs/plugins.md)
 
@@ -95,13 +107,14 @@ Start here if you want to understand *why* things are configured this way:
 2. Install dependencies (example):
 
    ```bash
-   sudo apt install kitty fish fzf bat eza ripgrep fd-find
+   sudo apt install kitty fish fzf bat eza ripgrep fd-find zoxide atuin fastfetch starship neovim
    ```
 
 3. Copy configs into place:
 
    ```bash
    cp -r .config/* ~/.config/
+   cp starship.toml ~/.config/
    ```
 
 4. Set fish as default shell (optional):

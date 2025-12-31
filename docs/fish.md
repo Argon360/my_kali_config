@@ -1,4 +1,3 @@
-
 # Fish Shell Configuration
 
 ## Purpose
@@ -13,42 +12,73 @@ fish handles:
 
 ## Startup Tools
 
-Initialized conditionally:
-- starship (prompt)
-- atuin (history)
-- zoxide (directory jumping)
-- fzf (selection engine)
-- fastfetch (startup info)
-
-Each tool is only loaded if present.
+Initialized conditionally (only if installed):
+- **starship**: Prompt (Source: `starship.toml`)
+- **atuin**: Shell history sync & search
+- **zoxide**: Smarter `cd`
+- **fastfetch**: System info on login (Source: `fastfetch/config.jsonc`)
+- **thefuck**: Command correction
 
 ---
 
 ## Aliases
 
-Aliases are grouped logically:
-- Filesystem
-- System / Networking
-- Git
-- Development
-- Quality-of-life
+Aliases are strictly categorized to avoid clutter.
 
-No alias overrides critical shell behavior.
+### 📂 Filesystem
+- `ls`, `ll`, `la`: mapped to **eza** (modern ls replacement) with icons and git integration.
+- `lt`, `tree1`, `tree2`: Tree views.
+- `x`: Universal extract (unp).
+- `du`, `duh`: mapped to **dust**.
+
+### 🛠️ System / Infra
+- `top`: mapped to **btop**.
+- `ipinfo`, `routes`, `ports`, `myip`: Networking shortcuts.
+- `sysup`: Full system update (apt update/upgrade/autoremove).
+
+### 🧭 Navigation
+- `..`, `...`: Directory traversal.
+- `home`: Go to `~`.
+
+### 🐙 Git (The "g" Suite)
+A comprehensive set of git abbreviations is provided, favoring explicit naming over cryptic 2-letter combos.
+- `gs`, `gl`, `gd`: Status, Log, Diff.
+- `ga`, `gc`, `gp`: Add, Commit, Push.
+- `gsw`, `grb`: Switch, Rebase.
+- `gunstage`, `gundo`: Safety undo commands.
+
+### 💻 Neovim
+- `nv`: Main editor.
+- `cf`: Edit fish config.
+- `cn`: Edit nvim config.
 
 ---
 
 ## Custom Functions
 
-### `__fzf_cd`
-Interactive directory change using fzf.
+These functions encapsulate complex workflows to prevent mistakes.
 
-### `__fzf_kill`
-Interactive process selection and termination.
+### `workstart`
+- Shows git status and recent log.
+- Used when starting a coding session to gain context.
 
-### Workflow Helpers
-- `workstart`
-- `workend`
-- `gpushsafe`
-- `weeklyreset`
+### `workend`
+- Checks for uncommitted changes.
+- Prompts for confirmation before you walk away.
 
-Each function is defensive and prompts before destructive actions.
+### `gpushsafe`
+- Shows destination branch and status.
+- **Requires interactive confirmation (y/N)** before pushing.
+- Prevents accidental pushes to `main` or wrong branches.
+
+### `weeklyreset`
+- Runs system updates (`sysup`).
+- Prunes remote git branches.
+- Deletes merged local branches.
+
+---
+
+## Shell Management
+
+- `reload`: Sources `config.fish`.
+- `reloadall`: Reloads fish, kitty, and fastfetch.

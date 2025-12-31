@@ -38,15 +38,6 @@ if type -q delta
     set -gx GIT_PAGER delta
 end
 
-# FZF Defaults
-set -gx FZF_DEFAULT_OPTS "
---height=40%
---layout=reverse
---border
---inline-info
---preview 'bat --style=numbers --color=always --line-range :500 {}'
---preview-window=right:60%
-"
 
 # -----------------------------------------------------------------------------
 #  Interactive Session Configuration
@@ -69,24 +60,6 @@ if status is-interactive
         zoxide init fish | source
     end
 
-    if type -q fzf
-        fzf --fish | source
-        fish_default_key_bindings
-
-        bind \cf fzf-file-widget
-        bind \cr fzf-history-widget
-
-        function __fzf_cd
-            set dir (find . -type d 2>/dev/null | fzf)
-            test -n "$dir"; and cd "$dir"
-        end
-        bind \cd __fzf_cd
-
-        function __fzf_kill
-            ps -ef | sed 1d | fzf | awk '{print $2}' | xargs -r kill -9
-        end
-        bind \ck __fzf_kill
-    end
 
     # -------------------------------------------------------------------------
     #  Startup Commands
