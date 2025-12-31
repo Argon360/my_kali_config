@@ -98,6 +98,35 @@ Start here if you want to understand *why* things are configured this way:
 
 ## 🚀 Getting Started
 
+### ⚡ Automated Setup (Recommended)
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/Argon360/my_kali_config.git ~/.config/my-dotfiles
+   cd ~/.config/my-dotfiles
+   ```
+   *(Note: You can clone this anywhere, but `~/.config/my-dotfiles` is a good spot)*
+
+2. Run the installer:
+
+   ```bash
+   ./setup.sh
+   ```
+   This script will:
+   - Detect your distro (Debian/Kali preferred)
+   - Install required packages (`kitty`, `fish`, `fzf`, `bat`, `eza`, `zoxide`, `atuin`, etc.)
+   - Link configuration files to `~/.config/`
+   - Set up `fisher` plugins
+
+3. Restart your terminal.
+
+---
+
+### 🛠️ Manual Setup
+
+If you prefer to do things yourself:
+
 1. Clone the repository:
 
    ```bash
@@ -107,13 +136,15 @@ Start here if you want to understand *why* things are configured this way:
 2. Install dependencies (example):
 
    ```bash
-   sudo apt install kitty fish fzf bat eza ripgrep fd-find zoxide atuin fastfetch starship neovim
+   sudo apt install kitty fish fzf bat ripgrep fd-find zoxide neovim
+   # Install starship, atuin, eza, fastfetch as needed
    ```
 
 3. Copy configs into place:
 
    ```bash
-   cp -r .config/* ~/.config/
+   # Copy specific configurations
+   cp -r kitty fish nvim fastfetch ~/.config/
    cp starship.toml ~/.config/
    ```
 
