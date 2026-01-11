@@ -138,4 +138,4 @@ else
 fi
 
 alias reload='source ~/.zshrc'; alias restart='exec zsh'
-alias kreload='killall kitty; kitty &; disown'
+alias kreload='killall kitty; kitty &; disown'alias lg="lazygit"
