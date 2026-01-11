@@ -1,0 +1,7 @@
+# Ignore Zsh Plugins (Installed via setup.sh)
+zsh/plugins/
+
+# Ignore backups
+config_backup_*
+*.bkp
+*.bak

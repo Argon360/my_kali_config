@@ -10,7 +10,7 @@
 #
 #  1. Installs System Dependencies
 #  2. Copies/Deploys configurations to ~/.config
-#  3. Configures Fish shell and Starship
+#  3. Configures Fish & Zsh shells
 #
 # ==============================================================================
 
@@ -51,6 +51,7 @@ install_packages() {
         build-essential
         kitty
         fish
+        zsh
         fzf
         bat
         ripgrep
@@ -101,18 +102,13 @@ install_externals() {
 deploy_configs() {
     log "Deploying configurations..."
 
-    # Check if we are running FROM ~/.config (i.e. user cloned directly into .config)
-    if [ "$SCRIPT_DIR" == "$TARGET_DIR" ]; then
-        success "Script is running from ~/.config. Files are already in place."
-        return
-    fi
-
     mkdir -p "$TARGET_DIR"
 
-    # Files and Directories to install
+    # Files and Directories to install/copy
     ITEMS=(
         "kitty"
         "fish"
+        "zsh"
         "fastfetch"
         "nvim"
         "bat"
@@ -127,21 +123,19 @@ deploy_configs() {
         SRC="$SCRIPT_DIR/$item"
         DEST="$TARGET_DIR/$item"
 
+        # Check if source exists in the repo folder we are running from
         if [ -e "$SRC" ]; then
-            # If destination exists, backup
-            if [ -e "$DEST" ]; then
-                warn "Backing up existing $item..."
-                mkdir -p "$BACKUP_DIR"
-                mv "$DEST" "$BACKUP_DIR/"
+            # If we are NOT running directly inside ~/.config, copy files
+            if [ "$SCRIPT_DIR" != "$TARGET_DIR" ]; then
+                if [ -e "$DEST" ]; then
+                    warn "Backing up existing $item..."
+                    mkdir -p "$BACKUP_DIR"
+                    mv "$DEST" "$BACKUP_DIR/"
+                fi
+                log "Copying $item to $TARGET_DIR..."
+                cp -r "$SRC" "$DEST"
             fi
-            
-            log "Copying $item to $TARGET_DIR..."
-            cp -r "$SRC" "$DEST"
-            success "Installed $item"
-        else
-            # Only warn if it's a directory we expected to exist, silence otherwise for optional files
-            # But here we assume the repo structure is consistent.
-            :
+            success "Deployed $item"
         fi
     done
 }
@@ -160,6 +154,94 @@ setup_fish() {
     fi
 }
 
+# --- 5. Zsh Setup ---
+setup_zsh() {
+    log "Configuring Zsh..."
+    ZSH_PLUGIN_DIR="$HOME/.config/zsh/plugins"
+    mkdir -p "$ZSH_PLUGIN_DIR"
+
+    # Clone Plugins
+    clone_plugin() {
+        REPO=$1
+        DEST=$2
+        if [ ! -d "$DEST" ]; then
+            log "Cloning $REPO..."
+            git clone --depth=1 "$REPO" "$DEST"
+        else
+            success "$(basename $DEST) already installed"
+        fi
+    }
+
+    clone_plugin "https://github.com/romkatv/powerlevel10k.git" "$ZSH_PLUGIN_DIR/powerlevel10k"
+    clone_plugin "https://github.com/zsh-users/zsh-syntax-highlighting.git" "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting"
+    clone_plugin "https://github.com/zsh-users/zsh-autosuggestions.git" "$ZSH_PLUGIN_DIR/zsh-autosuggestions"
+    clone_plugin "https://github.com/zsh-users/zsh-history-substring-search.git" "$ZSH_PLUGIN_DIR/zsh-history-substring-search"
+    clone_plugin "https://github.com/Aloxaf/fzf-tab" "$ZSH_PLUGIN_DIR/fzf-tab"
+
+    # Setup .zshrc in home directory
+    ZSHRC_CONTENT="# =============================================================================
+# ZSH Main Entry Point (Auto-Generated)
+# =============================================================================
+
+# Safety: only interactive shells
+[[ -o interactive ]] || return
+
+# -----------------------------------------------------------------------------
+# 1. Environment Variables
+# -----------------------------------------------------------------------------
+export EDITOR=nvim
+export VISUAL=nvim
+export PATH=\"$HOME/.local/bin:$HOME/go/bin:$PATH"
+
+# Base directory for modular config
+ZSH_CONFIG="$HOME/.config/zsh"
+
+# -----------------------------------------------------------------------------
+# 2. Load Modular Configs
+# -----------------------------------------------------------------------------
+# Load modules in explicit order to handle dependencies
+
+# Core
+[[ -f "$ZSH_CONFIG/00-env.zsh" ]] && source "$ZSH_CONFIG/00-env.zsh"
+[[ -f "$ZSH_CONFIG/10-tools.zsh" ]] && source "$ZSH_CONFIG/10-tools.zsh"
+[[ -f "$ZSH_CONFIG/15-options.zsh" ]] && source "$ZSH_CONFIG/15-options.zsh"
+
+# Behavior
+[[ -f "$ZSH_CONFIG/30-history.zsh" ]] && source "$ZSH_CONFIG/30-history.zsh"
+[[ -f "$ZSH_CONFIG/40-navigation.zsh" ]] && source "$ZSH_CONFIG/40-navigation.zsh"
+[[ -f "$ZSH_CONFIG/50-bindings.zsh" ]] && source "$ZSH_CONFIG/50-bindings.zsh"
+[[ -f "$ZSH_CONFIG/60-aliases.zsh" ]] && source "$ZSH_CONFIG/60-aliases.zsh"
+[[ -f "$ZSH_CONFIG/70-extras.zsh" ]] && source "$ZSH_CONFIG/70-extras.zsh"
+[[ -f "$ZSH_CONFIG/80-completion.zsh" ]] && source "$ZSH_CONFIG/80-completion.zsh"
+
+# Plugins
+[[ -f "$ZSH_CONFIG/90-plugins.zsh" ]] && source "$ZSH_CONFIG/90-plugins.zsh"
+
+# -----------------------------------------------------------------------------
+# 3. Prompt
+# -----------------------------------------------------------------------------
+if command -v starship >/dev/null; then
+  eval "$(starship init zsh)"
+fi
+
+# -----------------------------------------------------------------------------
+# 4. Startup
+# -----------------------------------------------------------------------------
+if command -v fastfetch >/dev/null; then
+  fastfetch
+fi
+"
+    
+    # Write .zshrc if it doesn't exist or if forced
+    if [ ! -f "$HOME/.zshrc" ] || grep -q "Auto-Generated" "$HOME/.zshrc"; then
+        echo "$ZSHRC_CONTENT" > "$HOME/.zshrc"
+        success "Updated ~/.zshrc"
+    else
+        warn "~/.zshrc exists and is not auto-generated. Skipping overwrite."
+        warn "Please manually verify it sources ~/.config/zsh files."
+    fi
+}
+
 # --- Main ---
 main() {
     log "Starting Setup..."
@@ -169,6 +251,7 @@ main() {
     install_externals
     deploy_configs
     setup_fish
+    setup_zsh
 
     success "Setup Complete!"
     if [ -d "$BACKUP_DIR" ]; then
