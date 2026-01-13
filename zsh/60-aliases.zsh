@@ -15,7 +15,21 @@ if command -v fzf >/dev/null; then
   bindkey '^R' fzf-history-widget
   
   fzf-cd-widget() { local dir; dir=$(find . -type d 2>/dev/null | fzf); [[ -n $dir ]] && cd "$dir"; }
-  zle -N fzf-cd-widget; bindkey '^D' fzf-cd-widget
+  zle -N fzf-cd-widget; bindkey '^[c' fzf-cd-widget
+
+  fzf-kill-widget() {
+      local pid
+      if [ "$UID" != "0" ]; then
+          pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+      else
+          pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+      fi
+      if [ "x$pid" != "x" ]; then
+          echo $pid | xargs kill -${1:-9}
+      fi
+      zle reset-prompt
+  }
+  zle -N fzf-kill-widget; bindkey '^[k' fzf-kill-widget
 fi
 
 # -----------------------------------------------------------------------------

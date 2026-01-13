@@ -9,7 +9,6 @@
 zsh/plugins/
 
 # Terminal & Shell Specifics
-ghostty/
 thefuck/
 powershell/
 gnome-xdg-terminals.list
@@ -117,3 +116,6 @@ qterminal.org/
 qt6ct/
 elephant/
 uncover/
+# OBS Studio
+obs-studio/logs/
+obs-studio/profiler_data/
