@@ -132,3 +132,8 @@ uncover/
 # OBS Studio
 obs-studio/logs/
 obs-studio/profiler_data/
+
+# Other Applications
+Motrix/
+ghidra/
+xsettingsd/
