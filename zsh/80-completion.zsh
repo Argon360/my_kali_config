@@ -10,4 +10,4 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Menu selection (like Fish)
-zstyle ':completion:*' menu select
+# zstyle ':completion:*' menu select

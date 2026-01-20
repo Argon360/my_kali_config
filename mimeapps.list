@@ -1,12 +1,7 @@
+
 [Default Applications]
-text/html=vivaldi-stable.desktop
 x-scheme-handler/http=vivaldi-stable.desktop
 x-scheme-handler/https=vivaldi-stable.desktop
-x-scheme-handler/about=vivaldi-stable.desktop
-x-scheme-handler/unknown=vivaldi-stable.desktop
-application/x-compressed-tar=engrampa.desktop
-inode/directory=org.gnome.Nautilus.desktop
-application/x-directory=org.gnome.Nautilus.desktop
-
-[Added Associations]
-application/x-compressed-tar=engrampa.desktop;
+text/html=vivaldi-stable.desktop
+x-scheme-handler/mailto=vivaldi-stable.desktop
+x-scheme-handler/com.todoist=todoist.desktop

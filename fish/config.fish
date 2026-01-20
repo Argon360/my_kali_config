@@ -11,13 +11,12 @@
 set -g fish_greeting
 
 # Path Configuration
-# Add Linuxbrew to path if it exists
 if test -d /home/linuxbrew/.linuxbrew/bin
     fish_add_path /home/linuxbrew/.linuxbrew/bin
 end
 
 # Append Go bin to path
-fish_add_path --path ~/go/bin
+fish_add_path --path --append ~/go/bin
 
 # Default editors
 set -Ux EDITOR nvim
@@ -27,14 +26,14 @@ set -Ux VISUAL nvim
 #  Integration Configuration (Bat, Delta, FZF)
 # -----------------------------------------------------------------------------
 
-# Bat (Better Cat): Syntax highlighting for file viewing
+# Bat (Better Cat)
 if type -q bat
     set -gx BAT_THEME Dracula
     set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
     alias cat='bat'
 end
 
-# Delta (Better Diff): Syntax highlighting for git diffs
+# Delta (Better Diff)
 if type -q delta
     set -gx GIT_PAGER delta
 end
@@ -43,8 +42,6 @@ end
 # -----------------------------------------------------------------------------
 #  Interactive Session Configuration
 # -----------------------------------------------------------------------------
-# Commands in this block only run when the user is actually typing at the terminal,
-# avoiding unnecessary overhead for scripts.
 if status is-interactive
 
     # -------------------------------------------------------------------------
@@ -209,7 +206,6 @@ if status is-interactive
     #  Functions (High-Leverage Productivity)
     # -------------------------------------------------------------------------
 
-    # workstart: Prints a summary of the current repo status to get oriented.
     function workstart
         echo "🔍 Repository overview"
         git status -sb
@@ -217,7 +213,6 @@ if status is-interactive
         git log --oneline --decorate -5
     end
 
-    # workend: Checks status and prompts to ensure everything is committed before leaving.
     function workend
         echo "📦 Final status check"
         git status
@@ -226,7 +221,6 @@ if status is-interactive
         test "$confirm" = y; or echo "⚠️  You still have work pending"
     end
 
-    # gpushsafe: A safer git push that asks for confirmation and shows the branch name.
     function gpushsafe
         echo "📌 Branch: "(git branch --show-current)
         git status -sb
@@ -258,7 +252,6 @@ if status is-interactive
         git reset --hard
     end
 
-    # weeklyreset: Performs system updates and cleans up merged git branches.
     function weeklyreset
         echo "🧹 Weekly hygiene"
         sysup

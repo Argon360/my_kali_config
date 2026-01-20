@@ -9,6 +9,7 @@
 zsh/plugins/
 
 # Terminal & Shell Specifics
+ghostty/
 thefuck/
 powershell/
 gnome-xdg-terminals.list
@@ -21,6 +22,8 @@ config_backup_*
 *.bkp
 *.bak
 trashrc
+*.log
+*.old
 
 # ------------------------------------------------------------------------------
 #  3. Browsers & Internet
@@ -31,6 +34,7 @@ chromium/
 chromium-flags.conf
 Google/
 transmission/
+vivaldi/
 
 # ------------------------------------------------------------------------------
 #  4. Development & Security Tools
@@ -57,27 +61,22 @@ OSRFramework/
 # KDE / Plasma
 kde.org/
 kdeconnect/
-kactivitymanagerd*
-kconf_updaterc
-kded*
-kdeglobals
-kglobalshortcutsrc
-kmenueditrc
-ktimezonedrc
-kwin*
-plasma-*
-plasmashellrc
-bluedevilglobalrc
-powermanagementprofilesrc
-Trolltech.conf
-gtkrc*
+kactivitymanagerdrc
 dolphinrc
+KDE/
+session/
+kwinoutputconfig.json
+bluedevil*
+kconf_updaterc
+kscreen/
 
 # GTK / Gnome
 gtk-3.0/
+gtk-4.0/
 dconf/
 menus/
 background
+xsettingsd/
 
 # System Configuration
 systemd/
@@ -90,6 +89,9 @@ uwsm/
 ibus/
 fcitx5/
 .gsd-keyboard.settings-ported
+libaccounts-glib/
+QtProject.conf
+Trolltech.conf
 
 # Audio / PulseAudio
 pulse/
@@ -114,6 +116,7 @@ GIMP/
 vlc/
 gqrx/
 hyprland-preview-share-picker/
+obs-studio/
 
 # Communication & Misc
 discord/
@@ -129,11 +132,4 @@ qterminal.org/
 qt6ct/
 elephant/
 uncover/
-# OBS Studio
-obs-studio/logs/
-obs-studio/profiler_data/
-
-# Other Applications
-Motrix/
-ghidra/
-xsettingsd/
+Todoist/

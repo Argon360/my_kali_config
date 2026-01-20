@@ -1,22 +1,16 @@
 #!/bin/bash
 
 # ==============================================================================
-#  Argon360 Universal System Setup
+#  My Kali / Linux Terminal Configuration - Automated Installer
 # ==============================================================================
 #
-#  This script is the master key to replicating the Argon360 environment.
-#  It combines system provisioning (installing packages, languages, tools)
-#  with dotfiles management (safely deploying configs).
+#  This script installs the environment using the files present in this directory.
+#  It does NOT clone from git. It assumes you have downloaded/cloned this
+#  repository and are running the script from within it.
 #
-#  Features:
-#  1. Installs Core Dependencies, Security Tools, and Dev Libraries.
-#  2. Sets up Rust (Cargo) and Go.
-#  3. Installs modern CLI tools (Walker, Atuin, Lazygit, etc.).
-#  4. Safely deploys configurations to ~/.config (with backups).
-#  5. Configures Zsh (plugins + auto-generated .zshrc) and Fish.
-#
-#  Usage:
-#    Run this script from the root of your dotfiles directory.
+#  1. Installs System Dependencies
+#  2. Copies/Deploys configurations to ~/.config
+#  3. Configures Fish & Zsh shells
 #
 # ==============================================================================
 
@@ -44,163 +38,73 @@ if [ "$EUID" -eq 0 ]; then
     error "Please run this script as a normal user (not root). Sudo will be requested when needed."
 fi
 
-# ==============================================================================
-# 1. System Updates & Core Packages
-# ==============================================================================
+# --- 1. System Updates & Package Installation ---
 install_packages() {
-    log "Updating package lists and upgrading system..."
-    sudo apt update -y && sudo apt upgrade -y
+    log "Updating package lists..."
+    sudo apt update -y
 
-    # Combined list from all setups
+    # Core Utils & Shell
     PACKAGES=(
-        # Core Utilities
         git
         curl
         wget
         build-essential
-        cmake
-        pkg-config
-        unzip
-        
-        # Shells & Terminal
-        zsh
-        fish
         kitty
-        tmux
-        
-        # Modern CLI Tools
+        fish
+        zsh
         fzf
         bat
         ripgrep
         fd-find
         zoxide
+        neovim
         eza
         fastfetch
-        btop
-        neovim
-        
-        # Security & Networking (Kali profile)
-        wireshark
-        nmap
-        
-        # Apps
-        vlc
-        
-        # Development Libraries (Required for compiling tools like Walker)
-        libgtk-4-dev
-        libgtk-layer-shell-dev
-        libpoppler-glib-dev
-        protobuf-compiler
+        atuin
     )
 
-    log "Installing APT packages..."
-    # Install in a loop to catch individual failures but keep going
+    log "Installing apt packages..."
     for pkg in "${PACKAGES[@]}"; do
         if sudo apt install -y "$pkg" 2>/dev/null; then
             : # Success
         else
-            warn "Could not install $pkg via apt. It might need manual installation or is already installed."
+            warn "Could not install $pkg via apt. It might need manual installation."
         fi
     done
 
-    # Fix symlinks for Debian/Ubuntu naming quirks
-    fix_symlinks
-}
-
-fix_symlinks() {
-    log "Fixing 'bat' and 'fd' naming quirks..."
-    mkdir -p ~/.local/bin
-    
+    # Fix bat -> batcat symlink
     if command -v batcat &> /dev/null && ! command -v bat &> /dev/null; then
+        log "Linking batcat to bat..."
+        mkdir -p ~/.local/bin
         ln -sf "$(command -v batcat)" ~/.local/bin/bat
-        success "Linked batcat -> bat"
     fi
 
+    # Fix fdfind -> fd symlink
     if command -v fdfind &> /dev/null && ! command -v fd &> /dev/null; then
+        log "Linking fdfind to fd..."
+        mkdir -p ~/.local/bin
         ln -sf "$(command -v fdfind)" ~/.local/bin/fd
-        success "Linked fdfind -> fd"
     fi
 }
 
-# ==============================================================================
-# 2. Language Environments (Rust & Go)
-# ==============================================================================
-install_languages() {
-    # Rust / Cargo
-    if ! command -v cargo &> /dev/null; then
-        log "Installing Rust (Cargo)..."
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-        source "$HOME/.cargo/env"
-    else
-        success "Rust/Cargo is already installed."
-    fi
-
-    # Go
-    if ! command -v go &> /dev/null; then
-        log "Go not found. Attempting to install via apt..."
-        if sudo apt install -y golang-go; then
-             success "Go installed via apt."
-        else
-             warn "Failed to install Go. Please install manually."
-        fi
-    else
-        success "Go is already installed."
-    fi
-}
-
-# ==============================================================================
-# 3. External Tools (Compiled/Scripted)
-# ==============================================================================
+# --- 2. External Tools Installation ---
 install_externals() {
-    log "Installing external tools..."
-
     # Starship
     if ! command -v starship &> /dev/null; then
         log "Installing Starship..."
         curl -sS https://starship.rs/install.sh | sh -s -- -y
     else
-        success "Starship already installed."
-    fi
-
-    # Atuin (Shell History)
-    if ! command -v atuin &> /dev/null; then
-        log "Installing Atuin..."
-        if command -v cargo &> /dev/null; then
-            cargo install atuin
-        else
-            bash <(curl --proto '=https' --tlsv1.2 -sSf https://setup.atuin.sh)
-        fi
-    fi
-
-    # Lazygit
-    if ! command -v lazygit &> /dev/null; then
-        log "Installing Lazygit..."
-        if command -v go &> /dev/null; then
-            go install github.com/jesseduffield/lazygit@latest
-        else
-            warn "Go not found. Skipping Lazygit."
-        fi
-    fi
-
-    # Walker (App Launcher)
-    if ! command -v walker &> /dev/null; then
-        log "Installing Walker (this may take a while)..."
-        if command -v cargo &> /dev/null; then
-            cargo install walker
-        else
-            warn "Cargo not found. Skipping Walker."
-        fi
+        success "Starship already installed"
     fi
 }
 
-# ==============================================================================
-# 4. Deploy Configurations (Dotfiles)
-# ==============================================================================
+# --- 3. Deploy Configurations ---
 deploy_configs() {
     log "Deploying configurations..."
+
     mkdir -p "$TARGET_DIR"
 
-    # List of config folders to look for in the script's directory
+    # Files and Directories to install/copy
     ITEMS=(
         "kitty"
         "fish"
@@ -213,56 +117,50 @@ deploy_configs() {
         "ghostty"
         "lazygit"
         "starship.toml"
-        "hypr"
-        "waybar"
     )
 
     for item in "${ITEMS[@]}"; do
         SRC="$SCRIPT_DIR/$item"
         DEST="$TARGET_DIR/$item"
 
+        # Check if source exists in the repo folder we are running from
         if [ -e "$SRC" ]; then
-            # Safety: Don't copy if we are running inside ~/.config (avoid self-overwrite loop)
+            # If we are NOT running directly inside ~/.config, copy files
             if [ "$SCRIPT_DIR" != "$TARGET_DIR" ]; then
                 if [ -e "$DEST" ]; then
                     warn "Backing up existing $item..."
                     mkdir -p "$BACKUP_DIR"
                     mv "$DEST" "$BACKUP_DIR/"
                 fi
-                log "Copying $item..."
+                log "Copying $item to $TARGET_DIR..."
                 cp -r "$SRC" "$DEST"
             fi
             success "Deployed $item"
-        else
-            # Only warn if we really expected it (optional)
-            # warn "Source $item not found in $SCRIPT_DIR"
-            true
         fi
     done
 }
 
-# ==============================================================================
-# 5. Shell Setup (Fish & Zsh)
-# ==============================================================================
+# --- 4. Fish Setup ---
 setup_fish() {
     log "Configuring Fish Shell..."
     if command -v fish &> /dev/null; then
-        # Install Fisher plugin manager
+        # Install Fisher
         fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher" || warn "Fisher install failed/skipped"
         
-        # Update plugins if config exists
+        # Update plugins
         if [ -f "$TARGET_DIR/fish/fish_plugins" ]; then
             fish -c "fisher update"
         fi
     fi
 }
 
+# --- 5. Zsh Setup ---
 setup_zsh() {
     log "Configuring Zsh..."
     ZSH_PLUGIN_DIR="$HOME/.config/zsh/plugins"
     mkdir -p "$ZSH_PLUGIN_DIR"
 
-    # Helper to clone plugins
+    # Clone Plugins
     clone_plugin() {
         REPO=$1
         DEST=$2
@@ -274,15 +172,13 @@ setup_zsh() {
         fi
     }
 
-    # Install Core Zsh Plugins
     clone_plugin "https://github.com/romkatv/powerlevel10k.git" "$ZSH_PLUGIN_DIR/powerlevel10k"
     clone_plugin "https://github.com/zsh-users/zsh-syntax-highlighting.git" "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting"
     clone_plugin "https://github.com/zsh-users/zsh-autosuggestions.git" "$ZSH_PLUGIN_DIR/zsh-autosuggestions"
     clone_plugin "https://github.com/zsh-users/zsh-history-substring-search.git" "$ZSH_PLUGIN_DIR/zsh-history-substring-search"
     clone_plugin "https://github.com/Aloxaf/fzf-tab" "$ZSH_PLUGIN_DIR/fzf-tab"
 
-    # Auto-Generate .zshrc
-    # This ensures the user's .zshrc always points to our modular config
+    # Setup .zshrc in home directory
     ZSHRC_CONTENT="# =============================================================================
 # ZSH Main Entry Point (Auto-Generated)
 # =============================================================================
@@ -295,58 +191,37 @@ setup_zsh() {
 # -----------------------------------------------------------------------------
 export EDITOR=nvim
 export VISUAL=nvim
-export PATH=\"
-$HOME/.local/bin:$HOME/go/bin:$PATH\"
+export PATH=\"$HOME/.local/bin:$HOME/go/bin:$PATH"
 
 # Base directory for modular config
-ZSH_CONFIG=\"
-$HOME/.config/zsh\"
+ZSH_CONFIG="$HOME/.config/zsh"
 
 # -----------------------------------------------------------------------------
 # 2. Load Modular Configs
 # -----------------------------------------------------------------------------
+# Load modules in explicit order to handle dependencies
+
 # Core
-[[ -f "\"
-$ZSH_CONFIG/00-env.zsh\"" ]] && source "\"
-$ZSH_CONFIG/00-env.zsh\""
-[[ -f "\"
-$ZSH_CONFIG/10-tools.zsh\"" ]] && source "\"
-$ZSH_CONFIG/10-tools.zsh\""
-[[ -f "\"
-$ZSH_CONFIG/15-options.zsh\"" ]] && source "\"
-$ZSH_CONFIG/15-options.zsh\""
+[[ -f "$ZSH_CONFIG/00-env.zsh" ]] && source "$ZSH_CONFIG/00-env.zsh"
+[[ -f "$ZSH_CONFIG/10-tools.zsh" ]] && source "$ZSH_CONFIG/10-tools.zsh"
+[[ -f "$ZSH_CONFIG/15-options.zsh" ]] && source "$ZSH_CONFIG/15-options.zsh"
 
 # Behavior
-[[ -f "\"
-$ZSH_CONFIG/30-history.zsh\"" ]] && source "\"
-$ZSH_CONFIG/30-history.zsh\""
-[[ -f "\"
-$ZSH_CONFIG/40-navigation.zsh\"" ]] && source "\"
-$ZSH_CONFIG/40-navigation.zsh\""
-[[ -f "\"
-$ZSH_CONFIG/50-bindings.zsh\"" ]] && source "\"
-$ZSH_CONFIG/50-bindings.zsh\""
-[[ -f "\"
-$ZSH_CONFIG/60-aliases.zsh\"" ]] && source "\"
-$ZSH_CONFIG/60-aliases.zsh\""
-[[ -f "\"
-$ZSH_CONFIG/70-extras.zsh\"" ]] && source "\"
-$ZSH_CONFIG/70-extras.zsh\""
-[[ -f "\"
-$ZSH_CONFIG/80-completion.zsh\"" ]] && source "\"
-$ZSH_CONFIG/80-completion.zsh\""
+[[ -f "$ZSH_CONFIG/30-history.zsh" ]] && source "$ZSH_CONFIG/30-history.zsh"
+[[ -f "$ZSH_CONFIG/40-navigation.zsh" ]] && source "$ZSH_CONFIG/40-navigation.zsh"
+[[ -f "$ZSH_CONFIG/50-bindings.zsh" ]] && source "$ZSH_CONFIG/50-bindings.zsh"
+[[ -f "$ZSH_CONFIG/60-aliases.zsh" ]] && source "$ZSH_CONFIG/60-aliases.zsh"
+[[ -f "$ZSH_CONFIG/70-extras.zsh" ]] && source "$ZSH_CONFIG/70-extras.zsh"
+[[ -f "$ZSH_CONFIG/80-completion.zsh" ]] && source "$ZSH_CONFIG/80-completion.zsh"
 
 # Plugins
-[[ -f "\"
-$ZSH_CONFIG/90-plugins.zsh\"" ]] && source "\"
-$ZSH_CONFIG/90-plugins.zsh\""
+[[ -f "$ZSH_CONFIG/90-plugins.zsh" ]] && source "$ZSH_CONFIG/90-plugins.zsh"
 
 # -----------------------------------------------------------------------------
 # 3. Prompt
 # -----------------------------------------------------------------------------
 if command -v starship >/dev/null; then
-  eval "\"
-$(starship init zsh)\n"
+  eval "$(starship init zsh)"
 fi
 
 # -----------------------------------------------------------------------------
@@ -356,7 +231,8 @@ if command -v fastfetch >/dev/null; then
   fastfetch
 fi
 "
-    # Write .zshrc if it doesn't exist or if it's our own auto-generated one
+    
+    # Write .zshrc if it doesn't exist or if forced
     if [ ! -f "$HOME/.zshrc" ] || grep -q "Auto-Generated" "$HOME/.zshrc"; then
         echo "$ZSHRC_CONTENT" > "$HOME/.zshrc"
         success "Updated ~/.zshrc"
@@ -366,37 +242,22 @@ fi
     fi
 }
 
-set_default_shell() {
-    if command -v zsh &> /dev/null; then
-        if [ "$SHELL" != "$(which zsh)" ]; then
-            log "Changing default shell to Zsh..."
-            chsh -s "$(which zsh)"
-        fi
-    fi
-}
-
-# ==============================================================================
-# Main Execution
-# ==============================================================================
+# --- Main ---
 main() {
-    log "Starting Argon360 System Setup..."
+    log "Starting Setup..."
     log "Source Dir: $SCRIPT_DIR"
     
     install_packages
-    install_languages
     install_externals
     deploy_configs
     setup_fish
     setup_zsh
-    set_default_shell
 
-    echo -e "\n${GREEN}==========================================${NC}"
-    echo -e "${GREEN}  Setup Complete!  ${NC}"
-    echo -e "${GREEN}==========================================${NC}"
+    success "Setup Complete!"
     if [ -d "$BACKUP_DIR" ]; then
         log "Old configs backed up to: $BACKUP_DIR"
     fi
-    log "Please restart your terminal or log out/in."
+    log "Please restart your terminal."
 }
 
 main

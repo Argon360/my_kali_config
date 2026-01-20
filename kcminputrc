@@ -1,0 +1,8 @@
+[Libinput][1267][12930][ELAN0307:00 04F3:3282 Touchpad]
+NaturalScroll=false
+
+[Libinput][12994][26145][ArcticFox-BTM Mouse]
+NaturalScroll=false
+
+[Libinput][3690][704][dakai PS/2+USB Keyboard Consumer Control]
+NaturalScroll=true

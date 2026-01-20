@@ -1,0 +1,5 @@
+[Favorites-org.kde.plasma.kickoff.favorites.instance-4-0e8470b4-3903-45f6-be76-0ebd06b6d4bd]
+ordering=systemsettings.desktop,org.kde.konsole.desktop,root-terminal.desktop,org.kde.dolphin.desktop,org.kde.kate.desktop,preferred://browser,kali-www.desktop,kali-tools.desktop,kali-docs.desktop,kali-bugs.desktop,offsec-training.desktop,exploit-database.desktop,vulnhub.desktop
+
+[Favorites-org.kde.plasma.kickoff.favorites.instance-4-global]
+ordering=systemsettings.desktop,org.kde.konsole.desktop,root-terminal.desktop,org.kde.dolphin.desktop,org.kde.kate.desktop,preferred://browser,kali-www.desktop,kali-tools.desktop,kali-docs.desktop,kali-bugs.desktop,offsec-training.desktop,exploit-database.desktop,vulnhub.desktop

@@ -15,21 +15,7 @@ if command -v fzf >/dev/null; then
   bindkey '^R' fzf-history-widget
   
   fzf-cd-widget() { local dir; dir=$(find . -type d 2>/dev/null | fzf); [[ -n $dir ]] && cd "$dir"; }
-  zle -N fzf-cd-widget; bindkey '^[c' fzf-cd-widget
-
-  fzf-kill-widget() {
-      local pid
-      if [ "$UID" != "0" ]; then
-          pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
-      else
-          pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
-      fi
-      if [ "x$pid" != "x" ]; then
-          echo $pid | xargs kill -${1:-9}
-      fi
-      zle reset-prompt
-  }
-  zle -N fzf-kill-widget; bindkey '^[k' fzf-kill-widget
+  zle -N fzf-cd-widget; bindkey '^D' fzf-cd-widget
 fi
 
 # -----------------------------------------------------------------------------
@@ -55,7 +41,7 @@ alias fcount='find . -type f | wc -l'
 alias dcount='find . -type d | wc -l'
 
 # System / Infra
-command -v btop >/dev/null && alias top='btop --utf-force'
+alias top='btop --utf-force'
 alias mem='free -h'
 alias cpu='lscpu | less'
 alias ipinfo='ip -c a'
@@ -152,4 +138,56 @@ else
 fi
 
 alias reload='source ~/.zshrc'; alias restart='exec zsh'
-alias kreload='killall kitty; kitty &; disown'alias lg="lazygit"
+alias kreload='killall kitty; kitty &; disown'
+
+# Todoist CLI
+alias todo='todoist-cli'
+alias td='todoist-cli'
+alias tdl='todoist-cli list'
+alias tda='todoist-cli add'
+alias tdc='todoist-cli close'
+alias tdd='todoist-cli delete'
+alias tds='todoist-cli sync'
+alias tdq='todoist-cli quick'
+alias tdt='todoist-cli list --filter "today"'
+alias tdn='todoist-cli list --filter "7 days"'
+
+
+# Interactive Todoist
+tdnew() {
+  echo "New Task"
+  echo -n "Title: "; read title
+  if [[ -z "$title" ]]; then echo "Cancelled"; return; fi
+
+  local project_name=""
+  if command -v fzf >/dev/null; then
+    echo "Fetching projects..."
+    # Get raw CSV line
+    local project_line=$(todoist-cli --csv projects | fzf --header "Select Project" --delimiter=, --with-nth=2)
+    
+    if [[ -n "$project_line" ]]; then
+      # Extract Name (Column 2) and strip leading '#' if present
+      project_name=$(echo "$project_line" | awk -F, '{print $2}' | sed 's/^#//')
+      echo "Selected Project: $project_name"
+    else
+      echo "No project selected. Defaulting to Inbox."
+    fi
+  fi
+
+  echo -n "Priority (1-4, Default 1): "; read priority
+  [[ -z "$priority" ]] && priority=1
+
+  echo -n "Date: "; read due
+  if [[ -n "$due" ]]; then
+    echo -n "Duration: "; read duration
+    [[ -n "$duration" ]] && due="$due for $duration"
+  fi
+
+  local args=()
+  [[ -n "$project_name" ]] && args+=(--project-name "$project_name")
+  [[ -n "$priority" ]] && args+=(--priority "$priority")
+  [[ -n "$due" ]] && args+=(--date "$due")
+
+  echo "Adding task: $title"
+  todoist-cli add "${args[@]}" "$title"
+}

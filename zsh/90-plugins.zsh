@@ -21,12 +21,28 @@ fi
 # 3. FZF-Tab (Interactive Completion)
 if [[ -f ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
     source ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
-    # Use LS_COLORS for file list
+    
+    # Basic Config
     zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-    # Use FZF for selection
     zstyle ':completion:*' menu no
-    # Preview files with Bat
+    zstyle ':completion:*:descriptions' format '[%d]'
+    zstyle ':fzf-tab:*' switch-group '<' '>'
+    
+    # Previews
+    # Default: Bat for files
     zstyle ':fzf-tab:complete:*:*' fzf-preview 'bat --color=always --style=numbers --line-range=:500 {}'
+    
+    # CD: Eza (Tree view for directories)
+    if command -v eza >/dev/null; then
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+    else
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -1 --color=always $realpath'
+    fi
+    
+    # Kill: Show detailed process info
+    zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+    zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+    zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
 fi
 
 # 4. Syntax Highlighting (MUST BE LAST)
