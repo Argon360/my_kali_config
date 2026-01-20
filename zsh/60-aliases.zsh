@@ -160,13 +160,15 @@ tdnew() {
   if [[ -z "$title" ]]; then echo "Cancelled"; return; fi
 
   local project_name=""
+  local project_id=""
   if command -v fzf >/dev/null; then
     echo "Fetching projects..."
     # Get raw CSV line
     local project_line=$(todoist-cli --csv projects | fzf --header "Select Project" --delimiter=, --with-nth=2)
     
     if [[ -n "$project_line" ]]; then
-      # Extract Name (Column 2) and strip leading '#' if present
+      # Extract ID (Column 1) and Name (Column 2)
+      project_id=$(echo "$project_line" | awk -F, '{print $1}')
       project_name=$(echo "$project_line" | awk -F, '{print $2}' | sed 's/^#//')
       echo "Selected Project: $project_name"
     else
@@ -174,20 +176,43 @@ tdnew() {
     fi
   fi
 
+  local section_name=""
+  # Fetch sections if project is selected and jq is available
+  if [[ -n "$project_id" ]] && command -v jq >/dev/null; then
+    local cache_file="$HOME/.cache/todoist/cache.json"
+    if [[ -f "$cache_file" ]]; then
+        # Query sections for the specific project_id
+        local sections=$(jq -r --arg pid "$project_id" '.sections[] | select(.project_id == $pid) | .name' "$cache_file")
+        if [[ -n "$sections" ]]; then
+            section_name=$(echo "$sections" | fzf --header "Select Section")
+            [[ -n "$section_name" ]] && echo "Selected Section: $section_name"
+        fi
+    fi
+  fi
+
   echo -n "Priority (1-4, Default 1): "; read priority
   [[ -z "$priority" ]] && priority=1
 
   echo -n "Date: "; read due
-  if [[ -n "$due" ]]; then
-    echo -n "Duration: "; read duration
-    [[ -n "$duration" ]] && due="$due for $duration"
+
+  if [[ -n "$section_name" ]]; then
+      # Use quick add for sections as 'add' command might not support it
+      # Format: "Title #Project / Section pPriority Date"
+      local quick_str="$title"
+      [[ -n "$project_name" ]] && quick_str+=" #$project_name / $section_name"
+      [[ -n "$priority" ]] && quick_str+=" p$priority"
+      [[ -n "$due" ]] && quick_str+=" $due"
+      
+      echo "Adding task via Quick Add: $quick_str"
+      todoist-cli quick "$quick_str"
+  else
+      # Use standard add
+      local args=()
+      [[ -n "$project_name" ]] && args+=(--project-name "$project_name")
+      [[ -n "$priority" ]] && args+=(--priority "$priority")
+      [[ -n "$due" ]] && args+=(--date "$due")
+
+      echo "Adding task: $title"
+      todoist-cli add "${args[@]}" "$title"
   fi
-
-  local args=()
-  [[ -n "$project_name" ]] && args+=(--project-name "$project_name")
-  [[ -n "$priority" ]] && args+=(--priority "$priority")
-  [[ -n "$due" ]] && args+=(--date "$due")
-
-  echo "Adding task: $title"
-  todoist-cli add "${args[@]}" "$title"
 }
