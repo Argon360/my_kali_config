@@ -271,3 +271,33 @@ alias update='sudo apt update'
 alias upgrade='sudo apt upgrade'
 alias remove='sudo apt remove'
 alias search='apt search'
+
+# -----------------------------------------------------------------------------
+#  Ollama (Auto-install & Model Pull)
+# -----------------------------------------------------------------------------
+function run_ollama_model() {
+    local model_name=$1
+
+    # 1. Check if Ollama is installed
+    if ! command -v ollama &> /dev/null; then
+        echo "Ollama is not installed. Installing now..."
+        curl -fsSL https://ollama.com/install.sh | sh
+        if [ $? -ne 0 ]; then
+            echo "Failed to install Ollama. Please install it manually."
+            return 1
+        fi
+    fi
+
+    # 2. Check if the model is already pulled
+    if ! ollama list | grep -q "^${model_name%:*}"; then
+        echo "Model '$model_name' not found. Pulling..."
+        ollama pull "$model_name"
+    fi
+
+    # 3. Run the model
+    ollama run "$model_name"
+}
+
+alias chat-whiterabbit='run_ollama_model "jimscard/whiterabbit-neo"'
+alias chat-deepseek='run_ollama_model "deepseek-coder-v2:16b-lite-instruct-q4_K_M"'
+alias chat-hermes3='run_ollama_model "hermes3"'
