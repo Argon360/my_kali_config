@@ -16,6 +16,21 @@ if command -v fzf >/dev/null; then
   
   fzf-cd-widget() { local dir; dir=$(find . -type d 2>/dev/null | fzf); [[ -n $dir ]] && cd "$dir"; }
   zle -N fzf-cd-widget; bindkey '^D' fzf-cd-widget
+
+  fzf-kill-widget() {
+    local pid
+    if [[ "$UID" != "0" ]]; then
+      pid=$(ps -f -u $UID | sed 1d | fzf -m --header 'Select process to kill' | awk '{print $2}')
+    else
+      pid=$(ps -ef | sed 1d | fzf -m --header 'Select process to kill' | awk '{print $2}')
+    fi
+
+    if [[ -n "$pid" ]]; then
+      echo "$pid" | xargs kill -9
+      zle reset-prompt
+    fi
+  }
+  zle -N fzf-kill-widget; bindkey '^K' fzf-kill-widget
 fi
 
 # -----------------------------------------------------------------------------
@@ -24,7 +39,7 @@ fi
 
 # File System (eza)
 if command -v eza >/dev/null; then
-  alias ls='eza --group-directories-first --color=always --icons'
+  alias ls='eza --group-directories-first --color=always --icons=always'
   alias ll='eza -l --group-directories-first --color=always --icons'
   alias la='eza -la --group-directories-first --color=always --icons'
   alias lt='eza --tree --level=3 --color=always --icons'
@@ -41,7 +56,7 @@ alias fcount='find . -type f | wc -l'
 alias dcount='find . -type d | wc -l'
 
 # System / Infra
-command -v btop >/dev/null && alias top='btop --utf-force'
+alias top='btop --force-utf'
 alias mem='free -h'
 alias cpu='lscpu | less'
 alias ipinfo='ip -c a'
@@ -59,6 +74,14 @@ alias please='sudo'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias home='cd ~'
+
+# -----------------------------------------------------------------------------
+#  Editors
+# -----------------------------------------------------------------------------
+alias v='nvim'
+alias vi='nvim'
+alias vim='nvim'
+alias lvim='NVIM_APPNAME=lazyvim nvim'
 
 # -----------------------------------------------------------------------------
 #  Git Aliases
@@ -139,3 +162,112 @@ fi
 
 alias reload='source ~/.zshrc'; alias restart='exec zsh'
 alias kreload='killall kitty; kitty &; disown'
+
+# Todoist CLI
+alias todo='todoist-cli'
+alias td='todoist-cli'
+alias tdl='todoist-pretty-list'
+alias tda='todoist-cli add'
+alias tdc='todoist-cli close'
+alias tds='todoist-cli sync'
+alias tdq='todoist-cli quick'
+alias tdt='todoist-pretty-list --filter "today"'
+alias tdn='todoist-pretty-list --filter "due before: $(date -d "+8 days" +%m/%d/%Y)"'
+
+# Interactive Delete
+unalias tdd 2>/dev/null
+tdd() {
+  if ! command -v fzf >/dev/null; then
+    todoist-cli delete "$@"
+    return
+  fi
+
+  local task_line
+  # Display: Content (6), Date (3), Project (4), Priority (2)
+  task_line=$(todoist-cli --csv list | fzf --header "Select task to DELETE" --delimiter=, --with-nth=6,3,4,2)
+  
+  if [[ -n "$task_line" ]]; then
+    local task_id
+    task_id=$(echo "$task_line" | cut -d, -f1)
+    
+    if [[ -n "$task_id" ]]; then
+        echo "Deleting task ID: $task_id"
+        todoist-cli delete "$task_id"
+    fi
+  else
+    echo "Deletion cancelled."
+  fi
+}
+
+
+# Interactive Todoist
+tdnew() {
+  echo "New Task"
+  echo -n "Title: "; read title
+  if [[ -z "$title" ]]; then echo "Cancelled"; return; fi
+
+  local project_name=""
+  local project_id=""
+  if command -v fzf >/dev/null; then
+    echo "Fetching projects..."
+    # Get raw CSV line
+    local project_line=$(todoist-cli --csv projects | fzf --header "Select Project" --delimiter=, --with-nth=2)
+    
+    if [[ -n "$project_line" ]]; then
+      # Extract ID (Column 1) and Name (Column 2)
+      project_id=$(echo "$project_line" | awk -F, '{print $1}')
+      project_name=$(echo "$project_line" | awk -F, '{print $2}' | sed 's/^#//')
+      echo "Selected Project: $project_name"
+    else
+      echo "No project selected. Defaulting to Inbox."
+    fi
+  fi
+
+  local section_name=""
+  # Fetch sections if project is selected and jq is available
+  if [[ -n "$project_id" ]] && command -v jq >/dev/null; then
+    local cache_file="$HOME/.cache/todoist/cache.json"
+    if [[ -f "$cache_file" ]]; then
+        # Query sections for the specific project_id
+        local sections=$(jq -r --arg pid "$project_id" '.sections[] | select(.project_id == $pid) | .name' "$cache_file")
+        if [[ -n "$sections" ]]; then
+            section_name=$(echo "$sections" | fzf --header "Select Section")
+            [[ -n "$section_name" ]] && echo "Selected Section: $section_name"
+        fi
+    fi
+  fi
+
+  echo -n "Priority (1-4, Default 1): "; read priority
+  [[ -z "$priority" ]] && priority=1
+
+  echo -n "Date: "; read due
+
+  if [[ -n "$section_name" ]]; then
+      # Use quick add for sections as 'add' command might not support it
+      # Format: "Title #Project / Section pPriority Date"
+      local quick_str="$title"
+      [[ -n "$project_name" ]] && quick_str+=" #$project_name / $section_name"
+      [[ -n "$priority" ]] && quick_str+=" p$priority"
+      [[ -n "$due" ]] && quick_str+=" $due"
+      
+      echo "Adding task via Quick Add: $quick_str"
+      todoist-cli quick "$quick_str"
+  else
+      # Use standard add
+      local args=()
+      [[ -n "$project_name" ]] && args+=(--project-name "$project_name")
+      [[ -n "$priority" ]] && args+=(--priority "$priority")
+      [[ -n "$due" ]] && args+=(--date "$due")
+
+      echo "Adding task: $title"
+      todoist-cli add "${args[@]}" "$title"
+  fi
+}
+
+
+# Package Management
+alias install='sudo apt install'
+alias update='sudo apt update'
+alias upgrade='sudo apt upgrade'
+alias remove='sudo apt remove'
+alias search='apt search'

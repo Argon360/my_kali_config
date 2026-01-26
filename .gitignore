@@ -1,119 +1,28 @@
 # ==============================================================================
-#  Git Ignore Configuration
+#  STRICT ALLOWLIST
+#  Ignore everything by default, only allow specific user-selected files.
 # ==============================================================================
 
-# ------------------------------------------------------------------------------
-#  1. Shell & Terminals
-# ------------------------------------------------------------------------------
-# Zsh Plugins (Installed via setup.sh)
-zsh/plugins/
+# 1. Ignore everything
+/*
 
-# Terminal & Shell Specifics
-ghostty/
-thefuck/
-powershell/
-gnome-xdg-terminals.list
-package-lock.json
+# 2. Allow GIT configuration
+!/.gitignore
 
-# ------------------------------------------------------------------------------
-#  2. Backups & Temporary Files
-# ------------------------------------------------------------------------------
-config_backup_*
-*.bkp
-*.bak
-trashrc
+# 3. Allow Specific Files
+!/README.md
+!/setup.sh
+!/starship.toml
 
-# ------------------------------------------------------------------------------
-#  3. Browsers & Internet
-# ------------------------------------------------------------------------------
-BraveSoftware/
-brave-flags.conf
-chromium/
-chromium-flags.conf
-Google/
-transmission/
-
-# ------------------------------------------------------------------------------
-#  4. Development & Security Tools
-# ------------------------------------------------------------------------------
-# Programming Languages & Environment
-go/
-git/
-gh/
-github-copilot/
-environment.d/
-
-# Security & Pentesting
-subfinder/
-nuclei/
-ffuf/
-scapy/
-imv/
-open-interpreter/
-OSRFramework/
-
-# ------------------------------------------------------------------------------
-#  5. Desktop Environment & System (KDE/Gnome/Systemd)
-# ------------------------------------------------------------------------------
-# KDE / Plasma
-kde.org/
-kdeconnect/
-kactivitymanagerdrc
-dolphinrc
-
-# GTK / Gnome
-gtk-3.0/
-dconf/
-menus/
-background
-
-# System Configuration
-systemd/
-autostart/
-fontconfig/
-user-dirs.dirs
-user-dirs.locale
-user-share/
-uwsm/
-ibus/
-fcitx5/
-.gsd-keyboard.settings-ported
-
-# Audio / PulseAudio
-pulse/
-pavucontrol.ini
-
-# ------------------------------------------------------------------------------
-#  6. Applications (GUI & CLI)
-# ------------------------------------------------------------------------------
-# Office & Editors
-libreoffice/
-Typora/
-cherrytree/
-xournalpp/
-Mousepad/
-Thunar/
-nautilus/
-Raspberry Pi/ 
-lazygit/
-
-# Graphics & Media
-GIMP/
-vlc/
-gqrx/
-hyprland-preview-share-picker/
-
-# Communication & Misc
-discord/
-teamviewer/
-protonmail/
-evolution/
-ticktick/
-wireshark/
-gnuradio/
-enchant/
-CuteCom/
-qterminal.org/
-qt6ct/
-elephant/
-uncover/
+# 4. Allow Specific Directories
+!/atuin/
+!/bat/
+!/btop/
+!/docs/
+!/fastfetch/
+!/fish/
+!/ghostty/
+!/kitty/
+!/nvim/
+!/zsh/
+!/zellij/
