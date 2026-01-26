@@ -16,6 +16,21 @@ if command -v fzf >/dev/null; then
   
   fzf-cd-widget() { local dir; dir=$(find . -type d 2>/dev/null | fzf); [[ -n $dir ]] && cd "$dir"; }
   zle -N fzf-cd-widget; bindkey '^D' fzf-cd-widget
+
+  fzf-kill-widget() {
+    local pid
+    if [[ "$UID" != "0" ]]; then
+      pid=$(ps -f -u $UID | sed 1d | fzf -m --header 'Select process to kill' | awk '{print $2}')
+    else
+      pid=$(ps -ef | sed 1d | fzf -m --header 'Select process to kill' | awk '{print $2}')
+    fi
+
+    if [[ -n "$pid" ]]; then
+      echo "$pid" | xargs kill -9
+      zle reset-prompt
+    fi
+  }
+  zle -N fzf-kill-widget; bindkey '^K' fzf-kill-widget
 fi
 
 # -----------------------------------------------------------------------------
@@ -24,7 +39,7 @@ fi
 
 # File System (eza)
 if command -v eza >/dev/null; then
-  alias ls='eza --group-directories-first --color=always --icons'
+  alias ls='eza --group-directories-first --color=always --icons=always'
   alias ll='eza -l --group-directories-first --color=always --icons'
   alias la='eza -la --group-directories-first --color=always --icons'
   alias lt='eza --tree --level=3 --color=always --icons'
@@ -41,7 +56,7 @@ alias fcount='find . -type f | wc -l'
 alias dcount='find . -type d | wc -l'
 
 # System / Infra
-alias top='btop --utf-force'
+alias top='btop --force-utf'
 alias mem='free -h'
 alias cpu='lscpu | less'
 alias ipinfo='ip -c a'
@@ -59,6 +74,14 @@ alias please='sudo'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias home='cd ~'
+
+# -----------------------------------------------------------------------------
+#  Editors
+# -----------------------------------------------------------------------------
+alias v='nvim'
+alias vi='nvim'
+alias vim='nvim'
+alias lvim='NVIM_APPNAME=lazyvim nvim'
 
 # -----------------------------------------------------------------------------
 #  Git Aliases
@@ -143,14 +166,38 @@ alias kreload='killall kitty; kitty &; disown'
 # Todoist CLI
 alias todo='todoist-cli'
 alias td='todoist-cli'
-alias tdl='todoist-cli list'
+alias tdl='todoist-pretty-list'
 alias tda='todoist-cli add'
 alias tdc='todoist-cli close'
-alias tdd='todoist-cli delete'
 alias tds='todoist-cli sync'
 alias tdq='todoist-cli quick'
-alias tdt='todoist-cli list --filter "today"'
-alias tdn='todoist-cli list --filter "7 days"'
+alias tdt='todoist-pretty-list --filter "today"'
+alias tdn='todoist-pretty-list --filter "due before: $(date -d "+8 days" +%m/%d/%Y)"'
+
+# Interactive Delete
+unalias tdd 2>/dev/null
+tdd() {
+  if ! command -v fzf >/dev/null; then
+    todoist-cli delete "$@"
+    return
+  fi
+
+  local task_line
+  # Display: Content (6), Date (3), Project (4), Priority (2)
+  task_line=$(todoist-cli --csv list | fzf --header "Select task to DELETE" --delimiter=, --with-nth=6,3,4,2)
+  
+  if [[ -n "$task_line" ]]; then
+    local task_id
+    task_id=$(echo "$task_line" | cut -d, -f1)
+    
+    if [[ -n "$task_id" ]]; then
+        echo "Deleting task ID: $task_id"
+        todoist-cli delete "$task_id"
+    fi
+  else
+    echo "Deletion cancelled."
+  fi
+}
 
 
 # Interactive Todoist
@@ -216,3 +263,11 @@ tdnew() {
       todoist-cli add "${args[@]}" "$title"
   fi
 }
+
+
+# Package Management
+alias install='sudo apt install'
+alias update='sudo apt update'
+alias upgrade='sudo apt upgrade'
+alias remove='sudo apt remove'
+alias search='apt search'
