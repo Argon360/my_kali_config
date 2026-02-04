@@ -120,6 +120,7 @@ alias gundo='git restore'
 # -----------------------------------------------------------------------------
 alias todo='todoist-cli'
 alias td='todoist-cli'
+alias tdm='tdm'
 alias tds='todoist-cli sync'
 alias tdq='todoist-cli quick'
 
@@ -175,6 +176,40 @@ tdd() {
         echo "Deleting: $(echo "$task_line" | awk '{$1=""; print $0}')"
         echo -n "Are you sure? [y/N] "; read confirm
         [[ "$confirm" == "y" ]] && todoist-cli delete "$task_id" && todoist-cli sync
+    else
+        echo "Cancelled."
+    fi
+}
+
+# Interactive Modify Task (FZF)
+unalias tdm 2>/dev/null
+tdm() {
+    local task_line=$(todoist-cli --csv list | sed 's/,,/,No Date,/g' | column -t -s ',' | fzf --header "Select task to MODIFY" --height 40% --layout reverse)
+    if [[ -n "$task_line" ]]; then
+        local task_id=$(echo "$task_line" | awk '{print $1}')
+        echo "Selected: $(echo "$task_line" | awk '{$1=""; print $0}')"
+        
+        echo -n "New Content (leave blank to keep): "; read new_content
+        echo -n "New Date (today, tom, etc. - leave blank to keep): "; read new_date
+        echo -n "New Priority (1-4 - leave blank to keep): "; read new_prio
+
+        local cmd=("todoist-cli" "modify")
+        [[ -n "$new_content" ]] && cmd+=("--content" "$new_content")
+        [[ -n "$new_date" ]] && cmd+=("--date" "$new_date")
+        [[ -n "$new_prio" ]] && cmd+=("--priority" "$new_prio")
+        cmd+=("$task_id")
+
+        if [[ ${#cmd[@]} -gt 3 ]]; then
+            echo "Executing: ${cmd[*]}"
+            echo -n "Confirm modification? [y/N] "; read confirm
+            if [[ "$confirm" == "y" ]]; then
+                "${cmd[@]}" && todoist-cli sync
+            else
+                echo "Cancelled."
+            fi
+        else
+            echo "No changes specified."
+        fi
     else
         echo "Cancelled."
     fi
