@@ -231,3 +231,12 @@ function run_ollama_model() {
 alias chat-whiterabbit='run_ollama_model "jimscard/whiterabbit-neo"'
 alias chat-deepseek='run_ollama_model "deepseek-coder-v2:16b-lite-instruct-q4_K_M"'
 alias chat-hermes3='run_ollama_model "hermes3"'
+
+# -----------------------------------------------------------------------------
+#  Gemini CLI Enhancements
+# -----------------------------------------------------------------------------
+alias gem='cd ~/Documents/gemini && gemini'
+alias gemy='cd ~/Documents/gemini && gemini --approval-mode yolo'
+alias gemp='cd ~/Documents/gemini && gemini --approval-mode plan'
+alias gems='cd ~/Documents/gemini && gemini --sandbox'
+
