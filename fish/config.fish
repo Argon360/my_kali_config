@@ -38,6 +38,23 @@ if type -q delta
     set -gx GIT_PAGER delta
 end
 
+# FZF Configuration
+if type -q fzf
+    set -gx FZF_DEFAULT_OPTS "
+      --height 40%
+      --layout=reverse
+      --border
+      --color=bg+:-1,fg:gray,fg+:white,hl:blue,hl+:blue
+      --color=prompt:blue,header:blue,pointer:magenta,info:yellow,marker:magenta
+      --bind 'ctrl-/:change-preview-window(down|hidden|)'
+    "
+    
+    if type -q rg
+        set -gx FZF_DEFAULT_COMMAND 'rg --files --hidden --follow --glob "!.git/*"'
+        set -gx FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
+    end
+end
+
 
 # -----------------------------------------------------------------------------
 #  Interactive Session Configuration

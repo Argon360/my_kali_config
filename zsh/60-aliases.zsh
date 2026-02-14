@@ -1,157 +1,93 @@
+# =============================================================================
+#  ZSH ALIASES & FUNCTIONS CONFIGURATION
+# =============================================================================
+
 # -----------------------------------------------------------------------------
-# FZF Key Bindings (Preserved)
+#  FZF Integrations & Key Bindings
 # -----------------------------------------------------------------------------
 if command -v fzf >/dev/null; then
-  # Debian/Kali specific paths
-  [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]] && source /usr/share/doc/fzf/examples/key-bindings.zsh
-  [[ -f /usr/share/doc/fzf/examples/completion.zsh ]] && source /usr/share/doc/fzf/examples/completion.zsh
-  
-  # Also check standard paths (fallback)
-  [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
-  [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
-  
-  fzf-file-widget() { local file; file=$(fzf); [[ -n $file ]] && LBUFFER+="$file"; }
-  zle -N fzf-file-widget; bindkey '^F' fzf-file-widget
-  bindkey '^R' fzf-history-widget
-  
-  fzf-cd-widget() { local dir; dir=$(find . -type d 2>/dev/null | fzf); [[ -n $dir ]] && cd "$dir"; }
-  zle -N fzf-cd-widget; bindkey '^D' fzf-cd-widget
+    # Source system FZF scripts if available
+    [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+    [[ -f /usr/share/doc/fzf/examples/completion.zsh ]] && source /usr/share/doc/fzf/examples/completion.zsh
+    [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+    [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+    
+    # Custom FZF Widgets
+    fzf-file-widget() { local file; file=$(fzf); [[ -n $file ]] && LBUFFER+="$file"; }
+    zle -N fzf-file-widget; bindkey '^F' fzf-file-widget
+    bindkey '^R' fzf-history-widget
+    
+    fzf-cd-widget() { local dir; dir=$(find . -type d 2>/dev/null | fzf); [[ -n $dir ]] && cd "$dir"; }
+    zle -N fzf-cd-widget; bindkey '^D' fzf-cd-widget
 
-  fzf-kill-widget() {
-    local pid
-    if [[ "$UID" != "0" ]]; then
-      pid=$(ps -f -u $UID | sed 1d | fzf -m --header 'Select process to kill' | awk '{print $2}')
-    else
-      pid=$(ps -ef | sed 1d | fzf -m --header 'Select process to kill' | awk '{print $2}')
-    fi
-
-    if [[ -n "$pid" ]]; then
-      echo "$pid" | xargs kill -9
-      zle reset-prompt
-    fi
-  }
-  zle -N fzf-kill-widget; bindkey '^K' fzf-kill-widget
+    fzf-kill-widget() {
+        local pid
+        if [[ "$UID" != "0" ]]; then
+            pid=$(ps -f -u $UID | sed 1d | fzf -m --header 'Select process to kill' | awk '{print $2}')
+        else
+            pid=$(ps -ef | sed 1d | fzf -m --header 'Select process to kill' | awk '{print $2}')
+        fi
+        if [[ -n "$pid" ]]; then
+            echo "$pid" | xargs kill -9
+            zle reset-prompt
+        fi
+    }
+    zle -N fzf-kill-widget; bindkey '^K' fzf-kill-widget
 fi
 
 # -----------------------------------------------------------------------------
-#  Ported Fish Aliases
+#  File System & Navigation (eza, dust)
 # -----------------------------------------------------------------------------
-
-# File System (eza)
 if command -v eza >/dev/null; then
-  alias ls='eza --group-directories-first --color=always --icons=always'
-  alias ll='eza -l --group-directories-first --color=always --icons'
-  alias la='eza -la --group-directories-first --color=always --icons'
-  alias lt='eza --tree --level=3 --color=always --icons'
-  alias tree1='eza --tree --level=1 --icons'
-  alias tree2='eza --tree --level=2 --icons'
+    alias ls='eza --group-directories-first --color=always --icons=always'
+    alias ll='eza -l --group-directories-first --color=always --icons'
+    alias la='eza -la --group-directories-first --color=always --icons'
+    alias lt='eza --tree --level=3 --color=always --icons'
 fi
 
-# Modern Utils
+alias ..='cd ..'
+alias ...='cd ../..'
+alias home='cd ~'
 alias x='unp'
+
 command -v dust >/dev/null && alias du='dust' && alias duh='dust -H'
-alias duh1='du -h --max-depth=1 | sort -hr'
-alias dfh='df -hT'
 alias fcount='find . -type f | wc -l'
 alias dcount='find . -type d | wc -l'
 
-# System / Infra
+# -----------------------------------------------------------------------------
+#  System Information & Maintenance
+# -----------------------------------------------------------------------------
 alias top='btop --force-utf'
 alias mem='free -h'
 alias cpu='lscpu | less'
 alias ipinfo='ip -c a'
-alias routes='ip route'
 alias ports='ss -tulnp'
 alias myip='curl -s ifconfig.me'
-alias dnscheck='resolvectl status || systemd-resolve --status'
 
 # Maintenance
 alias sysup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean'
 alias fixdpkg='sudo dpkg --configure -a'
 alias please='sudo'
 
-# Navigation
-alias ..='cd ..'
-alias ...='cd ../..'
-alias home='cd ~'
+# Package Management
+alias install='sudo apt install'
+alias update='sudo apt update'
+alias upgrade='sudo apt upgrade'
+alias remove='sudo apt remove'
+alias search='apt search'
 
 # -----------------------------------------------------------------------------
-#  Editors
+#  Editors & Utilities
 # -----------------------------------------------------------------------------
 alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'
 alias lvim='NVIM_APPNAME=lazyvim nvim'
 
-# -----------------------------------------------------------------------------
-#  Git Aliases
-# -----------------------------------------------------------------------------
-alias gs='git status'
-alias gss='git status -sb'
-alias ga='git add'
-alias gaa='git add .'
-alias gc='git commit'
-alias gcm='git commit -m'
-alias gca='git commit --amend'
-alias gwip='git add . && git commit -m "wip: checkpoint"'
-
-alias gl='git log --oneline --decorate'
-alias glg='git log --oneline --graph --decorate --all'
-alias glast='git log -1 --stat'
-
-alias gd='git diff'
-alias gds='git diff --staged'
-alias gshow='git show'
-alias gblame='git blame -w -M -C'
-
-alias gb='git branch'
-alias gba='git branch -a'
-alias gbranch='git branch --show-current'
-alias gsw='git switch'
-alias gswc='git switch -c'
-
-alias gm='git merge'
-alias grb='git rebase'
-alias grbi='git rebase -i'
-
-alias gf='git fetch'
-alias gpl='git pull'
-alias gplr='git pull --rebase'
-alias gp='git push'
-alias gps='git push --set-upstream origin $(git branch --show-current)'
-
-alias gunstage='git restore --staged'
-alias gundo='git restore'
-alias grs='git reset'
-alias gsoft='git reset --soft HEAD~1'
-alias grsh='git reset --hard'
-alias gclean='git branch --merged | grep -v "\*" | grep -v main | xargs -r git branch -d'
-
-alias gsm='git submodule'
-alias gsmi='git submodule update --init --recursive'
-alias gsmu='git submodule update --remote'
-
-# -----------------------------------------------------------------------------
-#  Tool Integrations
-# -----------------------------------------------------------------------------
-if command -v batcat >/dev/null; then
-    alias bat='batcat'; alias cat='batcat'
-    export BAT_THEME="Dracula"
-    export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
-elif command -v bat >/dev/null; then
-    export BAT_THEME="Dracula"
-    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-    alias cat='bat'
-fi
-
-if command -v delta >/dev/null; then export GIT_PAGER='delta'; fi
-
-# -----------------------------------------------------------------------------
-#  Utilities / QoL
-# -----------------------------------------------------------------------------
-alias cls='clear'; alias c='clear'
-alias now='date +"%Y-%m-%d %H:%M:%S"'; alias week='date +"Week %V, %Y"'
-alias weather='curl wttr.in'; alias genpass='openssl rand -base64 24'
+alias cls='clear'
+alias c='clear'
+alias now='date +"%Y-%m-%d %H:%M:%S"'
+alias weather='curl wttr.in'
 alias json='python3 -m json.tool'
 
 if command -v wl-copy >/dev/null; then
@@ -160,114 +96,164 @@ else
     alias clip='xclip -selection clipboard'; alias paste='xclip -o -selection clipboard'
 fi
 
-alias reload='source ~/.zshrc'; alias restart='exec zsh'
-alias kreload='killall kitty; kitty &; disown'
+alias reload='source ~/.zshrc'
+alias restart='exec zsh'
 
-# Todoist CLI
-alias todo='todoist-cli'
-alias td='todoist-cli'
+# -----------------------------------------------------------------------------
+#  Git Shortcuts
+# -----------------------------------------------------------------------------
+alias gs='git status'
+alias ga='git add'
+alias gaa='git add .'
+alias gc='git commit'
+alias gcm='git commit -m'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gl='git log --oneline --decorate'
+alias gcl='git clone'
+alias gp='git push'
+alias gpl='git pull'
+alias gsw='git switch'
+alias gundo='git restore'
+
+# -----------------------------------------------------------------------------
+#  Todoist CLI - Core Integrations
+# -----------------------------------------------------------------------------
+alias todo='todoist'
+alias td='todoist'
+alias tds='todoist sync'
+
+# Interactive Quick Add
+unalias tdq 2>/dev/null
+tdq() {
+    if [[ -z "$1" ]]; then
+        echo -n "Quick add task: "; read content
+        [[ -z "$content" ]] && { echo "Cancelled."; return; }
+        todoist quick "$content" && todoist sync
+    else
+        todoist quick "$*" && todoist sync
+    fi
+}
+
+# Formatted Lists (using custom todoist-pretty-list script)
 alias tdl='todoist-pretty-list'
-alias tda='todoist-cli add'
-alias tdc='todoist-cli close'
-alias tds='todoist-cli sync'
-alias tdq='todoist-cli quick'
 alias tdt='todoist-pretty-list --filter "today"'
-alias tdn='todoist-pretty-list --filter "due before: $(date -d "+8 days" +%m/%d/%Y)"'
+alias tdn="todoist-pretty-list --filter \"due before: \$(date -d '+8 days' +%m/%d/%Y)\""
 
-# Interactive Delete
+# Interactive Add Task
+unalias tda 2>/dev/null
+tda() {
+    echo -n "Task: "; read content
+    [[ -z "$content" ]] && { echo "Cancelled."; return; }
+
+    local project_name=""
+    if command -v fzf >/dev/null; then
+        local proj_line=$(todoist projects | fzf --height 40% --layout reverse --header "Select Project (Esc to skip)")
+        [[ -n "$proj_line" ]] && project_name=$(echo "$proj_line" | cut -d' ' -f2-)
+    fi
+
+    echo -n "Due (today, tom, etc): "; read due
+    echo -n "Priority (1-4): "; read prio
+
+    local cmd=("todoist" "add")
+    [[ -n "$project_name" ]] && cmd+=("--project-name" "${project_name#\#}")
+    [[ -n "$due" ]] && cmd+=("-d" "$due")
+    [[ -n "$prio" ]] && cmd+=("-p" "$prio")
+    cmd+=("$content")
+
+    echo "Adding task..."
+    "${cmd[@]}" && todoist sync
+}
+
+# Interactive Close Task (FZF)
+unalias tdc 2>/dev/null
+tdc() {
+    local task_line=$(todoist-pretty-list | fzf --ansi --header-lines=1 --header "Select task to CLOSE" --height 40% --layout reverse)
+    if [[ -n "$task_line" ]]; then
+        local task_id=$(echo "$task_line" | awk '{print $1}')
+        # Strip ANSI codes for display
+        local display_text=$(echo "$task_line" | sed 's/\x1b\[[0-9;]*m//g' | awk '{$1=""; print $0}')
+        echo "Closing task: $display_text"
+        todoist close "$task_id" && todoist sync
+    else
+        echo "Cancelled."
+    fi
+}
+
+# Interactive Delete Task (FZF)
 unalias tdd 2>/dev/null
 tdd() {
-  if ! command -v fzf >/dev/null; then
-    todoist-cli delete "$@"
-    return
-  fi
-
-  local task_line
-  # Display: Content (6), Date (3), Project (4), Priority (2)
-  task_line=$(todoist-cli --csv list | fzf --header "Select task to DELETE" --delimiter=, --with-nth=6,3,4,2)
-  
-  if [[ -n "$task_line" ]]; then
-    local task_id
-    task_id=$(echo "$task_line" | cut -d, -f1)
-    
-    if [[ -n "$task_id" ]]; then
-        echo "Deleting task ID: $task_id"
-        todoist-cli delete "$task_id"
-    fi
-  else
-    echo "Deletion cancelled."
-  fi
-}
-
-
-# Interactive Todoist
-tdnew() {
-  echo "New Task"
-  echo -n "Title: "; read title
-  if [[ -z "$title" ]]; then echo "Cancelled"; return; fi
-
-  local project_name=""
-  local project_id=""
-  if command -v fzf >/dev/null; then
-    echo "Fetching projects..."
-    # Get raw CSV line
-    local project_line=$(todoist-cli --csv projects | fzf --header "Select Project" --delimiter=, --with-nth=2)
-    
-    if [[ -n "$project_line" ]]; then
-      # Extract ID (Column 1) and Name (Column 2)
-      project_id=$(echo "$project_line" | awk -F, '{print $1}')
-      project_name=$(echo "$project_line" | awk -F, '{print $2}' | sed 's/^#//')
-      echo "Selected Project: $project_name"
+    local task_line=$(todoist-pretty-list | fzf --ansi --header-lines=1 --header "Select task to DELETE" --height 40% --layout reverse)
+    if [[ -n "$task_line" ]]; then
+        local task_id=$(echo "$task_line" | awk '{print $1}')
+        # Strip ANSI codes for display
+        local display_text=$(echo "$task_line" | sed 's/\x1b\[[0-9;]*m//g' | awk '{$1=""; print $0}')
+        echo "Deleting: $display_text"
+        echo -n "Are you sure? [y/N] "; read confirm
+        [[ "$confirm" == "y" ]] && todoist delete "$task_id" && todoist sync
     else
-      echo "No project selected. Defaulting to Inbox."
+        echo "Cancelled."
     fi
-  fi
-
-  local section_name=""
-  # Fetch sections if project is selected and jq is available
-  if [[ -n "$project_id" ]] && command -v jq >/dev/null; then
-    local cache_file="$HOME/.cache/todoist/cache.json"
-    if [[ -f "$cache_file" ]]; then
-        # Query sections for the specific project_id
-        local sections=$(jq -r --arg pid "$project_id" '.sections[] | select(.project_id == $pid) | .name' "$cache_file")
-        if [[ -n "$sections" ]]; then
-            section_name=$(echo "$sections" | fzf --header "Select Section")
-            [[ -n "$section_name" ]] && echo "Selected Section: $section_name"
-        fi
-    fi
-  fi
-
-  echo -n "Priority (1-4, Default 1): "; read priority
-  [[ -z "$priority" ]] && priority=1
-
-  echo -n "Date: "; read due
-
-  if [[ -n "$section_name" ]]; then
-      # Use quick add for sections as 'add' command might not support it
-      # Format: "Title #Project / Section pPriority Date"
-      local quick_str="$title"
-      [[ -n "$project_name" ]] && quick_str+=" #$project_name / $section_name"
-      [[ -n "$priority" ]] && quick_str+=" p$priority"
-      [[ -n "$due" ]] && quick_str+=" $due"
-      
-      echo "Adding task via Quick Add: $quick_str"
-      todoist-cli quick "$quick_str"
-  else
-      # Use standard add
-      local args=()
-      [[ -n "$project_name" ]] && args+=(--project-name "$project_name")
-      [[ -n "$priority" ]] && args+=(--priority "$priority")
-      [[ -n "$due" ]] && args+=(--date "$due")
-
-      echo "Adding task: $title"
-      todoist-cli add "${args[@]}" "$title"
-  fi
 }
 
+# Interactive Modify Task (FZF)
+unalias tdm 2>/dev/null
+tdm() {
+    local task_line=$(todoist-pretty-list | fzf --ansi --header-lines=1 --header "Select task to MODIFY" --height 40% --layout reverse)
+    if [[ -n "$task_line" ]]; then
+        local task_id=$(echo "$task_line" | awk '{print $1}')
+        # Strip ANSI codes for display
+        local display_text=$(echo "$task_line" | sed 's/\x1b\[[0-9;]*m//g' | awk '{$1=""; print $0}')
+        echo "Selected: $display_text"
+        
+        echo -n "New Content (leave blank to keep): "; read new_content
+        echo -n "New Date (today, tom, etc. - leave blank to keep): "; read new_date
+        echo -n "New Priority (1-4 - leave blank to keep): "; read new_prio
 
-# Package Management
-alias install='sudo apt install'
-alias update='sudo apt update'
-alias upgrade='sudo apt upgrade'
-alias remove='sudo apt remove'
-alias search='apt search'
+        local cmd=("todoist" "modify")
+        [[ -n "$new_content" ]] && cmd+=("--content" "$new_content")
+        [[ -n "$new_date" ]] && cmd+=("--date" "$new_date")
+        [[ -n "$new_prio" ]] && cmd+=("--priority" "$new_prio")
+        cmd+=("$task_id")
+
+        if [[ ${#cmd[@]} -gt 3 ]]; then
+            echo "Executing: ${cmd[*]}"
+            echo -n "Confirm modification? [y/N] "; read confirm
+            if [[ "$confirm" == "y" ]]; then
+                "${cmd[@]}" && todoist sync
+            else
+                echo "Cancelled."
+            fi
+        else
+            echo "No changes specified."
+        fi
+    else
+        echo "Cancelled."
+    fi
+}
+
+# -----------------------------------------------------------------------------
+#  AI & Ollama Helpers
+# -----------------------------------------------------------------------------
+function run_ollama_model() {
+    local model_name=$1
+    if ! command -v ollama &> /dev/null; then
+        echo "Ollama not found. Installing..."
+        curl -fsSL https://ollama.com/install.sh | sh
+    fi
+    ollama list | grep -q "^${model_name%:*}" || ollama pull "$model_name"
+    ollama run "$model_name"
+}
+
+alias chat-whiterabbit='run_ollama_model "jimscard/whiterabbit-neo"'
+alias chat-deepseek='run_ollama_model "deepseek-coder-v2:16b-lite-instruct-q4_K_M"'
+alias chat-hermes3='run_ollama_model "hermes3"'
+
+# -----------------------------------------------------------------------------
+#  Gemini CLI Enhancements
+# -----------------------------------------------------------------------------
+alias gem='cd ~/Documents/gemini && gemini'
+alias gemy='cd ~/Documents/gemini && gemini --approval-mode yolo'
+alias gemp='cd ~/Documents/gemini && gemini --approval-mode plan'
+alias gems='cd ~/Documents/gemini && gemini --sandbox'
+
