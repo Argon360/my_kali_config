@@ -28,11 +28,21 @@ if [[ -f ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
     zstyle ':completion:*:descriptions' format '[%d]'
     zstyle ':fzf-tab:*' switch-group '<' '>'
     
-    # Previews
-    # Default: Bat for files
-    zstyle ':fzf-tab:complete:*:*' fzf-preview 'bat --color=always --style=numbers --line-range=:500 {}'
+    # Enable continuous trigger (TAB to keep completing)
+    zstyle ':fzf-tab:*' continuous-trigger 'tab'
     
-    # CD: Eza (Tree view for directories)
+    # Previews
+    # Default: Bat for files, fallback to cat
+    if command -v bat >/dev/null; then
+        zstyle ':fzf-tab:complete:*:*' fzf-preview 'if [ -d $realpath ]; then eza -1 --color=always $realpath; else bat --color=always --style=numbers --line-range=:500 $realpath; fi'
+    else
+        zstyle ':fzf-tab:complete:*:*' fzf-preview 'if [ -d $realpath ]; then ls -1 --color=always $realpath; else cat $realpath; fi'
+    fi
+
+    # Command options and aliases
+    zstyle ':fzf-tab:complete:-command-:*' fzf-preview '(out=$(whence -p $word); [ -n "$out" ] && $out --help) | head -n 50'
+    
+    # CD/Navigation: Eza (Tree view for directories)
     if command -v eza >/dev/null; then
         zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
     else

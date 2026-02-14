@@ -110,6 +110,7 @@ alias gcm='git commit -m'
 alias gd='git diff'
 alias gds='git diff --staged'
 alias gl='git log --oneline --decorate'
+alias gcl='git clone'
 alias gp='git push'
 alias gpl='git pull'
 alias gsw='git switch'
@@ -118,16 +119,26 @@ alias gundo='git restore'
 # -----------------------------------------------------------------------------
 #  Todoist CLI - Core Integrations
 # -----------------------------------------------------------------------------
-alias todo='todoist-cli'
-alias td='todoist-cli'
-alias tdm='tdm'
-alias tds='todoist-cli sync'
-alias tdq='todoist-cli quick'
+alias todo='todoist'
+alias td='todoist'
+alias tds='todoist sync'
+
+# Interactive Quick Add
+unalias tdq 2>/dev/null
+tdq() {
+    if [[ -z "$1" ]]; then
+        echo -n "Quick add task: "; read content
+        [[ -z "$content" ]] && { echo "Cancelled."; return; }
+        todoist quick "$content" && todoist sync
+    else
+        todoist quick "$*" && todoist sync
+    fi
+}
 
 # Formatted Lists (using custom todoist-pretty-list script)
 alias tdl='todoist-pretty-list'
 alias tdt='todoist-pretty-list --filter "today"'
-alias tdn='todoist-pretty-list --filter "due before: $(date -d \"+8 days\" +%m/%d/%Y)"'
+alias tdn="todoist-pretty-list --filter \"due before: \$(date -d '+8 days' +%m/%d/%Y)\""
 
 # Interactive Add Task
 unalias tda 2>/dev/null
@@ -137,31 +148,33 @@ tda() {
 
     local project_name=""
     if command -v fzf >/dev/null; then
-        local proj_line=$(todoist-cli projects | fzf --height 40% --layout reverse --header "Select Project (Esc to skip)")
+        local proj_line=$(todoist projects | fzf --height 40% --layout reverse --header "Select Project (Esc to skip)")
         [[ -n "$proj_line" ]] && project_name=$(echo "$proj_line" | cut -d' ' -f2-)
     fi
 
     echo -n "Due (today, tom, etc): "; read due
     echo -n "Priority (1-4): "; read prio
 
-    local cmd=("todoist-cli" "add")
+    local cmd=("todoist" "add")
     [[ -n "$project_name" ]] && cmd+=("--project-name" "${project_name#\#}")
     [[ -n "$due" ]] && cmd+=("-d" "$due")
     [[ -n "$prio" ]] && cmd+=("-p" "$prio")
     cmd+=("$content")
 
     echo "Adding task..."
-    "${cmd[@]}" && todoist-cli sync
+    "${cmd[@]}" && todoist sync
 }
 
 # Interactive Close Task (FZF)
 unalias tdc 2>/dev/null
 tdc() {
-    local task_line=$(todoist-cli --csv list | sed 's/,,/,No Date,/g' | column -t -s ',' | fzf --header "Select task to CLOSE" --height 40% --layout reverse)
+    local task_line=$(todoist-pretty-list | fzf --ansi --header-lines=1 --header "Select task to CLOSE" --height 40% --layout reverse)
     if [[ -n "$task_line" ]]; then
         local task_id=$(echo "$task_line" | awk '{print $1}')
-        echo "Closing task: $(echo "$task_line" | awk '{$1=""; print $0}')"
-        todoist-cli close "$task_id" && todoist-cli sync
+        # Strip ANSI codes for display
+        local display_text=$(echo "$task_line" | sed 's/\x1b\[[0-9;]*m//g' | awk '{$1=""; print $0}')
+        echo "Closing task: $display_text"
+        todoist close "$task_id" && todoist sync
     else
         echo "Cancelled."
     fi
@@ -170,12 +183,14 @@ tdc() {
 # Interactive Delete Task (FZF)
 unalias tdd 2>/dev/null
 tdd() {
-    local task_line=$(todoist-cli --csv list | sed 's/,,/,No Date,/g' | column -t -s ',' | fzf --header "Select task to DELETE" --height 40% --layout reverse)
+    local task_line=$(todoist-pretty-list | fzf --ansi --header-lines=1 --header "Select task to DELETE" --height 40% --layout reverse)
     if [[ -n "$task_line" ]]; then
         local task_id=$(echo "$task_line" | awk '{print $1}')
-        echo "Deleting: $(echo "$task_line" | awk '{$1=""; print $0}')"
+        # Strip ANSI codes for display
+        local display_text=$(echo "$task_line" | sed 's/\x1b\[[0-9;]*m//g' | awk '{$1=""; print $0}')
+        echo "Deleting: $display_text"
         echo -n "Are you sure? [y/N] "; read confirm
-        [[ "$confirm" == "y" ]] && todoist-cli delete "$task_id" && todoist-cli sync
+        [[ "$confirm" == "y" ]] && todoist delete "$task_id" && todoist sync
     else
         echo "Cancelled."
     fi
@@ -184,16 +199,18 @@ tdd() {
 # Interactive Modify Task (FZF)
 unalias tdm 2>/dev/null
 tdm() {
-    local task_line=$(todoist-cli --csv list | sed 's/,,/,No Date,/g' | column -t -s ',' | fzf --header "Select task to MODIFY" --height 40% --layout reverse)
+    local task_line=$(todoist-pretty-list | fzf --ansi --header-lines=1 --header "Select task to MODIFY" --height 40% --layout reverse)
     if [[ -n "$task_line" ]]; then
         local task_id=$(echo "$task_line" | awk '{print $1}')
-        echo "Selected: $(echo "$task_line" | awk '{$1=""; print $0}')"
+        # Strip ANSI codes for display
+        local display_text=$(echo "$task_line" | sed 's/\x1b\[[0-9;]*m//g' | awk '{$1=""; print $0}')
+        echo "Selected: $display_text"
         
         echo -n "New Content (leave blank to keep): "; read new_content
         echo -n "New Date (today, tom, etc. - leave blank to keep): "; read new_date
         echo -n "New Priority (1-4 - leave blank to keep): "; read new_prio
 
-        local cmd=("todoist-cli" "modify")
+        local cmd=("todoist" "modify")
         [[ -n "$new_content" ]] && cmd+=("--content" "$new_content")
         [[ -n "$new_date" ]] && cmd+=("--date" "$new_date")
         [[ -n "$new_prio" ]] && cmd+=("--priority" "$new_prio")
@@ -203,7 +220,7 @@ tdm() {
             echo "Executing: ${cmd[*]}"
             echo -n "Confirm modification? [y/N] "; read confirm
             if [[ "$confirm" == "y" ]]; then
-                "${cmd[@]}" && todoist-cli sync
+                "${cmd[@]}" && todoist sync
             else
                 echo "Cancelled."
             fi
