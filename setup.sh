@@ -40,8 +40,22 @@ fi
 
 # --- 1. System Updates & Package Installation ---
 install_packages() {
+    # Detect Package Manager
+    if command -v dnf >/dev/null; then
+        PM="dnf"
+        UPDATE_CMD="sudo dnf check-update"
+        INSTALL_CMD="sudo dnf install -y"
+    elif command -v apt >/dev/null; then
+        PM="apt"
+        UPDATE_CMD="sudo apt update -y"
+        INSTALL_CMD="sudo apt install -y"
+    else
+        error "No supported package manager found (dnf or apt)."
+    fi
+
+    log "Using $PM package manager..."
     log "Updating package lists..."
-    sudo apt update -y
+    $UPDATE_CMD || true # dnf check-update returns 100 if updates are available
 
     # Core Utils & Shell
     PACKAGES=(
@@ -63,12 +77,20 @@ install_packages() {
         atuin
     )
 
-    log "Installing apt packages..."
+    # Distro-specific package name adjustments
+    if [ "$PM" == "dnf" ]; then
+        # On Fedora, some packages have different names
+        # build-essential -> @development-tools
+        # fd-find -> fd-find (same name)
+        PACKAGES=("${PACKAGES[@]/build-essential/@development-tools}")
+    fi
+
+    log "Installing packages..."
     for pkg in "${PACKAGES[@]}"; do
-        if sudo apt install -y "$pkg" 2>/dev/null; then
+        if $INSTALL_CMD "$pkg" 2>/dev/null; then
             : # Success
         else
-            warn "Could not install $pkg via apt. It might need manual installation."
+            warn "Could not install $pkg via $PM. It might need manual installation."
         fi
     done
 

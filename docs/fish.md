@@ -34,7 +34,7 @@ Aliases are strictly categorized to avoid clutter.
 ### 🛠️ System / Infra
 - `top`: mapped to **btop**.
 - `ipinfo`, `routes`, `ports`, `myip`: Networking shortcuts.
-- `sysup`: Full system update (apt update/upgrade/autoremove).
+- `sysup`: Full system update (dnf or apt).
 
 ### 🧭 Navigation
 - `..`, `...`: Directory traversal.

@@ -64,17 +64,24 @@ alias ipinfo='ip -c a'
 alias ports='ss -tulnp'
 alias myip='curl -s ifconfig.me'
 
-# Maintenance
-alias sysup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean'
+# Package Management
+if command -v dnf >/dev/null; then
+    alias sysup='sudo dnf upgrade -y && sudo dnf autoremove -y && sudo dnf clean all'
+    alias install='sudo dnf install'
+    alias update='sudo dnf check-update'
+    alias upgrade='sudo dnf upgrade'
+    alias remove='sudo dnf remove'
+    alias search='dnf search'
+elif command -v apt >/dev/null; then
+    alias sysup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean'
+    alias install='sudo apt install'
+    alias update='sudo apt update'
+    alias upgrade='sudo apt upgrade'
+    alias remove='sudo apt remove'
+    alias search='apt search'
+fi
 alias fixdpkg='sudo dpkg --configure -a'
 alias please='sudo'
-
-# Package Management
-alias install='sudo apt install'
-alias update='sudo apt update'
-alias upgrade='sudo apt upgrade'
-alias remove='sudo apt remove'
-alias search='apt search'
 
 # -----------------------------------------------------------------------------
 #  Editors & Utilities
