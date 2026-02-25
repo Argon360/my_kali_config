@@ -36,14 +36,65 @@ if command -v fzf >/dev/null; then
 fi
 
 # -----------------------------------------------------------------------------
-#  File System & Navigation (eza, dust)
+#  File System & Navigation (Recursive by default)
 # -----------------------------------------------------------------------------
+alias cp='cp -ivR'
+alias scp='scp -r'
+alias grep='grep --recursive --color=auto --exclude-dir={.git,node_modules,vendor}'
+
 if command -v eza >/dev/null; then
     alias ls='eza --group-directories-first --color=always --icons=always'
     alias ll='eza -l --group-directories-first --color=always --icons'
     alias la='eza -la --group-directories-first --color=always --icons'
-    alias lt='eza --tree --level=3 --color=always --icons'
+    alias lt='eza --tree --color=always --icons' # Removed --level=3 to be fully recursive
 fi
+
+# Secure RM (shred for files, auto-recursive, handles locked files)
+unalias rm 2>/dev/null
+rm() {
+    local -a targets
+    local force=0
+    local verbose=""
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -f|--force) force=1; shift ;;
+            -v|--verbose) verbose="-v"; shift ;;
+            -fv|-vf) force=1; verbose="-v"; shift ;;
+            -r|-R|--recursive) shift ;; # Ignore -r as we are now auto-recursive
+            --) shift; targets+=("$@"); break ;;
+            -*) shift ;; # Ignore other flags
+            *) targets+=("$1"); shift ;;
+        esac
+    done
+
+    for item in "${targets[@]}"; do
+        [[ ! -e "$item" && ! -L "$item" ]] && continue
+
+        if [[ -d "$item" ]]; then
+            echo "Securely removing directory: $item"
+            # Remove immutable flag if present (requires sudo if not owner)
+            [[ -f /usr/bin/chattr ]] && sudo chattr -R -i "$item" 2>/dev/null
+            
+            # Shred all files inside
+            find "$item" -type f -print0 | xargs -0 -I {} shred -uvzf -n 3 {}
+            
+            # Remove the directory structure
+            sudo rm -rf "$item"
+        else
+            # It's a file or symlink
+            # Try to unlock if it's a regular file
+            if [[ -f "$item" ]]; then
+                [[ -f /usr/bin/chattr ]] && sudo chattr -i "$item" 2>/dev/null
+            fi
+            
+            # Shred with force flag (handles read-only)
+            # Use sudo to ensure we can shred root-owned files the user wants gone
+            sudo shred -uvzf -n 3 "$item" || sudo rm -f "$item"
+        fi
+    done
+}
 
 alias ..='cd ..'
 alias ...='cd ../..'
