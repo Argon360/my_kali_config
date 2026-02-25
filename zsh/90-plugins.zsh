@@ -28,8 +28,11 @@ if [[ -f ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
     zstyle ':completion:*:descriptions' format '[%d]'
     zstyle ':fzf-tab:*' switch-group '<' '>'
     
-    # Enable continuous trigger (TAB to keep completing)
-    zstyle ':fzf-tab:*' continuous-trigger 'tab'
+    # Bind TAB to next option and Shift-TAB to previous
+    zstyle ':fzf-tab:*' fzf-flags --bind 'tab:down,btab:up'
+
+    # Disable continuous trigger so TAB only moves the selection
+    zstyle ':fzf-tab:*' continuous-trigger ''
     
     # Previews
     # Default: Bat for files, fallback to cat
