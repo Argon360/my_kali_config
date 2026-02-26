@@ -40,15 +40,28 @@ fi
 
 # --- 1. System Updates & Package Installation ---
 install_packages() {
+    # Detect Package Manager
+    if command -v dnf >/dev/null; then
+        PM="dnf"
+        UPDATE_CMD="sudo dnf check-update"
+        INSTALL_CMD="sudo dnf install -y"
+    elif command -v apt >/dev/null; then
+        PM="apt"
+        UPDATE_CMD="sudo apt update -y"
+        INSTALL_CMD="sudo apt install -y"
+    else
+        error "No supported package manager found (dnf or apt)."
+    fi
+
+    log "Using $PM package manager..."
     log "Updating package lists..."
-    sudo apt update -y
+    $UPDATE_CMD || true # dnf check-update returns 100 if updates are available
 
     # Core Utils & Shell
     PACKAGES=(
         git
         curl
         wget
-        build-essential
         kitty
         fish
         zsh
@@ -61,14 +74,42 @@ install_packages() {
         eza
         fastfetch
         atuin
+        btop
+        lazygit
+        dust
+        nodejs
+        npm
+        wl-clipboard
+        xclip
     )
 
-    log "Installing apt packages..."
+    # Distro-specific package name adjustments & Extras
+    if [ "$PM" == "dnf" ]; then
+        log "Configuring Fedora specific repositories..."
+        sudo dnf install -y dnf-plugins-core util-linux-user
+        
+        # Enable COPR for lazygit, ghostty, git-delta, eza (F42+) and fonts
+        sudo dnf copr enable -y dejan/lazygit
+        sudo dnf copr enable -y scottames/ghostty
+        sudo dnf copr enable -y elxreno/jetbrains-mono-fonts
+        sudo dnf copr enable -y alternateved/eza
+        
+        PACKAGES+=(ghostty jetbrains-mono-fonts git-delta file-unpack)
+        # Remove eza from main list if we want to ensure it comes from COPR or handles F42+
+        # But keeping it in PACKAGES is fine as dnf will find it in the COPR we just enabled.
+        
+        PACKAGES=("${PACKAGES[@]/build-essential/@development-tools}")
+    else
+        # Debian/Kali
+        PACKAGES+=(build-essential git-delta unp)
+    fi
+
+    log "Installing packages..."
     for pkg in "${PACKAGES[@]}"; do
-        if sudo apt install -y "$pkg" 2>/dev/null; then
+        if $INSTALL_CMD "$pkg" 2>/dev/null; then
             : # Success
         else
-            warn "Could not install $pkg via apt. It might need manual installation."
+            warn "Could not install $pkg via $PM. It might need manual installation."
         fi
     done
 
@@ -87,7 +128,7 @@ install_packages() {
     fi
 }
 
-# --- 2. External Tools Installation ---
+# --- 2. External Tools & Manual Installation ---
 install_externals() {
     # Starship
     if ! command -v starship &> /dev/null; then
@@ -95,6 +136,31 @@ install_externals() {
         curl -sS https://starship.rs/install.sh | sh -s -- -y
     else
         success "Starship already installed"
+    fi
+
+    # Todoist CLI
+    if ! command -v todoist &> /dev/null; then
+        if command -v npm &> /dev/null; then
+            log "Installing Todoist CLI..."
+            sudo npm install -g @doist/todoist-cli || warn "Failed to install todoist-cli"
+        fi
+    else
+        success "Todoist CLI already installed"
+    fi
+
+    # Nerd Font (Manual for Debian/Kali if not Fedora)
+    if [ "$PM" == "apt" ]; then
+        if ! fc-list | grep -qi "JetBrainsMono"; then
+            log "Installing JetBrainsMono Nerd Font..."
+            FONT_DIR="$HOME/.local/share/fonts"
+            mkdir -p "$FONT_DIR"
+            ZIP_PATH="/tmp/JetBrainsMono.zip"
+            wget -O "$ZIP_PATH" https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip
+            unzip -o "$ZIP_PATH" -d "$FONT_DIR"
+            rm "$ZIP_PATH"
+            fc-cache -fv > /dev/null
+            success "JetBrainsMono Nerd Font installed"
+        fi
     fi
 }
 

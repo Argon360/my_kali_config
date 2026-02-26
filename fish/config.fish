@@ -1,6 +1,6 @@
 # =============================================================================
 #  Fish Shell Configuration
-#  Environment: Linux (Pop!_OS / Debian / Ubuntu / Kali)
+#  Environment: Linux (Fedora / Debian / Pop!_OS / Ubuntu / Kali)
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -123,7 +123,11 @@ if status is-interactive
     # -----------------------------
     # System Maintenance
     # -----------------------------
-    alias sysup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean'
+    if type -q dnf
+        alias sysup='sudo dnf upgrade -y && sudo dnf autoremove -y && sudo dnf clean all'
+    else if type -q apt
+        alias sysup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean'
+    end
     alias fixdpkg='sudo dpkg --configure -a'
     alias please='sudo'
 

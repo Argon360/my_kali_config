@@ -136,7 +136,11 @@ If you prefer to do things yourself:
 2. Install dependencies (example):
 
    ```bash
-   sudo apt install kitty fish fzf bat ripgrep fd-find zoxide neovim
+   # For Fedora:
+   sudo dnf install kitty fish fzf bat ripgrep fd-find zoxide neovim eza fastfetch atuin
+
+   # For Debian/Ubuntu:
+   sudo apt install kitty fish fzf bat ripgrep fd-find zoxide neovim eza fastfetch atuin
    # Install starship, atuin, eza, fastfetch as needed
    ```
 

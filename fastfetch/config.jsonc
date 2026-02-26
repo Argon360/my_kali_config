@@ -1,9 +1,6 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "type": "file",
-    "source": "~/.config/kali/branding/about.txt",
-    "color": { "1": "cyan" },
     "padding": {
       "top": 2,
       "right": 6,
@@ -63,16 +60,9 @@
       "format": "\u001b[90m┌─────────────────────── Software ─────────────────────────┐"
     },
     {
-      "type": "command",
+      "type": "os",
       "key": "\uf013 OS",
-      "keyColor": "blue",
-      "text": "echo \"Kali Linux $(lsb_release -rs)\""
-    },
-    {
-      "type": "command",
-      "key": "│ ├󰘬",
-      "keyColor": "blue",
-      "text": "grep -E '^deb ' /etc/apt/sources.list | head -n 1 | awk '{print $3, $4}'"
+      "keyColor": "blue"
     },
     {
       "type": "kernel",
