@@ -49,8 +49,12 @@ install_packages() {
         PM="apt"
         UPDATE_CMD="sudo apt update -y"
         INSTALL_CMD="sudo apt install -y"
+    elif command -v pacman >/dev/null; then
+        PM="pacman"
+        UPDATE_CMD="sudo pacman -Sy"
+        INSTALL_CMD="sudo pacman -S --noconfirm"
     else
-        error "No supported package manager found (dnf or apt)."
+        error "No supported package manager found (dnf, apt or pacman)."
     fi
 
     log "Using $PM package manager..."
@@ -68,7 +72,7 @@ install_packages() {
         fzf
         bat
         ripgrep
-        fd-find
+        fd
         zoxide
         neovim
         eza
@@ -76,11 +80,13 @@ install_packages() {
         atuin
         btop
         lazygit
+        github-cli
         dust
         nodejs
         npm
         wl-clipboard
         xclip
+        base-devel
     )
 
     # Distro-specific package name adjustments & Extras
@@ -99,6 +105,9 @@ install_packages() {
         # But keeping it in PACKAGES is fine as dnf will find it in the COPR we just enabled.
         
         PACKAGES=("${PACKAGES[@]/build-essential/@development-tools}")
+    elif [ "$PM" == "pacman" ]; then
+        # Arch
+        PACKAGES+=(git-delta)
     else
         # Debian/Kali
         PACKAGES+=(build-essential git-delta unp)
@@ -257,7 +266,7 @@ setup_zsh() {
 # -----------------------------------------------------------------------------
 export EDITOR=nvim
 export VISUAL=nvim
-export PATH=\"$HOME/.local/bin:$HOME/go/bin:$PATH"
+export PATH=\"$HOME/.local/bin:$HOME/go/bin:$PATH\"
 
 # Base directory for modular config
 ZSH_CONFIG="$HOME/.config/zsh"

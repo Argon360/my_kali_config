@@ -116,13 +116,15 @@ alias ports='ss -tulnp'
 alias myip='curl -s ifconfig.me'
 
 # Package Management
-if command -v dnf >/dev/null; then
-    alias sysup='sudo dnf upgrade -y && sudo dnf autoremove -y && sudo dnf clean all'
-    alias install='sudo dnf install'
-    alias update='sudo dnf check-update'
-    alias upgrade='sudo dnf upgrade'
-    alias remove='sudo dnf remove'
-    alias search='dnf search'
+if command -v pacman >/dev/null; then
+    alias sysup='sudo pacman -Syu'
+    alias install='sudo pacman -S'
+    alias update='sudo pacman -Sy'
+    alias upgrade='sudo pacman -Syu'
+    alias remove='sudo pacman -Rs'
+    alias search='pacman -Ss'
+    alias cleanup='sudo pacman -Rns $(pacman -Qdtq)'
+elif command -v dnf >/dev/null; then
 elif command -v apt >/dev/null; then
     alias sysup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean'
     alias install='sudo apt install'
