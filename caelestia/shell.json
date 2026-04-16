@@ -38,7 +38,7 @@
     "excludedScreens": [],
     "apps": {
       "terminal": [
-        "foot"
+        "kitty"
       ],
       "audio": [
         "pavucontrol"

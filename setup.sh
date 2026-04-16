@@ -98,7 +98,6 @@ install_packages() {
         ydotool
         gnome-keyring
         polkit-gnome
-        foot
         app2unit
         inotify-tools
         jq
@@ -213,7 +212,6 @@ deploy_configs() {
         "hypr"
         "caelestia"
         "fuzzel"
-        "foot"
         "spicetify"
         "starship.toml"
     )
