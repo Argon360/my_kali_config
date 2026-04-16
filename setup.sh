@@ -87,6 +87,25 @@ install_packages() {
         wl-clipboard
         xclip
         base-devel
+        hyprland
+        hyprpicker
+        hyprcursor
+        fuzzel
+        cliphist
+        gammastep
+        trash-cli
+        wireplumber
+        ydotool
+        gnome-keyring
+        polkit-gnome
+        foot
+        app2unit
+        inotify-tools
+        jq
+        adw-gtk-theme
+        papirus-icon-theme
+        spicetify-cli
+        spotify-client
     )
 
     # Distro-specific package name adjustments & Extras
@@ -191,6 +210,11 @@ deploy_configs() {
         "btop"
         "ghostty"
         "lazygit"
+        "hypr"
+        "caelestia"
+        "fuzzel"
+        "foot"
+        "spicetify"
         "starship.toml"
     )
 
