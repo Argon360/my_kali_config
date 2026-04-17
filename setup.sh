@@ -165,14 +165,31 @@ install_externals() {
         success "Starship already installed"
     fi
 
-    # Todoist CLI
-    if ! command -v todoist &> /dev/null; then
+    # Claude Code
+    if ! command -v claude &> /dev/null; then
         if command -v npm &> /dev/null; then
-            log "Installing Todoist CLI..."
-            sudo npm install -g @doist/todoist-cli || warn "Failed to install todoist-cli"
+            log "Installing Claude Code..."
+            sudo npm install -g @anthropic-ai/claude-code || warn "Failed to install claudecode"
         fi
     else
-        success "Todoist CLI already installed"
+        success "Claude Code already installed"
+    fi
+
+    # Codex CLI
+    if ! command -v codex &> /dev/null; then
+        if command -v npm &> /dev/null; then
+            log "Installing Codex CLI..."
+            sudo npm install -g @openai/codex || warn "Failed to install codex"
+        fi
+    else
+        success "Codex CLI already installed"
+    fi
+
+    # Ollama Models
+    if command -v ollama &> /dev/null; then
+        log "Pulling Ollama models..."
+        ollama pull gemma4:31b || warn "Failed to pull gemma4:31b"
+        ollama pull llama3:8b-instruct-q4_K_M || warn "Failed to pull llama3:8b-instruct-q4_K_M"
     fi
 
     # Nerd Font (Manual for Debian/Kali if not Fedora)
