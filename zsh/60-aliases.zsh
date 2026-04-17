@@ -192,6 +192,12 @@ function run_ollama_model() {
 alias chat-gemma='run_ollama_model "gemma4:31b"'
 alias chat-llama='run_ollama_model "llama3:8b-instruct-q4_K_M"'
 
+# Shorthands
+alias cl='chat-gemma'
+alias cc='chat-gemma'
+alias cl-l='chat-llama'
+alias cc-l='chat-llama'
+
 # -----------------------------------------------------------------------------
 #  Gemini CLI Enhancements
 # -----------------------------------------------------------------------------
