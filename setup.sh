@@ -165,13 +165,6 @@ install_externals() {
         success "Starship already installed"
     fi
 
-    # Ollama Models
-    if command -v ollama &> /dev/null; then
-        log "Pulling Ollama models..."
-        ollama pull gemma4:31b || warn "Failed to pull gemma4:31b"
-        ollama pull llama3:8b-instruct-q4_K_M || warn "Failed to pull llama3:8b-instruct-q4_K_M"
-    fi
-
     # Nerd Font (Manual for Debian/Kali if not Fedora)
     if [ "$PM" == "apt" ]; then
         if ! fc-list | grep -qi "JetBrainsMono"; then

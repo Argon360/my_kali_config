@@ -177,28 +177,6 @@ alias gsw='git switch'
 alias gundo='git restore'
 
 # -----------------------------------------------------------------------------
-#  AI & Ollama Helpers
-# -----------------------------------------------------------------------------
-function run_ollama_model() {
-    local model_name=$1
-    if ! command -v ollama &> /dev/null; then
-        echo "Ollama not found. Installing..."
-        curl -fsSL https://ollama.com/install.sh | sh
-    fi
-    ollama list | grep -q "^${model_name%:*}" || ollama pull "$model_name"
-    ollama run "$model_name"
-}
-
-alias chat-gemma='run_ollama_model "gemma4:31b"'
-alias chat-llama='run_ollama_model "llama3:8b-instruct-q4_K_M"'
-
-# Shorthands
-alias cl='chat-gemma'
-alias cc='chat-gemma'
-alias cl-l='chat-llama'
-alias cc-l='chat-llama'
-
-# -----------------------------------------------------------------------------
 #  Gemini CLI Enhancements
 # -----------------------------------------------------------------------------
 alias gem='cd ~/Documents/gemini && gemini'
