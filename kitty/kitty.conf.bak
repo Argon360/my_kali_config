@@ -1,147 +1,121 @@
 # vim:fileencoding=utf-8:foldmethod=marker
 
-# ----------------------------
-# Fonts & Text Rendering
-# ----------------------------
+# ==============================================================================
+#  THEME & APPEARANCE
+# ==============================================================================
+# BEGIN_KITTY_THEME
+# 1984 Dark
+include current-theme.conf
+# END_KITTY_THEME
+
+background_opacity        0.75
+dynamic_background_opacity yes
+window_padding_width      6
+hide_window_decorations   yes
+
+# ==============================================================================
+#  FONTS
+# ==============================================================================
 font_family      JetBrainsMono Nerd Font
-font_size        10.0
+font_size        11.0
 enable_ligatures yes
 line_height      1.0
+# adjust_line_height  0
+# adjust_column_width 0
 
-
- cursor_shape block
-
- cursor_shape_unfocused hollow
-
- cursor_beam_thickness 1.5
-
- cursor_underline_thickness 2.0
-
- cursor_blink_interval -1
-
-cursor_stop_blinking_after -5.0
-
-cursor_trail 75
-
-cursor_trail_decay 0.3 0.8
-
+# ==============================================================================
+#  CURSOR & MOUSE
+# ==============================================================================
+cursor_shape                 block
+cursor_shape_unfocused       hollow
+cursor_beam_thickness        1.5
+cursor_underline_thickness   2.0
+cursor_blink_interval        -1
+cursor_stop_blinking_after   -5.0
+cursor_trail                 75
+cursor_trail_decay           0.3 0.8
 cursor_trail_start_threshold 1
-# cursor_trail_color none
 
-mouse_hide_wait 1.0
-# url_color #0087bd
-url_style curly
-
-open_url_with default
-
-detect_urls yes
-
-url_excluded_characters
-
+mouse_hide_wait        1.0
+detect_urls            yes
+url_style              curly
+open_url_with          default
 show_hyperlink_targets no
+underline_hyperlinks   hover
+copy_on_select         yes
+# url_excluded_characters
 
-underline_hyperlinks hover
+# ==============================================================================
+#  LAYOUTS & WINDOWS
+# ==============================================================================
+# Enabled layouts: splits (for manual tiling), stack (for zoom), plus standard cycling
+enabled_layouts splits:split_axis=horizontal,stack,tall,fat,grid
 
-copy_on_select yes
-
-
-visual_bell_duration 0.0
-# visual_bell_color none
-
-window_alert_on_bell yes
-
-bell_on_tab "🔔 "
-
-remember_window_position yes 
-
-window_border_width 0.5pt
-
-draw_minimal_borders yes
-
+remember_window_position              yes
+window_border_width                   0.5pt
+draw_minimal_borders                  yes
 draw_window_borders_for_single_window no
-# active_border_color #00ff00
-# inactive_border_color #cccccc
-# bell_border_color #ff5a00
+inactive_text_alpha                   1.0
 
-inactive_text_alpha 1.0
-window_decorations none
-show_tab_bar yes
+# ==============================================================================
+#  TAB BAR
+# ==============================================================================
+show_tab_bar        yes
+tab_bar_style       powerline
+tab_powerline_style slanted
+bell_on_tab         "🔔 "
+
+# ==============================================================================
+#  SYSTEM & PERFORMANCE
+# ==============================================================================
+scrollback_lines     10000
+linux_display_server auto
+sync_to_monitor      yes
 allow_remote_control yes
-shell_integration yes
+shell_integration    yes
+visual_bell_duration 0.5
+window_alert_on_bell yes
+enable_audio_bell    yes
+audio_bell_command   afplay /System/Library/Sounds/Ping.aiff
 
+# ==============================================================================
+#  KEYBINDINGS
+# ==============================================================================
 
-background_opacity 0.75
+# --- Layout Management ---
+map ctrl+shift+l next_layout             # Cycle: Splits -> Stack -> Tall -> Fat -> Grid
+map ctrl+shift+z toggle_layout stack     # Zoom: Toggle full screen (Stack layout)
 
-dynamic_background_opacity yes
+# --- Split Windows ---
+map ctrl+shift+h launch --location=hsplit
+map ctrl+shift+v launch --location=vsplit
+map ctrl+alt+n   new_window
+map ctrl+alt+q   close_window
 
-# color0 #000000
-# color8 #767676
+# --- Tab Management ---
+map ctrl+t           new_tab
+map ctrl+w           close_tab
+map ctrl+shift+right next_tab
+map ctrl+shift+left  previous_tab
+map ctrl+shift+d     detach_tab ask
 
-# color1 #cc0403
-# color9 #f2201f
+# --- Clipboard & Basics ---
+map ctrl+c copy_or_interrupt
+map ctrl+v paste_from_clipboard
+map ctrl+alt+enter toggle_fullscreen
+# --- Quick Select / Hints ---
+map ctrl+shift+e kitten hints --type url        # Select URLs
+map ctrl+shift+p kitten hints --type path --program -  # Select Paths (Insert)
+map ctrl+shift+y kitten hints --type hash --program -  # Select Hashes (Git)
 
-# color2  #19cb00
-# color10 #23fd00
+# --- Font Sizes ---
+map ctrl+plus  increase_font_size
+map ctrl+minus decrease_font_size
+map ctrl+0     reset_font_size
 
-# color3  #cecb00
-# color11 #fffd00
-
-# color4  #0d73cc
-# color12 #1a8fff
-
-# color5  #cb1ed1
-# color13 #fd28ff
-
-# color6  #0dcdcd
-# color14 #14ffff
-
-# color7  #dddddd
-# color15 #ffffff
-
-# mark1_foreground black
-
-# mark1_background #98d3cb
-
-# mark2_foreground black
-
-# mark2_background #f2dcd3
-
-# mark3_foreground black
-
-# mark3_background #f274bc
-
-# ----------------------------
-# Keybindings — Fast Workflow
-# ----------------------------
-# Tabs
-map ctrl+tab          next_tab
-map ctrl+shift+tab    previous_tab
-map ctrl+t            new_tab
-map ctrl+w            close_tab
-
-# Windows
-map ctrl+shift+n      new_window
-map ctrl+shift+q      close_window
-
-# Font scaling
-map ctrl+plus         increase_font_size
-map ctrl+minus        decrease_font_size
-map ctrl+0            reset_font_size
-
-# Copy/paste
-map ctrl+shift+c      copy_to_clipboard
-map ctrl+shift+v      paste_from_clipboard
-
-# Fullscreen
-map ctrl+shift+f      toggle_fullscreen
-
-# ----------------------------
-# Dynamic Opacity Presets
-# ----------------------------
-# Fully opaque
+# --- Opacity Control ---
+map ctrl+shift+o set_background_opacity 0.75 # Reset
 map ctrl+shift+1 set_background_opacity 1.0
-
-# 90% → 10% opacity steps
 map ctrl+shift+2 set_background_opacity 0.9
 map ctrl+shift+3 set_background_opacity 0.8
 map ctrl+shift+4 set_background_opacity 0.7
@@ -151,37 +125,11 @@ map ctrl+shift+7 set_background_opacity 0.4
 map ctrl+shift+8 set_background_opacity 0.3
 map ctrl+shift+9 set_background_opacity 0.2
 map ctrl+shift+0 set_background_opacity 0.1
-map ctrl+shift+backspace set_background_opacity 0.75
 
-# ----------------------------
-# Rendering & Stability Tweaks
-# ----------------------------
-enable_audio_bell no
-sync_to_monitor yes
-adjust_column_width   0
-adjust_line_height    0
-
-# ----------------------------
-# Gemini Suggested Improvements
-# ----------------------------
-# Aesthetic Polish
-window_padding_width 6
-tab_bar_style powerline
-tab_powerline_style slanted
-
-# Scrollback
-scrollback_lines 10000
-
-# Quick Select (Hints)
-map ctrl+shift+e kitten hints
-
-# Better Tiling (Splits)
-enabled_layouts splits:split_axis=horizontal,stack
-map F5 launch --location=hsplit
-map F6 launch --location=vsplit
-
-
-# BEGIN_KITTY_THEME
-# Wood
-include current-theme.conf
-# END_KITTY_THEME
+# --- Shell / FZF Integration (Sends text) ---
+map ctrl+alt+p send_text all \cf   # File search
+map ctrl+alt+h send_text all \cr   # History search
+map ctrl+alt+j send_text all \cd   # Directory jump
+map ctrl+alt+x send_text all \ck   # Kill process
+listen_on unix:/tmp/mykitty-shared
+tab_bar_min_tabs 1
