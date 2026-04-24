@@ -105,6 +105,7 @@ install_packages() {
         papirus-icon-theme
         spicetify-cli
         spotify-client
+        zellij
     )
 
     # Distro-specific package name adjustments & Extras
@@ -329,6 +330,42 @@ fi
     fi
 }
 
+# --- 6. User Directories & Assets ---
+setup_user_dirs() {
+    log "Setting up user directories and assets..."
+    
+    mkdir -p "$HOME/Pictures/Wallpapers"
+    mkdir -p "$HOME/Music/lyrics"
+    mkdir -p "$HOME/.local/bin"
+
+    if [ -d "$SCRIPT_DIR/wallpapers" ]; then
+        log "Copying wallpapers from repo..."
+        # Copy everything except .gitkeep
+        find "$SCRIPT_DIR/wallpapers" -type f ! -name ".gitkeep" -exec cp {} "$HOME/Pictures/Wallpapers/" \;
+    fi
+}
+
+# --- 7. Fix Hardcoded Paths ---
+fix_hardcoded_paths() {
+    log "Fixing hardcoded paths in configurations..."
+    
+    # Files to process in ~/.config
+    FILES=(
+        "$TARGET_DIR/caelestia/shell.json"
+        "$TARGET_DIR/fish/conf.d/eve-ng.fish"
+        "$TARGET_DIR/zsh/70-extras.zsh"
+    )
+
+    for file in "${FILES[@]}"; do
+        if [ -f "$file" ]; then
+            log "Processing $file..."
+            # Replace /home/argon with the actual $HOME
+            # Using | as delimiter for sed since $HOME contains slashes
+            sed -i "s|/home/argon|$HOME|g" "$file"
+        fi
+    done
+}
+
 # --- Main ---
 main() {
     log "Starting Setup..."
@@ -337,6 +374,8 @@ main() {
     install_packages
     install_externals
     deploy_configs
+    setup_user_dirs
+    fix_hardcoded_paths
     setup_fish
     setup_zsh
 
