@@ -106,6 +106,9 @@ install_packages() {
         spicetify-cli
         spotify-client
         zellij
+        putty
+        openconnect
+        vivaldi
         # Caelestia Dependencies
         brightnessctl
         aubio
@@ -135,6 +138,12 @@ install_packages() {
     elif [ "$PM" == "pacman" ]; then
         # Arch
         PACKAGES+=(git-delta)
+        
+        # AUR Packages if yay is present
+        if command -v yay >/dev/null; then
+            log "Installing AUR packages..."
+            yay -S --noconfirm eve-ng-integration || warn "Could not install eve-ng-integration via yay"
+        fi
     else
         # Debian/Kali
         PACKAGES+=(build-essential git-delta unp)
@@ -384,6 +393,12 @@ setup_user_dirs() {
         log "Copying wallpapers from repo..."
         # Copy everything except .gitkeep
         find "$SCRIPT_DIR/wallpapers" -type f ! -name ".gitkeep" -exec cp {} "$HOME/Pictures/Wallpapers/" \;
+    fi
+
+    if [ -f "$SCRIPT_DIR/scripts/eve-ng-terminal" ]; then
+        log "Installing eve-ng-terminal script..."
+        cp "$SCRIPT_DIR/scripts/eve-ng-terminal" "$HOME/.local/bin/eve-ng-terminal"
+        chmod +x "$HOME/.local/bin/eve-ng-terminal"
     fi
 }
 

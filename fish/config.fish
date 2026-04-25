@@ -27,6 +27,11 @@ if status is-interactive
     abbr gco 'git checkout'
     abbr gsh 'git show'
 
+    abbr vpn-ccn 'sudo openconnect 103.174.245.58 --servercert pin-sha256:KaXyhT+38uSFfjjiFIGF4dYRVdZmO5XtjMz+14atFFg= --user DhirajPatil --background --pid-file=/tmp/vpn-ccn.pid'
+    abbr vpn-stop 'sudo kill -SIGINT (cat /tmp/vpn-ccn.pid); and sudo rm /tmp/vpn-ccn.pid'
+    abbr vpn-logs 'journalctl -t openconnect -f'
+    abbr upsh 'cd ~/Documents/my_kali_config; and ./setup.sh'
+
     abbr l 'ls'
     abbr ll 'ls -l'
     abbr la 'ls -a'

@@ -1,0 +1,23 @@
+#!/bin/bash
+# ==============================================================================
+# EVE-NG Terminal Wrapper for Kitty
+# ==============================================================================
+# This script is called by eve-ng-integration to open sessions in Kitty tabs.
+# It uses the Kitty remote control feature.
+
+# Path to the Kitty socket (must match kitty.conf)
+SOCKET="unix:/tmp/mykitty-shared"
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <command>"
+    exit 1
+fi
+
+# Check if kitty is running with the socket
+if [ -S "/tmp/mykitty-shared" ]; then
+    # Open in a new tab in the existing kitty instance
+    kitty @ --to "$SOCKET" launch --type=tab --tab-title "EVE-NG: $1" "$@"
+else
+    # Fallback: Open a new kitty window if no socket found
+    kitty --title "EVE-NG: $1" "$@"
+fi

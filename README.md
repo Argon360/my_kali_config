@@ -136,11 +136,15 @@ If you prefer to do things yourself:
 2. Install dependencies (example):
 
    ```bash
+   # For Arch / EndeavourOS:
+   sudo pacman -S kitty fish fzf bat ripgrep fd zoxide neovim eza fastfetch atuin vivaldi putty openconnect
+   yay -S eve-ng-integration
+
    # For Fedora:
-   sudo dnf install kitty fish fzf bat ripgrep fd-find zoxide neovim eza fastfetch atuin
+   sudo dnf install kitty fish fzf bat ripgrep fd-find zoxide neovim eza fastfetch atuin vivaldi putty openconnect
 
    # For Debian/Ubuntu:
-   sudo apt install kitty fish fzf bat ripgrep fd-find zoxide neovim eza fastfetch atuin
+   sudo apt install kitty fish fzf bat ripgrep fd-find zoxide neovim eza fastfetch atuin vivaldi-stable putty openconnect
    # Install starship, atuin, eza, fastfetch as needed
    ```
 

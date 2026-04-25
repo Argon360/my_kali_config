@@ -114,6 +114,9 @@ alias cpu='lscpu | less'
 alias ipinfo='ip -c a'
 alias ports='ss -tulnp'
 alias myip='curl -s ifconfig.me'
+alias vpn-ccn='sudo openconnect 103.174.245.58 --servercert pin-sha256:KaXyhT+38uSFfjjiFIGF4dYRVdZmO5XtjMz+14atFFg= --user DhirajPatil --background --pid-file=/tmp/vpn-ccn.pid'
+alias vpn-stop='sudo kill -SIGINT $(cat /tmp/vpn-ccn.pid) && sudo rm /tmp/vpn-ccn.pid'
+alias vpn-logs='journalctl -t openconnect -f'
 
 # Package Management
 if command -v pacman >/dev/null; then
@@ -124,6 +127,7 @@ if command -v pacman >/dev/null; then
     alias remove='sudo pacman -Rs'
     alias search='pacman -Ss'
     alias cleanup='sudo pacman -Rns $(pacman -Qdtq)'
+    alias upsh='cd ~/Documents/my_kali_config && ./setup.sh'
 elif command -v dnf >/dev/null; then
 elif command -v apt >/dev/null; then
     alias sysup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean'
@@ -132,6 +136,7 @@ elif command -v apt >/dev/null; then
     alias upgrade='sudo apt upgrade'
     alias remove='sudo apt remove'
     alias search='apt search'
+    alias upsh='cd ~/Documents/my_kali_config && ./setup.sh'
 fi
 alias fixdpkg='sudo dpkg --configure -a'
 alias please='sudo'
