@@ -106,6 +106,14 @@ install_packages() {
         spicetify-cli
         spotify-client
         zellij
+        # Caelestia Dependencies
+        brightnessctl
+        aubio
+        slurp
+        grim
+        gpu-screen-recorder
+        swappy
+        python-pillow
     )
 
     # Distro-specific package name adjustments & Extras
@@ -182,7 +190,41 @@ install_externals() {
     fi
 }
 
-# --- 3. Deploy Configurations ---
+# --- 3. Caelestia Installation ---
+install_caelestia() {
+    log "Installing Caelestia Dotfiles..."
+    
+    CAELESTIA_DIR="$HOME/.local/share/caelestia"
+    
+    if [ ! -d "$CAELESTIA_DIR" ]; then
+        log "Cloning Caelestia repository..."
+        git clone https://github.com/caelestia-dots/caelestia.git "$CAELESTIA_DIR"
+    else
+        log "Updating Caelestia repository..."
+        git -C "$CAELESTIA_DIR" pull
+    fi
+
+    log "Running Caelestia installer..."
+    # Running with --discord, --vscode=codium, and --noconfirm as per current system setup
+    # We use fish to run the installer as it is a fish script
+    if command -v fish &> /dev/null; then
+        cd "$CAELESTIA_DIR"
+        fish ./install.fish --discord --vscode=codium --aur-helper=yay --noconfirm
+        cd - > /dev/null
+    else
+        error "Fish shell is required for Caelestia installation."
+    fi
+    
+    # Ensure VSCodium symlinks are correct if codium was installed
+    if [ -d "$HOME/.config/VSCodium/User" ]; then
+        log "Ensuring VSCodium symlinks..."
+        ln -sf "$CAELESTIA_DIR/vscode/settings.json" "$HOME/.config/VSCodium/User/settings.json"
+        ln -sf "$CAELESTIA_DIR/vscode/keybindings.json" "$HOME/.config/VSCodium/User/keybindings.json"
+        ln -sf "$CAELESTIA_DIR/vscode/flags.conf" "$HOME/.config/codium-flags.conf"
+    fi
+}
+
+# --- 4. Deploy Configurations ---
 deploy_configs() {
     log "Deploying configurations..."
 
@@ -373,6 +415,7 @@ main() {
     
     install_packages
     install_externals
+    install_caelestia
     deploy_configs
     setup_user_dirs
     fix_hardcoded_paths
