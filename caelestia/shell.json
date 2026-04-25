@@ -13,17 +13,17 @@
                 "sans": "Rubik"
             },
             "size": {
-                "scale": 0.9
+                "scale": 0.95
             }
         },
         "padding": {
-            "scale": 0.9
+            "scale": 0.95
         },
         "rounding": {
-            "scale": 0.9
+            "scale": 0.95
         },
         "spacing": {
-            "scale": 0.9
+            "scale": 0.95
         },
         "transparency": {
             "base": 0.85,
