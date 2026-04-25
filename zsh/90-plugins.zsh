@@ -3,24 +3,24 @@
 # -----------------------------------------------------------------------------
 
 # 1. Autosuggestions
-if [[ -f ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-    source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [[ -f $ZSH_CONFIG/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+    source $ZSH_CONFIG/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
     ZSH_AUTOSUGGEST_STRATEGY=(history completion)
     ZSH_AUTOSUGGEST_USE_ASYNC=1
 fi
 
 # 2. History Substring Search (Fish Up/Down)
-if [[ -f ~/.config/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh ]]; then
-    source ~/.config/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+if [[ -f $ZSH_CONFIG/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh ]]; then
+    source $ZSH_CONFIG/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
     # Color for the matched part
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=magenta,fg=white,bold'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=red,fg=white,bold'
 fi
 
 # 3. FZF-Tab (Interactive Completion)
-if [[ -f ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
-    source ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
+if [[ -f $ZSH_CONFIG/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
+    source $ZSH_CONFIG/plugins/fzf-tab/fzf-tab.plugin.zsh
     
     # Basic Config
     zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
@@ -59,6 +59,6 @@ if [[ -f ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
 fi
 
 # 4. Syntax Highlighting (MUST BE LAST)
-if [[ -f ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
-    source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [[ -f $ZSH_CONFIG/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source $ZSH_CONFIG/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
