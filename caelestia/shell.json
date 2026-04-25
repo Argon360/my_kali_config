@@ -473,8 +473,8 @@
         ],
         "showLyrics": false,
         "smartScheme": true,
-        "useFahrenheit": true,
-        "useFahrenheitPerformance": true,
+        "useFahrenheit": false,
+        "useFahrenheitPerformance": false,
         "useTwelveHourClock": true,
         "visualiserBars": 45,
         "weatherLocation": ""
