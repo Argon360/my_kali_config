@@ -147,6 +147,7 @@ alias please='sudo'
 alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'
+alias kitty='kitty --single-instance'
 alias lvim='NVIM_APPNAME=lazyvim nvim'
 
 alias cls='clear'

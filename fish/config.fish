@@ -31,6 +31,7 @@ if status is-interactive
     abbr vpn-stop 'sudo kill -SIGINT (cat /tmp/vpn-ccn.pid); and sudo rm /tmp/vpn-ccn.pid'
     abbr vpn-logs 'journalctl -t openconnect -f'
     abbr upsh 'cd ~/Documents/my_kali_config; and ./setup.sh'
+    abbr kitty 'kitty --single-instance'
 
     abbr l 'ls'
     abbr ll 'ls -l'
