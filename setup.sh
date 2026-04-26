@@ -109,6 +109,7 @@ install_packages() {
         putty
         openconnect
         vivaldi
+        inetutils
         # Caelestia Dependencies
         brightnessctl
         aubio

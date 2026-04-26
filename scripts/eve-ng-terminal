@@ -16,8 +16,9 @@ fi
 # Check if kitty is running with the socket
 if [ -S "/tmp/mykitty-shared" ]; then
     # Open in a new tab in the existing kitty instance
-    kitty @ --to "$SOCKET" launch --type=tab --tab-title "EVE-NG: $1" "$@"
+    # We use sh -c to ensure the command is looked up in the full PATH
+    kitty @ --to "$SOCKET" launch --type=tab --tab-title "EVE-NG: $1" sh -c "$*"
 else
     # Fallback: Open a new kitty window if no socket found
-    kitty --title "EVE-NG: $1" "$@"
+    kitty --title "EVE-NG: $1" sh -c "$*"
 fi
