@@ -438,6 +438,14 @@ main() {
     setup_fish
     setup_zsh
 
+    # Deploy Desktop Entries
+    if [ -d "$SCRIPT_DIR/applications" ]; then
+        log "Deploying desktop applications..."
+        mkdir -p "$HOME/.local/share/applications"
+        cp -r "$SCRIPT_DIR/applications/"* "$HOME/.local/share/applications/"
+        update-desktop-database "$HOME/.local/share/applications"
+    fi
+
     success "Setup Complete!"
     if [ -d "$BACKUP_DIR" ]; then
         log "Old configs backed up to: $BACKUP_DIR"

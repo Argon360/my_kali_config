@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=EVE-NG Integration
+Exec=env OVERRIDE_TERMINAL_CMD=/home/argon/.local/bin/eve-ng-terminal eve-ng-integration %u
+TryExec=eve-ng-integration
+Type=Application
+Categories=Network;
+MimeType=x-scheme-handler/telnet;x-scheme-handler/capture;x-scheme-handler/docker;
+X-KDE-Protocols=telnet,capture,docker
+NoDisplay=true
