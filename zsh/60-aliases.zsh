@@ -114,7 +114,7 @@ alias cpu='lscpu | less'
 alias ipinfo='ip -c a'
 alias ports='ss -tulnp'
 alias myip='curl -s ifconfig.me'
-alias vpn-ccn='sudo openconnect 103.174.245.58 --servercert pin-sha256:KaXyhT+38uSFfjjiFIGF4dYRVdZmO5XtjMz+14atFFg= --user DhirajPatil --background --pid-file=/tmp/vpn-ccn.pid'
+alias vpn-ccn='sudo openconnect 103.174.245.58 --servercert pin-sha256:KaXyhT+38uSFfjjiFIGF4dYRVdZmO5XtjMz+14atFFg= --user DhirajPatil --authgroup Connecting-Cyber-Networks --background --pid-file=/tmp/vpn-ccn.pid'
 alias vpn-stop='sudo kill -SIGINT $(cat /tmp/vpn-ccn.pid) && sudo rm /tmp/vpn-ccn.pid'
 alias vpn-logs='journalctl -t openconnect -f'
 
