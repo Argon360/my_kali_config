@@ -402,6 +402,12 @@ setup_user_dirs() {
         cp "$SCRIPT_DIR/scripts/eve-ng-terminal" "$HOME/.local/bin/eve-ng-terminal"
         chmod +x "$HOME/.local/bin/eve-ng-terminal"
     fi
+
+    if [ -f "$SCRIPT_DIR/scripts/kitty-wrapper" ]; then
+        log "Installing kitty master wrapper..."
+        cp "$SCRIPT_DIR/scripts/kitty-wrapper" "$HOME/.local/bin/kitty"
+        chmod +x "$HOME/.local/bin/kitty"
+    fi
 }
 
 # --- 7. Fix Hardcoded Paths ---

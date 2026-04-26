@@ -13,12 +13,11 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-# Check if kitty is running with the socket
-if [ -S "/tmp/mykitty-shared" ]; then
-    # Open in a new tab in the existing kitty instance
-    # We use sh -c to ensure the command is looked up in the full PATH
-    kitty @ --to "$SOCKET" launch --type=tab --tab-title "EVE-NG: $1" sh -c "$*"
+# Check if kitty is running
+if pgrep -f "kitty --single-instance --instance-group master" > /dev/null; then
+    # Open in a new tab in the master instance
+    /usr/bin/kitty --single-instance --instance-group master @ launch --type=tab --tab-title "EVE-NG: $1" sh -c "$*"
 else
-    # Fallback: Open a new kitty window if no socket found
-    kitty --title "EVE-NG: $1" sh -c "$*"
+    # Fallback: Just open using the master instance group
+    /usr/bin/kitty --single-instance --instance-group master --title "EVE-NG: $1" sh -c "$*"
 fi

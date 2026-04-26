@@ -1,0 +1,3 @@
+#!/bin/bash
+# Master Kitty Wrapper to enforce single-instance on a specific socket
+/usr/bin/kitty --single-instance --instance-group master "$@"
