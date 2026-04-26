@@ -255,6 +255,7 @@ deploy_configs() {
         "caelestia"
         "fuzzel"
         "spicetify"
+        "environment.d"
         "starship.toml"
     )
 
