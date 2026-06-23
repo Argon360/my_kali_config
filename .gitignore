@@ -1,0 +1,28 @@
+# ==============================================================================
+#  STRICT ALLOWLIST
+#  Ignore everything by default, only allow specific user-selected files.
+# ==============================================================================
+
+# 1. Ignore everything
+/*
+
+# 2. Allow GIT configuration
+!/.gitignore
+
+# 3. Allow Specific Files
+!/README.md
+!/setup.sh
+!/starship.toml
+
+# 4. Allow Specific Directories
+!/atuin/
+!/bat/
+!/btop/
+!/docs/
+!/fastfetch/
+!/fish/
+!/ghostty/
+!/kitty/
+!/nvim/
+!/zsh/
+!/zellij/
