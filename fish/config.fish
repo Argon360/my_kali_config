@@ -336,4 +336,11 @@ if status is-interactive
         thefuck --alias FUCK | source
     end
 
+    # -------------------------------------------------------------------------
+    #  Antigravity (AGY) CLI & Session Shortcuts
+    # -------------------------------------------------------------------------
+    alias agyc='agy -c'
+    alias agys='python3 ~/.local/bin/agy-session-tracker.py -i'
+    alias agyl='python3 ~/.local/bin/agy-session-tracker.py'
+
 end

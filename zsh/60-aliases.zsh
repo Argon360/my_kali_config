@@ -353,3 +353,11 @@ alias gemy='cd ~/Documents/gemini && gemini --approval-mode yolo'
 alias gemp='cd ~/Documents/gemini && gemini --approval-mode plan'
 alias gems='cd ~/Documents/gemini && gemini --sandbox'
 
+# -----------------------------------------------------------------------------
+#  Antigravity (AGY) CLI & Session Shortcuts
+# -----------------------------------------------------------------------------
+alias agyc='agy -c'
+alias agys='python3 ~/.local/bin/agy-session-tracker.py -i'
+alias agyl='python3 ~/.local/bin/agy-session-tracker.py'
+
+
