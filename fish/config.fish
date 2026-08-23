@@ -224,6 +224,19 @@ if status is-interactive
     alias gsmu='git submodule update --remote'
 
     # -----------------------------
+    # GitHub CLI (gh)
+    # -----------------------------
+    if type -q gh
+        alias ghpr='gh pr create'
+        alias ghpv='gh pr view'
+        alias ghpl='gh pr list'
+        alias ghrc='gh repo clone'
+        alias ghrv='gh repo view --web'
+        alias ghw='gh run watch'
+        alias ghs='gh auth status'
+    end
+
+    # -----------------------------
     # Neovim / Dev
     # -----------------------------
     alias nv='nvim'

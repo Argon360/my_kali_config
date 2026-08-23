@@ -185,7 +185,7 @@ alias reload='source ~/.zshrc'
 alias restart='exec zsh'
 
 # -----------------------------------------------------------------------------
-#  Git Shortcuts
+#  Git & GitHub (gh) Shortcuts
 # -----------------------------------------------------------------------------
 alias gs='git status'
 alias ga='git add'
@@ -200,6 +200,17 @@ alias gp='git push'
 alias gpl='git pull'
 alias gsw='git switch'
 alias gundo='git restore'
+
+# GitHub CLI (gh)
+if command -v gh >/dev/null; then
+    alias ghpr='gh pr create'
+    alias ghpv='gh pr view'
+    alias ghpl='gh pr list'
+    alias ghrc='gh repo clone'
+    alias ghrv='gh repo view --web'
+    alias ghw='gh run watch'
+    alias ghs='gh auth status'
+fi
 
 # -----------------------------------------------------------------------------
 #  Todoist CLI - Core Integrations
