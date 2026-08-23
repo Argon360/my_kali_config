@@ -95,6 +95,7 @@
 | Command | Description |
 |------|------------|
 | `sysup` | Full system update + cleanup |
+| `fixpacman` | Fix broken pacman database lock |
 | `fixdpkg` | Fix broken dpkg state |
 | `please` | Alias for `sudo` |
 

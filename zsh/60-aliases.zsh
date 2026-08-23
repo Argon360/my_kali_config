@@ -116,7 +116,34 @@ alias ports='ss -tulnp'
 alias myip='curl -s ifconfig.me'
 
 # Package Management
-if command -v dnf >/dev/null; then
+if command -v paru >/dev/null; then
+    alias sysup='paru -Syu'
+    alias install='paru -S'
+    alias update='paru -Sy'
+    alias upgrade='paru -Syu'
+    alias remove='paru -Rns'
+    alias search='paru -Ss'
+    alias orphans='paru -Qtdq | paru -Rns -'
+    alias fixpacman='sudo rm -f /var/lib/pacman/db.lck'
+elif command -v yay >/dev/null; then
+    alias sysup='yay -Syu'
+    alias install='yay -S'
+    alias update='yay -Sy'
+    alias upgrade='yay -Syu'
+    alias remove='yay -Rns'
+    alias search='yay -Ss'
+    alias orphans='yay -Qtdq | yay -Rns -'
+    alias fixpacman='sudo rm -f /var/lib/pacman/db.lck'
+elif command -v pacman >/dev/null; then
+    alias sysup='sudo pacman -Syu'
+    alias install='sudo pacman -S'
+    alias update='sudo pacman -Sy'
+    alias upgrade='sudo pacman -Syu'
+    alias remove='sudo pacman -Rns'
+    alias search='pacman -Ss'
+    alias orphans='sudo pacman -Rns $(pacman -Qtdq)'
+    alias fixpacman='sudo rm -f /var/lib/pacman/db.lck'
+elif command -v dnf >/dev/null; then
     alias sysup='sudo dnf upgrade -y && sudo dnf autoremove -y && sudo dnf clean all'
     alias install='sudo dnf install'
     alias update='sudo dnf check-update'

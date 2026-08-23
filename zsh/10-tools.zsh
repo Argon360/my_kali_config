@@ -19,7 +19,11 @@ fi
 # -----------------------------------------------------------------------------
 if [ -f /usr/share/doc/fzf/examples/completion.zsh ]; then
   source /usr/share/doc/fzf/examples/completion.zsh
+elif [ -f /usr/share/fzf/completion.zsh ]; then
+  source /usr/share/fzf/completion.zsh
 fi
 if [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
   source /usr/share/doc/fzf/examples/key-bindings.zsh
+elif [ -f /usr/share/fzf/key-bindings.zsh ]; then
+  source /usr/share/fzf/key-bindings.zsh
 fi

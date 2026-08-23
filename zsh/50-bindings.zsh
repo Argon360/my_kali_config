@@ -30,16 +30,16 @@ bindkey '^[[4~' end-of-line
 if command -v atuin >/dev/null; then
   # Atuin widget name depends on version, usually _atuin_search_widget
   bindkey '^[[A' _atuin_search_widget
-  bindkey "${terminfo[kcuu1]}" _atuin_search_widget
+  [[ -n "${terminfo[kcuu1]}" ]] && bindkey "${terminfo[kcuu1]}" _atuin_search_widget
 else
   # Fallback: History Substring Search
   bindkey '^[[A' history-substring-search-up
-  bindkey "${terminfo[kcuu1]}" history-substring-search-up
+  [[ -n "${terminfo[kcuu1]}" ]] && bindkey "${terminfo[kcuu1]}" history-substring-search-up
 fi
 
 # -----------------------------------------------------------------------------
-# Down Arrow: History Substring Search
+# History Substring Search (Down Arrow)
 # -----------------------------------------------------------------------------
 # We keep Down arrow for quick line-by-line history navigation
 bindkey '^[[B' history-substring-search-down
-bindkey "${terminfo[kcud1]}" history-substring-search-down
+[[ -n "${terminfo[kcud1]}" ]] && bindkey "${terminfo[kcud1]}" history-substring-search-down

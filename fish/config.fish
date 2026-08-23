@@ -123,10 +123,44 @@ if status is-interactive
     # -----------------------------
     # System Maintenance
     # -----------------------------
-    if type -q dnf
+    if type -q paru
+        alias sysup='paru -Syu'
+        alias install='paru -S'
+        alias update='paru -Sy'
+        alias upgrade='paru -Syu'
+        alias remove='paru -Rns'
+        alias search='paru -Ss'
+        alias fixpacman='sudo rm -f /var/lib/pacman/db.lck'
+    else if type -q yay
+        alias sysup='yay -Syu'
+        alias install='yay -S'
+        alias update='yay -Sy'
+        alias upgrade='yay -Syu'
+        alias remove='yay -Rns'
+        alias search='yay -Ss'
+        alias fixpacman='sudo rm -f /var/lib/pacman/db.lck'
+    else if type -q pacman
+        alias sysup='sudo pacman -Syu'
+        alias install='sudo pacman -S'
+        alias update='sudo pacman -Sy'
+        alias upgrade='sudo pacman -Syu'
+        alias remove='sudo pacman -Rns'
+        alias search='pacman -Ss'
+        alias fixpacman='sudo rm -f /var/lib/pacman/db.lck'
+    else if type -q dnf
         alias sysup='sudo dnf upgrade -y && sudo dnf autoremove -y && sudo dnf clean all'
+        alias install='sudo dnf install'
+        alias update='sudo dnf check-update'
+        alias upgrade='sudo dnf upgrade'
+        alias remove='sudo dnf remove'
+        alias search='dnf search'
     else if type -q apt
         alias sysup='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt clean'
+        alias install='sudo apt install'
+        alias update='sudo apt update'
+        alias upgrade='sudo apt upgrade'
+        alias remove='sudo apt remove'
+        alias search='apt search'
     end
     alias fixdpkg='sudo dpkg --configure -a'
     alias please='sudo'

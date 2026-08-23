@@ -2,23 +2,7 @@
 # Plugins
 # -----------------------------------------------------------------------------
 
-# 1. Autosuggestions
-if [[ -f ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
-    source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
-    ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-    ZSH_AUTOSUGGEST_USE_ASYNC=1
-fi
-
-# 2. History Substring Search (Fish Up/Down)
-if [[ -f ~/.config/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh ]]; then
-    source ~/.config/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-    # Color for the matched part
-    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=magenta,fg=white,bold'
-    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=red,fg=white,bold'
-fi
-
-# 3. FZF-Tab (Interactive Completion)
+# 1. FZF-Tab (Interactive Completion - MUST BE LOADED BEFORE AUTOSUGGESTIONS & SYNTAX HIGHLIGHTING)
 if [[ -f ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
     source ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
     
@@ -56,6 +40,22 @@ if [[ -f ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
     zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
     zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
     zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
+fi
+
+# 2. Autosuggestions
+if [[ -f ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+    source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
+    ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+    ZSH_AUTOSUGGEST_USE_ASYNC=1
+fi
+
+# 3. History Substring Search (Fish Up/Down)
+if [[ -f ~/.config/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh ]]; then
+    source ~/.config/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+    # Color for the matched part
+    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=magenta,fg=white,bold'
+    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=red,fg=white,bold'
 fi
 
 # 4. Syntax Highlighting (MUST BE LAST)
