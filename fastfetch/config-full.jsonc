@@ -7,7 +7,7 @@
             "2": "blue"
         },
         "padding": {
-            "top": 0,
+            "top": 4,
             "left": 1,
             "right": 3
         }
@@ -48,6 +48,10 @@
             "format": "{#36}{user-name-colored}{#39}@{host-name-colored}"
         },
         {
+            "key": "├───────────┤",
+            "type": "custom"
+        },
+        {
             "key": "│ {#34} distro  {#keys}│",
             "type": "os"
         },
@@ -64,22 +68,69 @@
             "type": "de"
         },
         {
+            "key": "│ {#35}󱂬 wm      {#keys}│",
+            "type": "wm"
+        },
+        {
+            "key": "│ {#32} term    {#keys}│",
+            "type": "terminal"
+        },
+        {
             "key": "│ {#31} shell   {#keys}│",
             "type": "shell"
         },
         {
+            "key": "│ {#34}󰏖 pkgs    {#keys}│",
+            "type": "packages"
+        },
+        {
+            "key": "├───────────┤",
+            "type": "custom"
+        },
+        {
+            "key": "│ {#35} host    {#keys}│",
+            "type": "host"
+        },
+        {
             "key": "│ {#36} cpu     {#keys}│",
             "type": "cpu",
-            "format": "{name}"
+            "showPeCoreCount": true
+        },
+        {
+            "key": "│ {#36}󰓅 load    {#keys}│",
+            "type": "cpuusage"
+        },
+        {
+            "key": "│ {#33}󰢮 gpu     {#keys}│",
+            "type": "gpu",
+            "detectionMethod": "pci",
+            "format": "{name} [{type}]"
+        },
+        {
+            "key": "│ {#32}󰍹 display {#keys}│",
+            "type": "display",
+            "format": "{width}x{height} @ {refresh-rate}Hz ({inch}\")"
         },
         {
             "key": "│ {#34} memory  {#keys}│",
             "type": "memory"
         },
         {
+            "key": "│ {#31}󰓡 swap    {#keys}│",
+            "type": "swap"
+        },
+        {
             "key": "│ {#35}󰋊 disk    {#keys}│",
             "type": "disk",
             "folders": "/"
+        },
+        {
+            "key": "│ {#32} battery {#keys}│",
+            "type": "battery"
+        },
+        {
+            "key": "├───────────┤",
+            "type": "custom"
         },
         {
             "key": "│ {#39} colors  {#keys}│",

@@ -367,4 +367,5 @@ alias agyn='python3 ~/.local/bin/agy-session-tracker.py rename'
 # -----------------------------------------------------------------------------
 alias ff='fastfetch'
 alias ffpreview='fastfetch --config ~/.config/fastfetch/config.jsonc'
-alias ffwatch='fastfetch --watch'
+alias fffull='fastfetch --config ~/.config/fastfetch/config-full.jsonc'
+alias ffwatch='fastfetch --config ~/.config/fastfetch/config-full.jsonc --watch'

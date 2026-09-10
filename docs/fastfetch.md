@@ -2,22 +2,42 @@
 
 ## Purpose
 
-**Fastfetch** is the system information tool that runs when a new interactive shell session starts. 
-It provides a quick snapshot of the hardware and software environment.
+**Fastfetch** is the system information tool executed on interactive shell startups and via `ff`. It provides a sleek, modern snapshot of hardware, software, and system health.
 
 ---
 
-# Fastfetch Configuration
+## 1. Compact Default Layout (`ff` / `fastfetch`)
 
-## Purpose
+The default configuration is tailored to be **compact (11 lines)**, matching the exact height of the small CachyOS ASCII logo without wasting terminal vertical space:
 
-**Fastfetch** is the system information tool executed on interactive shell startups and via `ffpreview`. It provides a sleek, modern snapshot of hardware, software, and system health.
+```
+      ...........           ╭───────────╮  
+     /,,,,...../            │  user    │  argon@Growler
+    /,,,..,,../   ()        │  distro  │  CachyOS x86_64
+   /,,,,../                 │  kernel  │  Linux 7.2.3-1-cachyos
+  /,,,.../     /'\          │ 󰅐 uptime  │  1 hour, 13 mins
+ /,...../      \,/          │  desktop │  KDE Plasma 6.7.5
+ \,,,,,,\\             _    │  shell   │  zsh 5.9
+  \,,....\\           / \   │  cpu     │  12th Gen Intel(R) Core(TM) i5-12450H
+   \...,..\\          \_/   │  memory  │   4.42 GiB / 15.32 GiB (29%)
+    \..,,,,,,,,,,,,/        │ 󰋊 disk    │   14.52 GiB / 120.00 GiB (12%) - btrfs
+     \,,........,,/         │  colors  │  ● ● ● ● ● ● ● ●
+                            ╰───────────╯  
+```
+
+### Key Highlights
+- **1:1 Alignment**: The 11-line pill badge matches the 11-line small CachyOS logo line-for-line.
+- **Powerline Progress Bars**: Curved Powerline glyphs (``) with multi-color dynamic threshold colors.
+- **Instant Speed**: Omits heavy sampling modules for sub-30ms shell startup times.
 
 ---
 
-## Layout & Aesthetic
+## 2. Full Extended Dashboard (`fffull` & `ffwatch`)
 
-The configuration uses a modern **Pill-Badge Card** layout with JetBrainsMono Nerd Font icons and Powerline-style progress bars:
+When you want a complete hardware & software breakdown or a live real-time dashboard:
+
+- **`fffull`**: Full static snapshot including dual GPUs, display details, real-time CPU load, swap, and battery.
+- **`ffwatch`**: Real-time live updating watch mode (`--watch`). Continuously updates CPU load, memory, swap, and battery in place.
 
 ```
                             ╭───────────╮  
@@ -25,7 +45,7 @@ The configuration uses a modern **Pill-Badge Card** layout with JetBrainsMono Ne
                             ├───────────┤  
                             │  distro  │  CachyOS x86_64
       ...........           │  kernel  │  Linux 7.2.3-1-cachyos
-     /,,,,...../            │ 󰅐 uptime  │  1 hour, 3 mins
+     /,,,,...../            │ 󰅐 uptime  │  1 hour, 11 mins
     /,,,..,,../   ()        │  desktop │  KDE Plasma 6.7.5
    /,,,,../                 │ 󱂬 wm      │  KWin (Wayland)
   /,,,.../     /'\          │  term    │  kitty 0.48.2
@@ -33,63 +53,34 @@ The configuration uses a modern **Pill-Badge Card** layout with JetBrainsMono Ne
  \,,,,,,\\             _    │ 󰏖 pkgs    │  1498 (pacman)
   \,,....\\           / \   ├───────────┤  
    \...,..\\          \_/   │  host    │  Cyborg 15 A12UCX (REV:1.0)
-    \..,,,,,,,,,,,,/        │  cpu     │  12th Gen Intel Core i5-12450H (8+4) @ 4.40 GHz
-     \,,........,,/         │ 󰢮 gpu     │  GeForce RTX 2050 [Discrete]
+    \..,,,,,,,,,,,,/        │  cpu     │  12th Gen Intel(R) Core(TM) i5-12450H (8+4) @ 4.40 GHz
+     \,,........,,/         │ 󰓅 load    │   (15%)
+                            │ 󰢮 gpu     │  GeForce RTX 2050 [Discrete]
                             │ 󰢮 gpu     │  UHD Graphics [Integrated]
                             │ 󰍹 display │  1920x1080 @ 144Hz (16")
-                            │  memory  │   4.47 GiB / 15.32 GiB (29%)
+                            │  memory  │   4.45 GiB / 15.32 GiB (29%)
                             │ 󰓡 swap    │   216.00 KiB / 23.32 GiB (0%)
                             │ 󰋊 disk    │   14.52 GiB / 120.00 GiB (12%) - btrfs
-                            │  battery │   (93%) [AC Connected, Charging]
+                            │  battery │   (95%) [AC Connected, Charging]
                             ├───────────┤  
                             │  colors  │  ● ● ● ● ● ● ● ●
                             ╰───────────╯  
 ```
 
-### 1.  User & Host
-- Stylized dynamic title: `{user}@{host}`
+---
 
-### 2. 💿 System & Desktop
-- **Distro**: OS name and architecture (`CachyOS x86_64`)
-- **Kernel**: Linux kernel release
-- **Uptime**: Session uptime
-- **Desktop**: Desktop environment (`KDE Plasma 6.7.5`)
-- **WM**: Window manager with display protocol (`KWin (Wayland)`)
-- **Terminal & Shell**: Active terminal and shell version
-- **Packages**: Installed pacman package count
+## 3. Shell Shortcuts
 
-### 3. 🖥️ Hardware & Metrics
-- **Host**: Machine model / motherboard
-- **CPU**: Model with performance/efficiency core breakdown
-- **Load**: Real-time CPU usage percentage with smooth progress bar
-- **GPU**: Discrete and Integrated GPU detection
-- **Display**: Resolution, refresh rate, and physical display size
-- **Memory**: RAM usage with smooth Powerline progress bar & percentage
-- **Swap**: Swap usage with smooth progress bar
-- **Disk**: Primary root (`/`) filesystem usage with progress bar & filesystem type
-- **Battery**: Charge level with bar and charging status
-- **Palette**: Terminal 16-color circular swatches
+| Command | Description |
+|---|---|
+| `ff` / `fastfetch` | Fast, compact 11-line fetch |
+| `ffpreview` | Preview primary `~/.config/fastfetch/config.jsonc` |
+| `fffull` | Comprehensive hardware & software breakdown |
+| `ffwatch` | Real-time live animated dashboard (`Ctrl+C` to stop) |
 
 ---
 
-## Dynamic Progress Bars & Live Watch Mode
+## Configuration Files
 
-Fastfetch supports both static startup snapshots and live-updating dynamic monitoring:
-
-- **`ff`**: Standard instant snapshot.
-- **`ffpreview`**: Preview explicit `~/.config/fastfetch/config.jsonc`.
-- **`ffwatch`** (`fastfetch --watch`): **Live Dynamic Mode**. Continuously refreshes the progress bars (CPU Load, Memory, Swap, Battery) in real-time right inside the terminal.
-
-### Dynamic Thresholds
-The progress bars dynamically shift color states based on capacity:
-- 🟢 **Normal**: < 50%
-- 🟡 **Elevated**: 50% - 80%
-- 🔴 **High/Critical**: > 80%
-*(Battery inverts thresholds to alert when power is depleted).*
-
----
-
-## Configuration File
-
-- Repository: `fastfetch/config.jsonc`
-- Deployed location: `~/.config/fastfetch/config.jsonc`
+- Primary Compact: `~/.config/fastfetch/config.jsonc` (Repo: `fastfetch/config.jsonc`)
+- Full Extended: `~/.config/fastfetch/config-full.jsonc` (Repo: `fastfetch/config-full.jsonc`)

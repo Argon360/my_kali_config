@@ -268,7 +268,8 @@ if status is-interactive
     alias fontreload='fc-cache -fv'
     alias ff='fastfetch'
     alias ffpreview='fastfetch --config ~/.config/fastfetch/config.jsonc'
-    alias ffwatch='fastfetch --watch'
+    alias fffull='fastfetch --config ~/.config/fastfetch/config-full.jsonc'
+    alias ffwatch='fastfetch --config ~/.config/fastfetch/config-full.jsonc --watch'
     alias kreload='killall kitty; kitty &; disown'
     alias reloadall='reload; ffpreview; echo "✔ All configs reloaded"'
 
