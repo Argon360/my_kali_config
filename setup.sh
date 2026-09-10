@@ -83,6 +83,7 @@ install_packages() {
         lazygit
         github-cli
         dust
+        flatpak
         nodejs
         npm
         wl-clipboard
@@ -153,14 +154,13 @@ install_externals() {
         success "Starship already installed"
     fi
 
-    # Todoist CLI
-    if ! command -v todoist &> /dev/null; then
-        if command -v npm &> /dev/null; then
-            log "Installing Todoist CLI..."
-            sudo npm install -g @doist/todoist-cli || warn "Failed to install todoist-cli"
-        fi
+    # Todoist Desktop App (Flatpak)
+    if ! flatpak list 2>/dev/null | grep -qi "com.todoist.Todoist"; then
+        log "Installing native Todoist desktop app via Flatpak..."
+        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo 2>/dev/null || true
+        flatpak install -y flathub com.todoist.Todoist || warn "Failed to install Todoist via Flatpak"
     else
-        success "Todoist CLI already installed"
+        success "Todoist native app already installed"
     fi
 
     # Nerd Font (Manual for Debian/Kali if not Fedora/Arch)

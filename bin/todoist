@@ -1,0 +1,3 @@
+#!/bin/bash
+# Wrapper to launch Todoist native desktop app
+exec flatpak run com.todoist.Todoist "$@"
