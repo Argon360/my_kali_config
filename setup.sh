@@ -383,6 +383,25 @@ fix_hardcoded_paths() {
     done
 }
 
+# --- 8. Set Default Login Shell ---
+set_default_shell() {
+    log "Configuring default login shell..."
+    local target_shell
+    target_shell=$(command -v zsh || command -v fish)
+    if [ -n "$target_shell" ]; then
+        local current_shell
+        current_shell=$(getent passwd "$USER" 2>/dev/null | cut -d: -f7)
+        if [ "$current_shell" != "$target_shell" ]; then
+            log "Switching default shell from $current_shell to $target_shell..."
+            if command -v chsh >/dev/null; then
+                chsh -s "$target_shell" "$USER" 2>/dev/null || sudo chsh -s "$target_shell" "$USER" 2>/dev/null || warn "Could not set default shell automatically. Run: chsh -s $target_shell"
+            fi
+        else
+            success "Default shell is already $target_shell"
+        fi
+    fi
+}
+
 # --- Main ---
 main() {
     log "Starting Automated Setup..."
@@ -395,6 +414,7 @@ main() {
     setup_fish
     setup_zsh
     fix_hardcoded_paths
+    set_default_shell
 
     success "Automated Setup Complete!"
     if [ -d "$BACKUP_DIR" ]; then
