@@ -384,5 +384,9 @@ if status is-interactive
     bind \em _fzf_open_menu
     bind -M insert \em _fzf_open_menu
 
+    # FZF Tab Completion for Any Command or Option (cd, git, pacman, files, flags)
+    bind \t __fzf_complete
+    bind -M insert \t __fzf_complete
+
 end
 
