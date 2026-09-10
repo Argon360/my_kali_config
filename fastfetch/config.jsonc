@@ -97,6 +97,10 @@
             "showPeCoreCount": true
         },
         {
+            "key": "│ {#36}󰓅 load    {#keys}│",
+            "type": "cpuusage"
+        },
+        {
             "key": "│ {#33}󰢮 gpu     {#keys}│",
             "type": "gpu",
             "detectionMethod": "pci",

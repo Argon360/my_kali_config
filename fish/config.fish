@@ -266,7 +266,9 @@ if status is-interactive
     alias reload='source ~/.config/fish/config.fish'
     alias restart='exec $SHELL'
     alias fontreload='fc-cache -fv'
+    alias ff='fastfetch'
     alias ffpreview='fastfetch --config ~/.config/fastfetch/config.jsonc'
+    alias ffwatch='fastfetch --watch'
     alias kreload='killall kitty; kitty &; disown'
     alias reloadall='reload; ffpreview; echo "✔ All configs reloaded"'
 

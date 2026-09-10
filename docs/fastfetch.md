@@ -61,6 +61,7 @@ The configuration uses a modern **Pill-Badge Card** layout with JetBrainsMono Ne
 ### 3. 🖥️ Hardware & Metrics
 - **Host**: Machine model / motherboard
 - **CPU**: Model with performance/efficiency core breakdown
+- **Load**: Real-time CPU usage percentage with smooth progress bar
 - **GPU**: Discrete and Integrated GPU detection
 - **Display**: Resolution, refresh rate, and physical display size
 - **Memory**: RAM usage with smooth Powerline progress bar & percentage
@@ -71,11 +72,20 @@ The configuration uses a modern **Pill-Badge Card** layout with JetBrainsMono Ne
 
 ---
 
-## Customization Details
+## Dynamic Progress Bars & Live Watch Mode
 
-- **Logo**: Compact `small` CachyOS ASCII logo with custom cyan & blue palette, vertically centered with `padding.top: 4`.
-- **Badges**: Fixed 8-character key columns inside rounded box characters (`╭─╮`, `│ │`, `├─┤`, `╰─╯`) preventing ragged text.
-- **Bars**: Unicode Powerline rounded bar glyphs (``, ``, ``, ``, ``, ``).
+Fastfetch supports both static startup snapshots and live-updating dynamic monitoring:
+
+- **`ff`**: Standard instant snapshot.
+- **`ffpreview`**: Preview explicit `~/.config/fastfetch/config.jsonc`.
+- **`ffwatch`** (`fastfetch --watch`): **Live Dynamic Mode**. Continuously refreshes the progress bars (CPU Load, Memory, Swap, Battery) in real-time right inside the terminal.
+
+### Dynamic Thresholds
+The progress bars dynamically shift color states based on capacity:
+- 🟢 **Normal**: < 50%
+- 🟡 **Elevated**: 50% - 80%
+- 🔴 **High/Critical**: > 80%
+*(Battery inverts thresholds to alert when power is depleted).*
 
 ---
 

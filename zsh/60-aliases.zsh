@@ -362,4 +362,9 @@ alias agyl='python3 ~/.local/bin/agy-session-tracker.py'
 alias agyr='python3 ~/.local/bin/agy-session-tracker.py resume'
 alias agyn='python3 ~/.local/bin/agy-session-tracker.py rename'
 
-
+# -----------------------------------------------------------------------------
+#  Fastfetch Shortcuts
+# -----------------------------------------------------------------------------
+alias ff='fastfetch'
+alias ffpreview='fastfetch --config ~/.config/fastfetch/config.jsonc'
+alias ffwatch='fastfetch --watch'
