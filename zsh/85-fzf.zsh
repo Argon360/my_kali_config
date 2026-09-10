@@ -93,3 +93,25 @@ fshow() {
                 {}
 FZF-EOF"
 }
+
+# 7. Unified FZF Command Menu
+menu() {
+    local target
+    target=$(fmenu "$@")
+    if [[ -n "$target" ]]; then
+        if [[ "$target" =~ ^cd:\ (.*)$ ]]; then
+            cd "${match[1]}"
+        elif [[ "$target" =~ ^exec:\ (.*)$ ]]; then
+            eval "${match[1]}"
+        fi
+    fi
+}
+alias fmenu='~/.local/bin/fmenu'
+
+fzf-menu-widget() {
+    menu
+    zle reset-prompt
+}
+zle -N fzf-menu-widget
+bindkey '^G' fzf-menu-widget
+bindkey '^[m' fzf-menu-widget

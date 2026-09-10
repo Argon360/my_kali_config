@@ -17,6 +17,7 @@
 # 4. Allow Specific Directories
 !/atuin/
 !/bat/
+!/bin/
 !/btop/
 !/docs/
 !/fastfetch/

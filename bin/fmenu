@@ -1,0 +1,309 @@
+#!/usr/bin/env bash
+# ==============================================================================
+#  fmenu - Unified FZF Command Palette & Interactive Menu
+# ==============================================================================
+
+set -eo pipefail
+
+# Determine if stdout is a terminal or captured by a wrapper
+IS_TTY=0
+if [ -t 1 ]; then
+    IS_TTY=1
+fi
+
+# Dispatch an action
+dispatch() {
+    local action="$1"
+    local payload="$2"
+
+    if [ "$IS_TTY" -eq 1 ]; then
+        case "$action" in
+            cd)
+                echo -e "\033[1;34m[fmenu]\033[0m Changing directory in subshell: $payload"
+                cd "$payload" && exec "${SHELL:-/bin/bash}"
+                ;;
+            exec)
+                eval "$payload"
+                ;;
+        esac
+    else
+        echo "${action}: ${payload}"
+    fi
+}
+
+# Common FZF Options
+FZF_CMD="fzf --height=50% --layout=reverse --border --info=inline --color=bg+:-1,fg:gray,fg+:white,hl:blue,hl+:blue --color=prompt:blue,header:blue,pointer:magenta,info:yellow,marker:magenta"
+
+# 1. Main Menu Options
+main_menu() {
+    local choices=(
+        "📂  Find & Open File        Search all files with Bat preview & open in Neovim"
+        "📁  Jump to Directory       Fuzzy jump to directories via zoxide / fd"
+        "🕒  Command History         Fuzzy search and re-run shell history"
+        "🌿  Git Hub & Actions       Interactive git log, status, branches & commits"
+        "⚙️   Edit Configurations     Instant access to Fish, Zsh, Kitty, Nvim configs"
+        "💀  Process Manager         Search and terminate running processes"
+        "📈  System Monitor (btop)   Launch real-time performance monitor"
+        "🖥️   System Overview (ff)    Display hardware, kernel, and desktop info"
+        "💾  Disk Usage (dust)       Interactive visual directory disk analysis"
+        "🌐  Listening Ports         Inspect open network ports and listening sockets"
+        "🚀  Launch Desktop App      Fuzzy search and launch installed applications"
+        "📋  Clipboard History       View and copy recent clipboard entries"
+        "🔄  Reload Configurations   Refresh shell, starship, and font caches"
+    )
+
+    printf '%s\n' "${choices[@]}" | $FZF_CMD --prompt="󰍉 FZF Menu > " --header="Select an action (ESC or Ctrl-C to exit):"
+}
+
+# 2. File Search
+menu_files() {
+    local file
+    if command -v fd >/dev/null 2>&1; then
+        file=$(fd --type f --hidden --exclude .git | $FZF_CMD --prompt="📂 Files > " --preview='bat --color=always --style=numbers --line-range=:300 {} 2>/dev/null || cat {} 2>/dev/null')
+    else
+        file=$(find . -type f -not -path '*/.*' 2>/dev/null | $FZF_CMD --prompt="📂 Files > " --preview='cat {} 2>/dev/null')
+    fi
+
+    if [ -n "$file" ]; then
+        dispatch "exec" "${EDITOR:-nvim} \"$file\""
+    fi
+}
+
+# 3. Directory Jump
+menu_dirs() {
+    local dir
+    if command -v zoxide >/dev/null 2>&1; then
+        dir=$(zoxide query -l 2>/dev/null | $FZF_CMD --prompt="📁 Dirs (zoxide) > " --preview='eza --tree --level=2 --color=always --icons {} 2>/dev/null || ls -la {}')
+    elif command -v fd >/dev/null 2>&1; then
+        dir=$(fd --type d --hidden --exclude .git | $FZF_CMD --prompt="📁 Dirs > " --preview='eza --tree --level=2 --color=always --icons {} 2>/dev/null || ls -la {}')
+    else
+        dir=$(find . -type d -not -path '*/.*' 2>/dev/null | $FZF_CMD --prompt="📁 Dirs > ")
+    fi
+
+    if [ -n "$dir" ]; then
+        dispatch "cd" "$dir"
+    fi
+}
+
+# 4. Command History
+menu_history() {
+    local cmd
+    if [ -f "$HOME/.local/share/fish/fish_history" ]; then
+        cmd=$(grep -E '^\s*- cmd:' "$HOME/.local/share/fish/fish_history" 2>/dev/null | sed 's/^\s*- cmd: //' | tac | awk '!seen[$0]++' | $FZF_CMD --prompt="🕒 History > ")
+    elif [ -f "$HOME/.zsh_history" ]; then
+        cmd=$(sed 's/^: [0-9]*:[0-9]*;//' "$HOME/.zsh_history" 2>/dev/null | tac | awk '!seen[$0]++' | $FZF_CMD --prompt="🕒 History > ")
+    fi
+
+    if [ -n "$cmd" ]; then
+        dispatch "exec" "$cmd"
+    fi
+}
+
+# 5. Git Hub
+menu_git() {
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        echo "Not inside a Git repository."
+        read -n 1 -s -r -p "Press any key to continue..."
+        return
+    fi
+
+    local git_choices=(
+        "📊  Status            git status -sb"
+        "📜  Interactive Log   git log with interactive graph and diff viewer"
+        "🔀  Switch Branch      Fuzzy select and checkout git branch"
+        "📝  Unstaged Diff     Inspect unstaged working directory diff"
+        "🔍  Staged Diff       Inspect staged git diff"
+        "💾  Commit (gaa & gc) Stage all changes and commit"
+        "🚀  Push Safe         Push current branch to upstream"
+        "📥  Pull (Rebase)     git pull --rebase"
+    )
+
+    local sel
+    sel=$(printf '%s\n' "${git_choices[@]}" | $FZF_CMD --prompt="🌿 Git > ")
+    [ -z "$sel" ] && return
+
+    case "$sel" in
+        *"Status"*)
+            dispatch "exec" "git status"
+            ;;
+        *"Interactive Log"*)
+            local commit
+            commit=$(git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" | \
+                $FZF_CMD --ansi --no-sort --prompt="📜 Commit > " --preview="git show --color=always {2} 2>/dev/null")
+            if [ -n "$commit" ]; then
+                local hash
+                hash=$(echo "$commit" | grep -oE '[a-f0-9]{7,}' | head -n1)
+                [ -n "$hash" ] && dispatch "exec" "git show $hash"
+            fi
+            ;;
+        *"Switch Branch"*)
+            local branch
+            branch=$(git branch -a --color=always | $FZF_CMD --ansi --prompt="🔀 Branch > " | tr -d ' *' | sed 's#remotes/origin/##')
+            [ -n "$branch" ] && dispatch "exec" "git checkout $branch"
+            ;;
+        *"Unstaged Diff"*)
+            dispatch "exec" "git diff"
+            ;;
+        *"Staged Diff"*)
+            dispatch "exec" "git diff --staged"
+            ;;
+        *"Commit"*)
+            dispatch "exec" "git add . && git commit"
+            ;;
+        *"Push Safe"*)
+            dispatch "exec" "git push"
+            ;;
+        *"Pull"*)
+            dispatch "exec" "git pull --rebase"
+            ;;
+    esac
+}
+
+# 6. Edit Configs
+menu_configs() {
+    local cfgs=(
+        "🐱  Kitty Terminal           $HOME/.config/kitty/kitty.conf"
+        "🐟  Fish Shell Main Config   $HOME/.config/fish/config.fish"
+        "🐚  Zsh Modular Directory    $HOME/.config/zsh"
+        "🚀  Starship Prompt          $HOME/.config/starship.toml"
+        "📝  Neovim Config            $HOME/.config/nvim/init.lua"
+        "🖥️   Fastfetch Config         $HOME/.config/fastfetch/config.jsonc"
+        "📊  Btop Monitor Config      $HOME/.config/btop/btop.conf"
+        "🪟  Zellij Multiplexer       $HOME/.config/zellij/config.kdl"
+        "🔧  Atuin Shell History      $HOME/.config/atuin/config.toml"
+    )
+
+    local sel
+    sel=$(printf '%s\n' "${cfgs[@]}" | $FZF_CMD --prompt="⚙️  Configs > ")
+    [ -z "$sel" ] && return
+
+    local target_path
+    target_path=$(echo "$sel" | awk '{print $NF}')
+    if [ -e "$target_path" ]; then
+        dispatch "exec" "${EDITOR:-nvim} \"$target_path\""
+    fi
+}
+
+# 7. Process Manager
+menu_processes() {
+    local line
+    line=$(ps -eo pid,user,%cpu,%mem,comm --sort=-%cpu | sed 1d | \
+        $FZF_CMD --prompt="💀 Kill Process > " --header="Select process to terminate:" \
+        --preview='ps -fp {1} 2>/dev/null || cat /proc/{1}/status 2>/dev/null')
+    [ -z "$line" ] && return
+
+    local pid
+    pid=$(echo "$line" | awk '{print $1}')
+    local comm
+    comm=$(echo "$line" | awk '{print $5}')
+
+    local action
+    action=$(printf "%s\n" "⚠️  SIGTERM - 15 (Graceful Request)" "❌  SIGKILL - 9 (Force Terminate)" "🚫  Cancel" | \
+        $FZF_CMD --prompt="Action for PID $pid ($comm) > ")
+    case "$action" in
+        *"SIGTERM"*)
+            kill -15 "$pid" && echo "Sent SIGTERM to $pid"
+            ;;
+        *"SIGKILL"*)
+            kill -9 "$pid" && echo "Sent SIGKILL to $pid"
+            ;;
+        *)
+            echo "Cancelled."
+            ;;
+    esac
+}
+
+# 8. Desktop App Launcher
+menu_apps() {
+    local desktop_files=()
+    for d in /usr/share/applications ~/.local/share/applications; do
+        if [ -d "$d" ]; then
+            while IFS= read -r f; do
+                desktop_files+=("$f")
+            done < <(find "$d" -name "*.desktop" 2>/dev/null)
+        fi
+    done
+
+    local app_list=()
+    for f in "${desktop_files[@]}"; do
+        local name
+        name=$(grep -m1 '^Name=' "$f" 2>/dev/null | cut -d= -f2-)
+        local exec_cmd
+        exec_cmd=$(grep -m1 '^Exec=' "$f" 2>/dev/null | cut -d= -f2- | sed 's/ %[a-zA-Z]//g')
+        if [ -n "$name" ] && [ -n "$exec_cmd" ]; then
+            app_list+=("$name  [$exec_cmd]")
+        fi
+    done
+
+    local sel
+    sel=$(printf '%s\n' "${app_list[@]}" | sort -u | $FZF_CMD --prompt="🚀 Applications > ")
+    [ -z "$sel" ] && return
+
+    local cmd
+    cmd=$(echo "$sel" | sed -E 's/.*\[(.*)\]$/\1/')
+    if [ -n "$cmd" ]; then
+        dispatch "exec" "$cmd & disown"
+    fi
+}
+
+# 9. Clipboard
+menu_clipboard() {
+    if command -v wl-paste >/dev/null 2>&1; then
+        local current
+        current=$(wl-paste 2>/dev/null || true)
+        echo "Current Clipboard:"
+        echo "$current"
+        read -n 1 -s -r -p "Press any key to return..."
+    fi
+}
+
+# Main Execution Flow
+main() {
+    local selected
+    selected=$(main_menu)
+    [ -z "$selected" ] && exit 0
+
+    case "$selected" in
+        *"Find & Open File"*)
+            menu_files
+            ;;
+        *"Jump to Directory"*)
+            menu_dirs
+            ;;
+        *"Command History"*)
+            menu_history
+            ;;
+        *"Git Hub"*)
+            menu_git
+            ;;
+        *"Edit Configurations"*)
+            menu_configs
+            ;;
+        *"Process Manager"*)
+            menu_processes
+            ;;
+        *"System Monitor"*)
+            dispatch "exec" "btop --utf-force"
+            ;;
+        *"System Overview"*)
+            dispatch "exec" "fastfetch"
+            ;;
+        *"Disk Usage"*)
+            dispatch "exec" "dust"
+            ;;
+        *"Listening Ports"*)
+            dispatch "exec" "ss -tulnp | less"
+            ;;
+        *"Launch Desktop App"*)
+            menu_apps
+            ;;
+        *"Clipboard History"*)
+            menu_clipboard
+            ;;
+        *"Reload Configurations"*)
+            dispatch "exec" "reloadall 2>/dev/null || source ~/.config/fish/config.fish 2>/dev/null || true"
+            ;;
+    esac
+}
+
+main "$@"

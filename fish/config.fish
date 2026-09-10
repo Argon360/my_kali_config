@@ -343,4 +343,46 @@ if status is-interactive
     alias agys='python3 ~/.local/bin/agy-session-tracker.py -i'
     alias agyl='python3 ~/.local/bin/agy-session-tracker.py'
 
+    # -------------------------------------------------------------------------
+    #  FZF Suite & Unified Menu Configuration
+    # -------------------------------------------------------------------------
+    alias fmenu='~/.local/bin/fmenu'
+
+    # Configure fzf.fish bindings to match Kitty mappings:
+    # Ctrl+F: File Search, Ctrl+R: History, Ctrl+K: Process Kill, Ctrl+L: Git Log, Ctrl+S: Git Status
+    if type -q fzf_configure_bindings
+        fzf_configure_bindings --directory=\cf --history=\cr --processes=\ck --git_log=\cl --git_status=\cs --variables=
+    end
+
+    # Interactive Directory Jump (\cd / Ctrl+Alt+J from Kitty)
+    function _fzf_zoxide_jump --description "Interactive directory jump via zoxide or fzf"
+        if type -q __zoxide_zi
+            __zoxide_zi
+        else
+            _fzf_search_directory
+        end
+        commandline -f repaint
+    end
+
+    function _smart_ctrl_d
+        if test -z (commandline)
+            _fzf_zoxide_jump
+        else
+            commandline -f delete-char
+        end
+    end
+    bind \cd _smart_ctrl_d
+    bind -M insert \cd _smart_ctrl_d
+
+    # Unified FZF Command Menu (\cg / Ctrl+G and \em / Alt+M / Ctrl+Alt+M)
+    function _fzf_open_menu --description "Open Unified FZF Command Menu"
+        menu
+        commandline -f repaint
+    end
+    bind \cg _fzf_open_menu
+    bind -M insert \cg _fzf_open_menu
+    bind \em _fzf_open_menu
+    bind -M insert \em _fzf_open_menu
+
 end
+

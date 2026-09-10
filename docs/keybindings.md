@@ -27,6 +27,7 @@ Routed by Kitty -> Executed by Fish -> FZF.
 
 | Key | Action | Underlying Command |
 |-----|--------|-------------------|
+| `Ctrl + Alt + M` | Unified FZF Menu | `\cg` / `menu` |
 | `Ctrl + Alt + P` | Find File | `\cf` |
 | `Ctrl + Alt + H` | Find History | `\cr` |
 | `Ctrl + Alt + J` | Jump Directory | `\cd` (zoxide) |

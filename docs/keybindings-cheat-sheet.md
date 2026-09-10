@@ -106,6 +106,7 @@ No undocumented shortcuts exist.
 
 | Key | Action |
 |----|------|
+| `Ctrl + G` / `Alt + M` | Unified FZF Command Menu (`menu`) |
 | `Ctrl + F` | File / project search |
 | `Ctrl + R` | Command history search |
 | `Ctrl + D` | Directory jump |
@@ -119,6 +120,7 @@ These actions are triggered via kitty routing:
 
 | Physical Key | Routed As | Final Action |
 |------------|----------|--------------|
+| `Ctrl + Alt + M` | `Ctrl + G` | Unified FZF Menu |
 | `Ctrl + Alt + P` | `Ctrl + F` | File search |
 | `Ctrl + Alt + H` | `Ctrl + R` | History search |
 | `Ctrl + Alt + J` | `Ctrl + D` | Directory jump |

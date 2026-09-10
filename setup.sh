@@ -233,6 +233,15 @@ deploy_configs() {
         fi
         success "Deployed applications"
     fi
+
+    # Deploy Custom Binaries
+    if [ -d "$SCRIPT_DIR/bin" ]; then
+        log "Deploying custom binaries..."
+        mkdir -p "$HOME/.local/bin"
+        cp -r "$SCRIPT_DIR/bin/"* "$HOME/.local/bin/"
+        chmod +x "$HOME/.local/bin/"*
+        success "Deployed custom binaries"
+    fi
 }
 
 # --- 4. Fish Setup ---
