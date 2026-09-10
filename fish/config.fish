@@ -342,6 +342,8 @@ if status is-interactive
     alias agyc='agy -c'
     alias agys='python3 ~/.local/bin/agy-session-tracker.py -i'
     alias agyl='python3 ~/.local/bin/agy-session-tracker.py'
+    alias agyr='python3 ~/.local/bin/agy-session-tracker.py resume'
+    alias agyn='python3 ~/.local/bin/agy-session-tracker.py rename'
 
     # -------------------------------------------------------------------------
     #  FZF Suite & Unified Menu Configuration

@@ -242,6 +242,18 @@ deploy_configs() {
         chmod +x "$HOME/.local/bin/"*
         success "Deployed custom binaries"
     fi
+
+    # Deploy Systemd User Services
+    if [ -d "$SCRIPT_DIR/systemd/user" ]; then
+        log "Deploying systemd user services..."
+        mkdir -p "$HOME/.config/systemd/user"
+        cp -r "$SCRIPT_DIR/systemd/user/"* "$HOME/.config/systemd/user/"
+        if command -v systemctl &> /dev/null; then
+            systemctl --user daemon-reload 2>/dev/null || true
+            systemctl --user enable --now agy-session-tracker.path 2>/dev/null || true
+        fi
+        success "Deployed systemd user services"
+    fi
 }
 
 # --- 4. Fish Setup ---

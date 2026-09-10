@@ -359,5 +359,7 @@ alias gems='cd ~/Documents/gemini && gemini --sandbox'
 alias agyc='agy -c'
 alias agys='python3 ~/.local/bin/agy-session-tracker.py -i'
 alias agyl='python3 ~/.local/bin/agy-session-tracker.py'
+alias agyr='python3 ~/.local/bin/agy-session-tracker.py resume'
+alias agyn='python3 ~/.local/bin/agy-session-tracker.py rename'
 
 

@@ -1,0 +1,9 @@
+[Unit]
+Description=Sync Antigravity AGY Sessions to Documents
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/.local/bin/agy-session-tracker.py --sync
+StandardOutput=null
+StandardError=journal

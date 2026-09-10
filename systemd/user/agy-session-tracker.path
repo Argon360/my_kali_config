@@ -1,0 +1,10 @@
+[Unit]
+Description=Watch Antigravity AGY Sessions Directory for Changes
+
+[Path]
+PathModified=%h/.gemini/antigravity-cli/brain
+PathModified=%h/.gemini/antigravity-cli/conversations
+Unit=agy-session-tracker.service
+
+[Install]
+WantedBy=default.target

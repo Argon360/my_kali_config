@@ -49,6 +49,7 @@ main_menu() {
         "🌐  Listening Ports         Inspect open network ports and listening sockets"
         "🚀  Launch Desktop App      Fuzzy search and launch installed applications"
         "📋  Clipboard History       View and copy recent clipboard entries"
+        "🤖  AGY Session Manager     Fuzzy select and resume an AGY conversation by name"
         "🔄  Reload Configurations   Refresh shell, starship, and font caches"
     )
 
@@ -299,6 +300,9 @@ main() {
             ;;
         *"Clipboard History"*)
             menu_clipboard
+            ;;
+        *"AGY Session Manager"*)
+            dispatch "exec" "python3 ~/.local/bin/agy-session-tracker.py -i"
             ;;
         *"Reload Configurations"*)
             dispatch "exec" "reloadall 2>/dev/null || source ~/.config/fish/config.fish 2>/dev/null || true"
