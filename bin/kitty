@@ -1,0 +1,3 @@
+#!/bin/bash
+# Wrapper to enforce single-instance Kitty throughout login session
+exec /usr/bin/kitty --single-instance "$@"

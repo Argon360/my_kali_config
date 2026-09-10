@@ -15,6 +15,7 @@
 !/starship.toml
 
 # 4. Allow Specific Directories
+!/applications/
 !/atuin/
 !/bat/
 !/bin/

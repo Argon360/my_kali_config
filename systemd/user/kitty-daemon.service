@@ -1,0 +1,14 @@
+[Unit]
+Description=Kitty Terminal Daemon (Single Instance Server)
+Documentation=man:kitty(1)
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/kitty --start-as=hidden --single-instance --listen-on=unix:%t/kitty.sock
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=graphical-session.target

@@ -247,6 +247,7 @@ deploy_configs() {
         if command -v systemctl &> /dev/null; then
             systemctl --user daemon-reload 2>/dev/null || true
             systemctl --user enable --now agy-session-tracker.path 2>/dev/null || true
+            systemctl --user enable --now kitty-daemon.service 2>/dev/null || true
         fi
         success "Deployed systemd user services"
     fi
