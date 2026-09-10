@@ -170,7 +170,6 @@ menu_configs() {
         "📝  Neovim Config            $HOME/.config/nvim/init.lua"
         "🖥️   Fastfetch Config         $HOME/.config/fastfetch/config.jsonc"
         "📊  Btop Monitor Config      $HOME/.config/btop/btop.conf"
-        "🪟  Zellij Multiplexer       $HOME/.config/zellij/config.kdl"
         "🔧  Atuin Shell History      $HOME/.config/atuin/config.toml"
     )
 

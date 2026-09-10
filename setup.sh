@@ -91,7 +91,6 @@ install_packages() {
         gnome-keyring
         inotify-tools
         jq
-        zellij
         putty
         openconnect
         vivaldi
@@ -106,13 +105,12 @@ install_packages() {
         log "Configuring Fedora specific repositories..."
         sudo dnf install -y dnf-plugins-core util-linux-user
         
-        # Enable COPR for lazygit, ghostty, git-delta, eza (F42+) and fonts
+        # Enable COPR for lazygit, git-delta, eza (F42+) and fonts
         sudo dnf copr enable -y dejan/lazygit
-        sudo dnf copr enable -y scottames/ghostty
         sudo dnf copr enable -y elxreno/jetbrains-mono-fonts
         sudo dnf copr enable -y alternateved/eza
         
-        PACKAGES+=(ghostty jetbrains-mono-fonts git-delta file-unpack)
+        PACKAGES+=(jetbrains-mono-fonts git-delta file-unpack)
         PACKAGES=("${PACKAGES[@]/fd-find/fd-find}") # Fedora uses fd-find
     else
         # Debian/Kali
@@ -197,8 +195,6 @@ deploy_configs() {
         "bat"
         "atuin"
         "btop"
-        "ghostty"
-        "zellij"
         "environment.d"
         "starship.toml"
     )
