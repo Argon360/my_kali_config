@@ -265,6 +265,21 @@ deploy_configs() {
         success "Deployed custom binaries"
     fi
 
+    # Deploy Autostart Entries
+    if [ -d "$SCRIPT_DIR/autostart" ]; then
+        log "Deploying autostart entries..."
+        mkdir -p "$HOME/.config/autostart"
+        cp -r "$SCRIPT_DIR/autostart/"* "$HOME/.config/autostart/"
+        success "Deployed autostart entries"
+    fi
+
+    # Apply Touchpad Drag Lock
+    if [ -x "$HOME/.local/bin/apply-touchpad-drag-lock" ]; then
+        log "Applying touchpad drag-lock configuration..."
+        "$HOME/.local/bin/apply-touchpad-drag-lock" 2>/dev/null || true
+        success "Touchpad drag-lock applied"
+    fi
+
     # Deploy Systemd User Services
     if [ -d "$SCRIPT_DIR/systemd/user" ]; then
         log "Deploying systemd user services..."

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Touchpad Drag Lock
+Comment=Enables tap-and-drag with drag lock on touchpads
+Exec=sh -c 'command -v apply-touchpad-drag-lock >/dev/null && apply-touchpad-drag-lock || "$HOME/.local/bin/apply-touchpad-drag-lock"'
+Terminal=false
+Hidden=false
+X-GNOME-Autostart-enabled=true
+X-KDE-autostart-after=plasma-desktop

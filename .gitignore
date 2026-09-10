@@ -17,6 +17,7 @@
 # 4. Allow Specific Directories
 !/applications/
 !/atuin/
+!/autostart/
 !/bat/
 !/bin/
 !/btop/

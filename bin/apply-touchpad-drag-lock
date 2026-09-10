@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# =============================================================================
+#  apply-touchpad-drag-lock
+#  Enables tap-and-drag with drag-lock across desktop environments (KDE, GNOME)
+#  Keeps tap-and-drag active briefly after lifting finger to reposition.
+# =============================================================================
+
+set -e
+
+# 1. KDE Plasma (Wayland / KWin)
+if command -v qdbus6 &>/dev/null && qdbus6 org.kde.KWin &>/dev/null; then
+    for dev in $(qdbus6 org.kde.KWin 2>/dev/null | grep -E '^/org/kde/KWin/InputDevice/event'); do
+        is_tp=$(qdbus6 org.kde.KWin "$dev" org.freedesktop.DBus.Properties.Get org.kde.KWin.InputDevice touchpad 2>/dev/null || true)
+        if [ "$is_tp" = "true" ]; then
+            # Enable live via DBus
+            if command -v gdbus &>/dev/null; then
+                gdbus call --session -d org.kde.KWin -o "$dev" -m org.freedesktop.DBus.Properties.Set org.kde.KWin.InputDevice tapDragLock "<true>" 2>/dev/null || true
+            fi
+
+            # Read hardware vendor/product/name for kcminputrc
+            vendor=$(qdbus6 org.kde.KWin "$dev" org.freedesktop.DBus.Properties.Get org.kde.KWin.InputDevice vendor 2>/dev/null || true)
+            product=$(qdbus6 org.kde.KWin "$dev" org.freedesktop.DBus.Properties.Get org.kde.KWin.InputDevice product 2>/dev/null || true)
+            name=$(qdbus6 org.kde.KWin "$dev" org.freedesktop.DBus.Properties.Get org.kde.KWin.InputDevice name 2>/dev/null || true)
+
+            if [ -n "$vendor" ] && [ -n "$product" ] && [ -n "$name" ] && command -v kwriteconfig6 &>/dev/null; then
+                kwriteconfig6 --file kcminputrc --group "Libinput" --group "$vendor" --group "$product" --group "$name" --key "TapDragLock" "true"
+                kwriteconfig6 --file kcminputrc --group "Libinput" --group "$vendor" --group "$product" --group "$name" --key "TapAndDrag" "true"
+                kwriteconfig6 --file kcminputrc --group "Libinput" --group "$vendor" --group "$product" --group "$name" --key "TapToClick" "true"
+            fi
+        fi
+    done
+fi
+
+# 2. GNOME / GSettings
+if command -v gsettings &>/dev/null; then
+    schema="org.gnome.desktop.peripherals.touchpad"
+    if gsettings list-schemas 2>/dev/null | grep -q "^$schema$"; then
+        if gsettings list-keys "$schema" 2>/dev/null | grep -q "^tap-and-drag-lock$"; then
+            gsettings set "$schema" tap-and-drag-lock true 2>/dev/null || true
+        fi
+        if gsettings list-keys "$schema" 2>/dev/null | grep -q "^tap-and-drag$"; then
+            gsettings set "$schema" tap-and-drag true 2>/dev/null || true
+        fi
+        if gsettings list-keys "$schema" 2>/dev/null | grep -q "^tap-to-click$"; then
+            gsettings set "$schema" tap-to-click true 2>/dev/null || true
+        fi
+    fi
+fi
