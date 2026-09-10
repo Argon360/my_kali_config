@@ -1,0 +1,3 @@
+#!/bin/bash
+# Convenient alias wrapper for proton-pass
+exec "$(dirname "$0")/proton-pass" "$@"

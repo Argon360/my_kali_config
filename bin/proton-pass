@@ -1,0 +1,10 @@
+#!/bin/bash
+# Wrapper to launch Proton Pass desktop app
+if [ -x /usr/bin/proton-pass ]; then
+    exec /usr/bin/proton-pass "$@"
+elif flatpak list 2>/dev/null | grep -qi "me.proton.Pass"; then
+    exec flatpak run me.proton.Pass "$@"
+else
+    echo "Proton Pass is not installed." >&2
+    exit 1
+fi

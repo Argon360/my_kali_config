@@ -163,6 +163,32 @@ install_externals() {
         success "Todoist native app already installed"
     fi
 
+    # Clean up obsolete Bitwarden if present
+    if command -v bitwarden &>/dev/null || flatpak list 2>/dev/null | grep -qi "com.bitwarden.desktop"; then
+        log "Removing obsolete Bitwarden installation..."
+        if [ "$PM" == "pacman" ] && pacman -Qi bitwarden &>/dev/null; then
+            sudo pacman -Rns --noconfirm bitwarden 2>/dev/null || true
+        elif [ "$PM" == "apt" ] && dpkg -s bitwarden &>/dev/null; then
+            sudo apt remove -y bitwarden 2>/dev/null || true
+        elif [ "$PM" == "dnf" ] && rpm -q bitwarden &>/dev/null; then
+            sudo dnf remove -y bitwarden 2>/dev/null || true
+        fi
+        flatpak uninstall -y com.bitwarden.desktop 2>/dev/null || true
+    fi
+
+    # Proton Pass Desktop App
+    if ! command -v proton-pass &> /dev/null && ! flatpak list 2>/dev/null | grep -qi "me.proton.Pass"; then
+        log "Installing Proton Pass desktop app..."
+        if [ "$PM" == "pacman" ] && pacman -Si proton-pass &>/dev/null; then
+            sudo pacman -S --noconfirm proton-pass || warn "Failed to install proton-pass via pacman"
+        else
+            flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo 2>/dev/null || true
+            flatpak install -y flathub me.proton.Pass || warn "Failed to install Proton Pass via Flatpak"
+        fi
+    else
+        success "Proton Pass already installed"
+    fi
+
     # Nerd Font (Manual for Debian/Kali if not Fedora/Arch)
     if [ "$PM" == "apt" ]; then
         if ! fc-list | grep -qi "JetBrainsMono"; then
