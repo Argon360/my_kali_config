@@ -18,9 +18,10 @@ end
 # Append Go bin to path
 fish_add_path --path --append ~/go/bin
 
-# Default editors
+# Default editors & terminal
 set -Ux EDITOR nvim
 set -Ux VISUAL nvim
+set -Ux TERMINAL kitty
 
 # -----------------------------------------------------------------------------
 #  Integration Configuration (Bat, Delta, FZF)

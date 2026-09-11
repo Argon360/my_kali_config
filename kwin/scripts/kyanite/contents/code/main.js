@@ -9,11 +9,8 @@ function trace(...args) { if (LOG_LEVEL <= 0) log(...args); }
 
 
 let guardDepth = 0;
-
-
 let dragInProgress = false;
-
-
+let initializing = true;
 const wiredClientIds = new Set();
 
 /******** Plasma 6 Compatibility Layer ********/
@@ -201,6 +198,73 @@ function onDragFinished() {
 	reconcile();
 }
 
+function isClientMaximized(c) {
+	if (!c) return false;
+	if (typeof c.maximizeMode === "number") {
+		return c.maximizeMode === 3;
+	}
+	if (typeof c.maximized === "boolean") {
+		return c.maximized;
+	}
+	return false;
+}
+
+function moveMaximizedClientToNewDesktop(client) {
+	if (initializing || dragInProgress || guardDepth > 0) return;
+	if (!client || client.skipPager || client.onAllDesktops) return;
+	if (client.normalWindow !== undefined && !client.normalWindow) return;
+	if (!client.desktops || !client.desktops.length) return;
+
+	const currentD = client.desktops[0];
+	if (!currentD) return;
+
+	// Check if there are other windows on this desktop
+	const otherWindows = compat.windowList(workspace).filter(c => {
+		if (c === client) return false;
+		if (!c.desktops || !c.desktops.length) return false;
+		if (c.skipPager || c.onAllDesktops) return false;
+		if (c.normalWindow !== undefined && !c.normalWindow) return false;
+		return compat.clientOnDesktop(c, currentD);
+	});
+
+	if (otherWindows.length === 0) {
+		return;
+	}
+
+	log("Window", client.caption || "window", "maximized; moving to new workspace");
+
+	const desktops = compat.workspaceDesktops();
+	const lastIdx = desktops.length - 1;
+	let targetDesktop = null;
+
+	if (lastIdx >= 0 && desktopIsEmpty(lastIdx) && desktops[lastIdx] !== currentD) {
+		targetDesktop = desktops[lastIdx];
+	} else {
+		guardDepth++;
+		try {
+			compat.addDesktop();
+		} finally {
+			guardDepth--;
+		}
+		const newDesktops = compat.workspaceDesktops();
+		targetDesktop = newDesktops[newDesktops.length - 1];
+	}
+
+	if (targetDesktop) {
+		guardDepth++;
+		try {
+			compat.setClientDesktops(client, [targetDesktop]);
+			workspace.currentDesktop = targetDesktop;
+			if (workspace.activeWindow !== undefined) {
+				workspace.activeWindow = client;
+			}
+		} finally {
+			guardDepth--;
+		}
+		reconcile();
+	}
+}
+
 function onClientAdded(client) {
 	if (!client || client.skipPager) return;
 	if (!client.desktops || !client.desktops.length) return;
@@ -210,6 +274,18 @@ function onClientAdded(client) {
 	const id = client.internalId;
 	if (!id || wiredClientIds.has(id)) return;
 	wiredClientIds.add(id);
+
+	let prevMaximized = isClientMaximized(client);
+
+	if (client.maximizedChanged) {
+		client.maximizedChanged.connect(() => {
+			const curMaximized = isClientMaximized(client);
+			if (!prevMaximized && curMaximized) {
+				moveMaximizedClientToNewDesktop(client);
+			}
+			prevMaximized = curMaximized;
+		});
+	}
 
 	if (client.interactiveMoveResizeStarted) {
 		client.interactiveMoveResizeStarted.connect(() => {
@@ -230,6 +306,10 @@ function onClientAdded(client) {
 		client.windowClosed.connect(() => {
 			wiredClientIds.delete(id);
 		});
+	}
+
+	if (!initializing && prevMaximized) {
+		moveMaximizedClientToNewDesktop(client);
 	}
 }
 
@@ -263,6 +343,7 @@ if (workspace.windowFinishUserMovedResized) {
 
 compat.windowList(workspace).forEach(onClientAdded);
 compat.windowAddedSignal(workspace).connect(onClientAdded);
+initializing = false;
 
 workspace.windowRemoved.connect(() => {
 	compactPreservingIndex();
@@ -272,3 +353,4 @@ workspace.windowRemoved.connect(() => {
 workspace.currentDesktopChanged.connect(() => {
 	reconcile();
 });
+

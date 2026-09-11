@@ -9,6 +9,7 @@ StartupNotify=true
 Exec=kitty --single-instance %u
 Icon=kitty
 Categories=System;TerminalEmulator;
+X-KDE-Shortcuts=Meta+T
 X-TerminalArgExec=--
 X-TerminalArgTitle=--title
 X-TerminalArgAppId=--class

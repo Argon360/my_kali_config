@@ -304,6 +304,7 @@ setup_desktop_environments() {
         fi
 
         if command -v kwriteconfig6 &>/dev/null; then
+            # KWin window rules & hot corners
             kwriteconfig6 --file kwinrc --group "Plugins" --key "kyaniteEnabled" "true"
             kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "TopLeft" "Overview"
             kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "TopRight" "Grid"
@@ -312,16 +313,108 @@ setup_desktop_environments() {
             kwriteconfig6 --file kwinrc --group "Windows" --key "DelayFocusInterval" "0"
             kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaise" "true"
             kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaiseInterval" "250"
+
+            # Default Terminal: Kitty everywhere (file manager, KRunner, global)
+            kwriteconfig6 --file kdeglobals --group General --key TerminalApplication kitty
+            kwriteconfig6 --file kdeglobals --group General --key TerminalService kitty.desktop
+
+            # Global Shortcuts:
+            # 1. Clear conflicting task manager entries in plasmashell (Meta+1..9)
+            for i in {1..9}; do
+                kwriteconfig6 --file kglobalshortcutsrc --group "plasmashell" --key "activate task manager entry $i" "none,none,Activate Task Manager Entry $i"
+            done
+
+            # 2. Clear conflicting Edit Tiles in kwin (Meta+T)
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Edit Tiles" "none,none,Toggle Tiles Editor"
+
+            # 3. Super+[1-9] to switch workspaces
+            for i in {1..9}; do
+                kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Switch to Desktop $i" "Meta+$i,none,Switch to Desktop $i"
+            done
+
+            # 4. Super+Alt+[1-9] to move active window to workspace
+            for i in {1..9}; do
+                kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Window to Desktop $i" "Meta+Alt+$i,none,Window to Desktop $i"
+            done
+
+            # 5. Super+T (Meta+T) to open Kitty
+            kwriteconfig6 --file kglobalshortcutsrc --group "kitty.desktop" --key "_k_friendly_name" "kitty"
+            kwriteconfig6 --file kglobalshortcutsrc --group "kitty.desktop" --key "_launch" "Meta+T,none,kitty"
+
+            # Live DBus update for shortcuts if session is running
+            if command -v python3 &>/dev/null && command -v qdbus6 &>/dev/null; then
+                python3 -c "
+import dbus
+try:
+    bus = dbus.SessionBus()
+    kglobalaccel = bus.get_object('org.kde.kglobalaccel', '/kglobalaccel')
+    iface = dbus.Interface(kglobalaccel, 'org.kde.KGlobalAccel')
+    META = 0x10000000
+    ALT = 0x08000000
+    try:
+        iface.setForeignShortcut(['kwin', 'Edit Tiles', 'kwin', 'Toggle Tiles Editor'], dbus.Array([], signature='i'))
+    except Exception:
+        pass
+    for i in range(1, 10):
+        try:
+            iface.setForeignShortcut(['plasmashell', f'activate task manager entry {i}', 'plasmashell', f'Activate Task Manager Entry {i}'], dbus.Array([], signature='i'))
+        except Exception:
+            pass
+        try:
+            iface.setForeignShortcut(['kwin', f'Switch to Desktop {i}', 'kwin', f'Switch to Desktop {i}'], dbus.Array([META + 0x30 + i], signature='i'))
+        except Exception:
+            pass
+        try:
+            iface.setForeignShortcut(['kwin', f'Window to Desktop {i}', 'kwin', f'Window to Desktop {i}'], dbus.Array([META + ALT + 0x30 + i], signature='i'))
+        except Exception:
+            pass
+    try:
+        iface.setForeignShortcut(['kitty.desktop', '_launch', 'kitty', 'kitty'], dbus.Array([META + ord('T')], signature='i'))
+    except Exception:
+        pass
+except Exception:
+    pass
+" 2>/dev/null || true
+            fi
+
+            if command -v kbuildsycoca6 &>/dev/null; then
+                kbuildsycoca6 2>/dev/null || true
+            fi
             if command -v qdbus6 &>/dev/null; then
                 qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
             fi
         fi
-        success "KDE Plasma: dynamic workspaces, hot corners, and hover-to-activate configured"
+        success "KDE Plasma: dynamic workspaces, hot corners, hover-to-activate, default terminal, and Super+NUM shortcuts configured"
     fi
 
     # 2. GNOME Configuration (if active, or gsettings schemas available)
     if [[ "$current_de" =~ [Gg][Nn][Oo][Mm][Ee] ]] || command -v gnome-shell &>/dev/null || (command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "org.gnome.desktop"); then
         log "Configuring GNOME desktop settings..."
+
+        # Terminal Configuration (Kitty)
+        if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.default-applications.terminal$"; then
+            gsettings set org.gnome.desktop.default-applications.terminal exec 'kitty' 2>/dev/null || true
+            gsettings set org.gnome.desktop.default-applications.terminal exec-arg '-e' 2>/dev/null || true
+        fi
+
+        # Shortcuts: Super+1..9 switches workspaces, Super+Alt+1..9 moves window to workspace
+        if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.wm.keybindings$"; then
+            for i in {1..9}; do
+                # Clear conflicting app launcher shortcuts in GNOME Shell
+                gsettings set org.gnome.shell.keybindings "switch-to-application-$i" "[]" 2>/dev/null || true
+                gsettings set org.gnome.desktop.wm.keybindings "switch-to-workspace-$i" "['<Super>$i']" 2>/dev/null || true
+                gsettings set org.gnome.desktop.wm.keybindings "move-to-workspace-$i" "['<Super><Alt>$i']" 2>/dev/null || true
+            done
+        fi
+
+        # GNOME Custom Shortcut: Super+T opens Kitty
+        if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.settings-daemon.plugins.media-keys$"; then
+            local kb_path="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom-kitty/"
+            gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['$kb_path']" 2>/dev/null || true
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$kb_path name 'Open Kitty' 2>/dev/null || true
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$kb_path command 'kitty' 2>/dev/null || true
+            gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$kb_path binding '<Super>t' 2>/dev/null || true
+        fi
 
         # Dynamic Workspaces (native Mutter)
         if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.mutter$"; then
@@ -354,7 +447,7 @@ setup_desktop_environments() {
             gsettings set org.gnome.desktop.interface enable-hot-corners true 2>/dev/null || true
         fi
 
-        success "GNOME: dynamic workspaces, hover-to-activate, touchpad gestures & window controls configured"
+        success "GNOME: dynamic workspaces, shortcuts, hover-to-activate, touchpad gestures & window controls configured"
     fi
 
     # 3. Apply Live Touchpad Settings
@@ -415,6 +508,7 @@ setup_zsh() {
 # -----------------------------------------------------------------------------
 export EDITOR=nvim
 export VISUAL=nvim
+export TERMINAL=kitty
 export PATH="$HOME/.local/bin:$HOME/go/bin:$PATH"
 
 # Base directory for modular config
@@ -467,6 +561,9 @@ fi
 setup_user_dirs() {
     log "Setting up user directories..."
     mkdir -p "$HOME/.local/bin"
+    # Ensure x-terminal-emulator symlink points to kitty
+    ln -sf "$HOME/.local/bin/kitty" "$HOME/.local/bin/x-terminal-emulator" 2>/dev/null || \
+    ln -sf "$(command -v kitty || echo '/usr/bin/kitty')" "$HOME/.local/bin/x-terminal-emulator" 2>/dev/null || true
 }
 
 # --- 8. Fix Hardcoded Paths ---
