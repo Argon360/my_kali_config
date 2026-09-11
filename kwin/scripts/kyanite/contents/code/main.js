@@ -3,15 +3,16 @@
 const MIN_DESKTOPS = 1;
 const LOG_LEVEL = 2;
 
-function log(...args) { print("[kyanite]", ...args); }
+function log(...args) { console.info("[kyanite]", ...args); }
 function debug(...args) { if (LOG_LEVEL <= 1) log(...args); }
 function trace(...args) { if (LOG_LEVEL <= 0) log(...args); }
-
 
 let guardDepth = 0;
 let dragInProgress = false;
 let initializing = true;
 const wiredClientIds = new Set();
+const windowOriginDesktop = new Map();
+const dedicatedWindows = new Set();
 
 /******** Plasma 6 Compatibility Layer ********/
 
@@ -121,7 +122,8 @@ function compactFromEnd() {
 		const desktops = compat.workspaceDesktops();
 		const lastIdx = desktops.length - 1;
 
-		for (let i = lastIdx - 1; i >= 0; i--) {
+		// Compact intermediate empty desktops, always preserving base Desktop 0
+		for (let i = lastIdx - 1; i >= 1; i--) {
 			if (compat.desktopAmount() <= MIN_DESKTOPS) break;
 
 			if (desktopIsEmpty(i)) {
@@ -215,10 +217,17 @@ function moveMaximizedClientToNewDesktop(client) {
 	if (client.normalWindow !== undefined && !client.normalWindow) return;
 	if (!client.desktops || !client.desktops.length) return;
 
+	const id = client.internalId;
+	if (id && dedicatedWindows.has(id)) {
+		return;
+	}
+
 	const currentD = client.desktops[0];
 	if (!currentD) return;
 
-	// Check if there are other windows on this desktop
+	const desktops = compat.workspaceDesktops();
+	const isBaseDesktop = (desktops.indexOf(currentD) === 0);
+
 	const otherWindows = compat.windowList(workspace).filter(c => {
 		if (c === client) return false;
 		if (!c.desktops || !c.desktops.length) return false;
@@ -227,13 +236,18 @@ function moveMaximizedClientToNewDesktop(client) {
 		return compat.clientOnDesktop(c, currentD);
 	});
 
-	if (otherWindows.length === 0) {
+	// Only stay in-place if client is already the only window on a non-base desktop
+	if (!isBaseDesktop && otherWindows.length === 0) {
 		return;
 	}
 
-	log("Window", client.caption || "window", "maximized; moving to new workspace");
+	log("Window", client.caption || "window", "maximized; moving to dedicated workspace");
 
-	const desktops = compat.workspaceDesktops();
+	if (id) {
+		windowOriginDesktop.set(id, currentD);
+		dedicatedWindows.add(id);
+	}
+
 	const lastIdx = desktops.length - 1;
 	let targetDesktop = null;
 
@@ -265,6 +279,37 @@ function moveMaximizedClientToNewDesktop(client) {
 	}
 }
 
+function restoreMaximizedClient(client) {
+	if (initializing || dragInProgress || guardDepth > 0) return;
+	if (!client) return;
+
+	const id = client.internalId;
+	if (!id || !dedicatedWindows.has(id)) return;
+
+	dedicatedWindows.delete(id);
+
+	if (windowOriginDesktop.has(id)) {
+		const origD = windowOriginDesktop.get(id);
+		windowOriginDesktop.delete(id);
+
+		const desktops = compat.workspaceDesktops();
+		if (origD && desktops.indexOf(origD) !== -1) {
+			log("Window", client.caption || "window", "restored; returning to original workspace");
+			guardDepth++;
+			try {
+				compat.setClientDesktops(client, [origD]);
+				workspace.currentDesktop = origD;
+				if (workspace.activeWindow !== undefined) {
+					workspace.activeWindow = client;
+				}
+			} finally {
+				guardDepth--;
+			}
+			reconcile();
+		}
+	}
+}
+
 function onClientAdded(client) {
 	if (!client || client.skipPager) return;
 	if (!client.desktops || !client.desktops.length) return;
@@ -282,6 +327,8 @@ function onClientAdded(client) {
 			const curMaximized = isClientMaximized(client);
 			if (!prevMaximized && curMaximized) {
 				moveMaximizedClientToNewDesktop(client);
+			} else if (prevMaximized && !curMaximized) {
+				restoreMaximizedClient(client);
 			}
 			prevMaximized = curMaximized;
 		});
@@ -295,6 +342,10 @@ function onClientAdded(client) {
 	if (client.interactiveMoveResizeFinished) {
 		client.interactiveMoveResizeFinished.connect(() => {
 			onDragFinished();
+			if (id) {
+				dedicatedWindows.delete(id);
+				windowOriginDesktop.delete(id);
+			}
 		});
 	}
 
@@ -305,6 +356,10 @@ function onClientAdded(client) {
 	if (client.windowClosed) {
 		client.windowClosed.connect(() => {
 			wiredClientIds.delete(id);
+			if (id) {
+				dedicatedWindows.delete(id);
+				windowOriginDesktop.delete(id);
+			}
 		});
 	}
 

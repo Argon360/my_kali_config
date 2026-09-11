@@ -297,10 +297,17 @@ setup_desktop_environments() {
         log "Configuring KDE Plasma settings..."
 
         # Deploy KWin Scripts (Kyanite dynamic workspaces)
+        # Deploy KWin Scripts (Kyanite dynamic workspaces)
         if [ -d "$SCRIPT_DIR/kwin/scripts/kyanite" ] && command -v kpackagetool6 &>/dev/null; then
             log "Installing Kyanite dynamic workspaces KWin script..."
             kpackagetool6 --type KWin/Script --upgrade "$SCRIPT_DIR/kwin/scripts/kyanite" 2>/dev/null || \
             kpackagetool6 --type KWin/Script --install "$SCRIPT_DIR/kwin/scripts/kyanite" 2>/dev/null || true
+            # In KWin 6, reload script instance live
+            if command -v qdbus6 &>/dev/null; then
+                qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.unloadScript "kyanite" 2>/dev/null || true
+                qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.loadScript "$HOME/.local/share/kwin/scripts/kyanite/contents/code/main.js" "kyanite" 2>/dev/null || true
+                qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.start 2>/dev/null || true
+            fi
         fi
 
         if command -v kwriteconfig6 &>/dev/null; then
@@ -310,9 +317,9 @@ setup_desktop_environments() {
             kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "TopRight" "Grid"
             kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "BottomRight" "ShowDesktop"
             kwriteconfig6 --file kwinrc --group "Windows" --key "FocusPolicy" "FocusFollowsMouse"
-            kwriteconfig6 --file kwinrc --group "Windows" --key "DelayFocusInterval" "0"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "DelayFocusInterval" "300"
             kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaise" "true"
-            kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaiseInterval" "250"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaiseInterval" "300"
 
             # Default Terminal: Kitty everywhere (file manager, KRunner, global)
             kwriteconfig6 --file kdeglobals --group General --key TerminalApplication kitty
@@ -436,7 +443,7 @@ except Exception:
         if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.wm.preferences$"; then
             gsettings set org.gnome.desktop.wm.preferences focus-mode 'sloppy' 2>/dev/null || true
             gsettings set org.gnome.desktop.wm.preferences auto-raise true 2>/dev/null || true
-            gsettings set org.gnome.desktop.wm.preferences auto-raise-delay 250 2>/dev/null || true
+            gsettings set org.gnome.desktop.wm.preferences auto-raise-delay 300 2>/dev/null || true
             gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close' 2>/dev/null || true
         fi
 
