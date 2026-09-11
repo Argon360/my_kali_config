@@ -308,11 +308,15 @@ setup_desktop_environments() {
             kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "TopLeft" "Overview"
             kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "TopRight" "Grid"
             kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "BottomRight" "ShowDesktop"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "FocusPolicy" "FocusFollowsMouse"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "DelayFocusInterval" "0"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaise" "true"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaiseInterval" "250"
             if command -v qdbus6 &>/dev/null; then
                 qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
             fi
         fi
-        success "KDE Plasma: dynamic workspaces and hot corners configured"
+        success "KDE Plasma: dynamic workspaces, hot corners, and hover-to-activate configured"
     fi
 
     # 2. GNOME Configuration (if active, or gsettings schemas available)
@@ -335,8 +339,11 @@ setup_desktop_environments() {
             gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enabled true 2>/dev/null || true
         fi
 
-        # Window Controls (Minimize, Maximize, Close buttons)
+        # Window Controls & Focus (Hover to activate, Auto-raise, Buttons)
         if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.wm.preferences$"; then
+            gsettings set org.gnome.desktop.wm.preferences focus-mode 'sloppy' 2>/dev/null || true
+            gsettings set org.gnome.desktop.wm.preferences auto-raise true 2>/dev/null || true
+            gsettings set org.gnome.desktop.wm.preferences auto-raise-delay 250 2>/dev/null || true
             gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close' 2>/dev/null || true
         fi
 
@@ -347,7 +354,7 @@ setup_desktop_environments() {
             gsettings set org.gnome.desktop.interface enable-hot-corners true 2>/dev/null || true
         fi
 
-        success "GNOME: dynamic workspaces, touchpad gestures, dark theme & window controls configured"
+        success "GNOME: dynamic workspaces, hover-to-activate, touchpad gestures & window controls configured"
     fi
 
     # 3. Apply Live Touchpad Settings
