@@ -101,7 +101,7 @@ install_packages() {
     # Distro-specific package name adjustments & Extras
     if [ "$PM" == "pacman" ]; then
         PACKAGES=("${PACKAGES[@]/fd-find/fd}")
-        PACKAGES+=(base-devel git-delta unp unzip ttf-jetbrains-mono-nerd)
+        PACKAGES+=(base-devel git-delta unp unzip ttf-jetbrains-mono-nerd dconf)
     elif [ "$PM" == "dnf" ]; then
         log "Configuring Fedora specific repositories..."
         sudo dnf install -y dnf-plugins-core util-linux-user
@@ -111,11 +111,11 @@ install_packages() {
         sudo dnf copr enable -y elxreno/jetbrains-mono-fonts
         sudo dnf copr enable -y alternateved/eza
         
-        PACKAGES+=(jetbrains-mono-fonts git-delta file-unpack)
+        PACKAGES+=(jetbrains-mono-fonts git-delta file-unpack dconf)
         PACKAGES=("${PACKAGES[@]/fd-find/fd-find}") # Fedora uses fd-find
     else
         # Debian/Kali
-        PACKAGES+=(build-essential git-delta unp unzip)
+        PACKAGES+=(build-essential git-delta unp unzip dconf-cli libglib2.0-bin)
         # Adjust vivaldi package name for Debian
         PACKAGES=("${PACKAGES[@]/vivaldi/vivaldi-stable}")
     fi
@@ -273,27 +273,6 @@ deploy_configs() {
         success "Deployed autostart entries"
     fi
 
-    # Apply Touchpad Drag Lock & Gestures
-    if [ -x "$HOME/.local/bin/apply-touchpad-drag-lock" ]; then
-        log "Applying touchpad drag-lock and gestures configuration..."
-        "$HOME/.local/bin/apply-touchpad-drag-lock" 2>/dev/null || true
-        success "Touchpad drag-lock and gestures applied"
-    fi
-
-    # Deploy KWin Scripts (Kyanite dynamic workspaces)
-    if [ -d "$SCRIPT_DIR/kwin/scripts/kyanite" ] && command -v kpackagetool6 &>/dev/null; then
-        log "Installing Kyanite dynamic workspaces KWin script..."
-        kpackagetool6 --type KWin/Script --upgrade "$SCRIPT_DIR/kwin/scripts/kyanite" 2>/dev/null || \
-        kpackagetool6 --type KWin/Script --install "$SCRIPT_DIR/kwin/scripts/kyanite" 2>/dev/null || true
-        if command -v kwriteconfig6 &>/dev/null; then
-            kwriteconfig6 --file kwinrc --group "Plugins" --key "kyaniteEnabled" "true"
-            if command -v qdbus6 &>/dev/null; then
-                qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
-            fi
-        fi
-        success "Deployed Kyanite dynamic workspaces"
-    fi
-
     # Deploy Systemd User Services
     if [ -d "$SCRIPT_DIR/systemd/user" ]; then
         log "Deploying systemd user services..."
@@ -308,7 +287,77 @@ deploy_configs() {
     fi
 }
 
-# --- 4. Fish Setup ---
+# --- 4. Desktop Environment Configurations (KDE Plasma & GNOME) ---
+setup_desktop_environments() {
+    log "Configuring Desktop Environments..."
+    local current_de="${XDG_CURRENT_DESKTOP:-}"
+
+    # 1. KDE Plasma Configuration (if active or tools present)
+    if [[ "$current_de" =~ [Kk][Dd][Ee] ]] || command -v kpackagetool6 &>/dev/null || command -v kwriteconfig6 &>/dev/null; then
+        log "Configuring KDE Plasma settings..."
+
+        # Deploy KWin Scripts (Kyanite dynamic workspaces)
+        if [ -d "$SCRIPT_DIR/kwin/scripts/kyanite" ] && command -v kpackagetool6 &>/dev/null; then
+            log "Installing Kyanite dynamic workspaces KWin script..."
+            kpackagetool6 --type KWin/Script --upgrade "$SCRIPT_DIR/kwin/scripts/kyanite" 2>/dev/null || \
+            kpackagetool6 --type KWin/Script --install "$SCRIPT_DIR/kwin/scripts/kyanite" 2>/dev/null || true
+        fi
+
+        if command -v kwriteconfig6 &>/dev/null; then
+            kwriteconfig6 --file kwinrc --group "Plugins" --key "kyaniteEnabled" "true"
+            kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "TopLeft" "Overview"
+            kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "TopRight" "Grid"
+            kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "BottomRight" "ShowDesktop"
+            if command -v qdbus6 &>/dev/null; then
+                qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
+            fi
+        fi
+        success "KDE Plasma: dynamic workspaces and hot corners configured"
+    fi
+
+    # 2. GNOME Configuration (if active, or gsettings schemas available)
+    if [[ "$current_de" =~ [Gg][Nn][Oo][Mm][Ee] ]] || command -v gnome-shell &>/dev/null || (command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "org.gnome.desktop"); then
+        log "Configuring GNOME desktop settings..."
+
+        # Dynamic Workspaces (native Mutter)
+        if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.mutter$"; then
+            gsettings set org.gnome.mutter dynamic-workspaces true 2>/dev/null || true
+            gsettings set org.gnome.mutter center-new-windows true 2>/dev/null || true
+        fi
+
+        # Touchpad Gestures & Controls
+        if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.peripherals.touchpad$"; then
+            gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true 2>/dev/null || true
+            gsettings set org.gnome.desktop.peripherals.touchpad tap-and-drag true 2>/dev/null || true
+            gsettings set org.gnome.desktop.peripherals.touchpad tap-and-drag-lock true 2>/dev/null || true
+            gsettings set org.gnome.desktop.peripherals.touchpad click-method 'fingers' 2>/dev/null || true
+            gsettings set org.gnome.desktop.peripherals.touchpad disable-while-typing true 2>/dev/null || true
+            gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enabled true 2>/dev/null || true
+        fi
+
+        # Window Controls (Minimize, Maximize, Close buttons)
+        if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.wm.preferences$"; then
+            gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close' 2>/dev/null || true
+        fi
+
+        # Appearance & Fonts (Dark Theme & JetBrainsMono)
+        if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.interface$"; then
+            gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
+            gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10' 2>/dev/null || true
+            gsettings set org.gnome.desktop.interface enable-hot-corners true 2>/dev/null || true
+        fi
+
+        success "GNOME: dynamic workspaces, touchpad gestures, dark theme & window controls configured"
+    fi
+
+    # 3. Apply Live Touchpad Settings
+    if [ -x "$HOME/.local/bin/apply-touchpad-drag-lock" ]; then
+        "$HOME/.local/bin/apply-touchpad-drag-lock" 2>/dev/null || true
+        success "Applied live touchpad gestures"
+    fi
+}
+
+# --- 5. Fish Setup ---
 setup_fish() {
     log "Configuring Fish Shell..."
     if command -v fish &> /dev/null; then
@@ -322,7 +371,7 @@ setup_fish() {
     fi
 }
 
-# --- 5. Zsh Setup ---
+# --- 6. Zsh Setup ---
 setup_zsh() {
     log "Configuring Zsh..."
     ZSH_PLUGIN_DIR="$HOME/.config/zsh/plugins"
@@ -407,13 +456,13 @@ fi
     fi
 }
 
-# --- 6. User Directories & Bin Setup ---
+# --- 7. User Directories & Bin Setup ---
 setup_user_dirs() {
     log "Setting up user directories..."
     mkdir -p "$HOME/.local/bin"
 }
 
-# --- 7. Fix Hardcoded Paths ---
+# --- 8. Fix Hardcoded Paths ---
 fix_hardcoded_paths() {
     log "Fixing hardcoded paths in configurations..."
     
@@ -435,7 +484,7 @@ fix_hardcoded_paths() {
     done
 }
 
-# --- 8. Set Default Login Shell ---
+# --- 9. Set Default Login Shell ---
 set_default_shell() {
     log "Configuring default login shell..."
     local target_shell
@@ -462,6 +511,7 @@ main() {
     install_packages
     install_externals
     deploy_configs
+    setup_desktop_environments
     setup_user_dirs
     setup_fish
     setup_zsh

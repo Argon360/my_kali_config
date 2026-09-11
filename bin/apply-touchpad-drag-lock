@@ -71,7 +71,7 @@ fi
 if command -v gsettings &>/dev/null; then
     schema="org.gnome.desktop.peripherals.touchpad"
     if gsettings list-schemas 2>/dev/null | grep -q "^$schema$"; then
-        for key in tap-and-drag-lock tap-and-drag tap-to-click disable-while-typing; do
+        for key in tap-and-drag-lock tap-and-drag tap-to-click disable-while-typing two-finger-scrolling-enabled; do
             if gsettings list-keys "$schema" 2>/dev/null | grep -q "^$key$"; then
                 gsettings set "$schema" "$key" true 2>/dev/null || true
             fi
@@ -79,5 +79,10 @@ if command -v gsettings &>/dev/null; then
         if gsettings list-keys "$schema" 2>/dev/null | grep -q "^click-method$"; then
             gsettings set "$schema" click-method 'fingers' 2>/dev/null || true
         fi
+    fi
+
+    # Dynamic Workspaces
+    if gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.mutter$"; then
+        gsettings set org.gnome.mutter dynamic-workspaces true 2>/dev/null || true
     fi
 fi
