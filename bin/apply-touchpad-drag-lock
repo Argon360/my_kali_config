@@ -14,12 +14,15 @@ set -e
 
 # 1. KDE Plasma (Wayland / KWin)
 if command -v qdbus6 &>/dev/null && qdbus6 org.kde.KWin &>/dev/null; then
-    # Ensure at least 4 Virtual Desktops exist for 1:1 3-finger swipe transitions
-    vd_count=$(qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.count 2>/dev/null || echo "1")
-    if [ "$vd_count" -lt 4 ]; then
-        for i in $(seq $((vd_count + 1)) 4); do
-            qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.createDesktop "$((i - 1))" "Desktop $i" 2>/dev/null || true
-        done
+    # Virtual Desktops: If Kyanite dynamic workspaces is not active, ensure at least 4 desktops
+    is_kyanite=$(kreadconfig6 --file kwinrc --group "Plugins" --key "kyaniteEnabled" 2>/dev/null || echo "false")
+    if [ "$is_kyanite" != "true" ]; then
+        vd_count=$(qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.count 2>/dev/null || echo "1")
+        if [ "$vd_count" -lt 4 ]; then
+            for i in $(seq $((vd_count + 1)) 4); do
+                qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.createDesktop "$((i - 1))" "Desktop $i" 2>/dev/null || true
+            done
+        fi
     fi
 
     # Enable workspace wrap-around navigation

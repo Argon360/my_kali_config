@@ -1,0 +1,21 @@
+
+{ "KPackageStructure": "KWin/Script"
+, "KPlugin":
+    { "Authors":
+        [ { "Name": "MurderFromMars" }
+        ]
+    , "Description": "Hybrid dynamic workspace management for Plasma 6."
+    , "Icon": "preferences-system-windows-script-test"
+    , "Id": "kyanite"
+    , "License": "MIT"
+    , "Name": "Kyanite"
+    , "Version": "1.5"
+    }
+, "X-KDE-PluginKeyword": "workspaces"
+
+, "X-Plasma-API": "javascript"
+, "X-Plasma-API-Minimum-Version": "6.0"
+
+, "X-KDE-Library": "kwin/effects/configs/kcm_kwin4_genericscripted"
+, "X-Plasma-MainScript": "code/main.js"
+}

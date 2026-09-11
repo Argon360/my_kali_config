@@ -273,11 +273,25 @@ deploy_configs() {
         success "Deployed autostart entries"
     fi
 
-    # Apply Touchpad Drag Lock
+    # Apply Touchpad Drag Lock & Gestures
     if [ -x "$HOME/.local/bin/apply-touchpad-drag-lock" ]; then
-        log "Applying touchpad drag-lock configuration..."
+        log "Applying touchpad drag-lock and gestures configuration..."
         "$HOME/.local/bin/apply-touchpad-drag-lock" 2>/dev/null || true
-        success "Touchpad drag-lock applied"
+        success "Touchpad drag-lock and gestures applied"
+    fi
+
+    # Deploy KWin Scripts (Kyanite dynamic workspaces)
+    if [ -d "$SCRIPT_DIR/kwin/scripts/kyanite" ] && command -v kpackagetool6 &>/dev/null; then
+        log "Installing Kyanite dynamic workspaces KWin script..."
+        kpackagetool6 --type KWin/Script --upgrade "$SCRIPT_DIR/kwin/scripts/kyanite" 2>/dev/null || \
+        kpackagetool6 --type KWin/Script --install "$SCRIPT_DIR/kwin/scripts/kyanite" 2>/dev/null || true
+        if command -v kwriteconfig6 &>/dev/null; then
+            kwriteconfig6 --file kwinrc --group "Plugins" --key "kyaniteEnabled" "true"
+            if command -v qdbus6 &>/dev/null; then
+                qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
+            fi
+        fi
+        success "Deployed Kyanite dynamic workspaces"
     fi
 
     # Deploy Systemd User Services
