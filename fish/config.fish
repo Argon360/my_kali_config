@@ -118,8 +118,22 @@ if status is-interactive
     alias ipinfo='ip -c a'
     alias routes='ip route'
     alias ports='ss -tulnp'
-    alias myip='curl -s ifconfig.me'
     alias dnscheck='resolvectl status || systemd-resolve --status'
+
+    # -----------------------------
+    # Screensavers & Visuals
+    # -----------------------------
+    if type -q cmatrix
+        alias matrix='cmatrix -C cyan -b'
+        alias screensaver='cmatrix -C cyan -b'
+        alias away='cmatrix -C cyan -b'
+    end
+    if type -q cbonsai
+        alias bonsai='cbonsai -l -i -w 4'
+    end
+    if type -q pipes.sh
+        alias pipes='pipes.sh'
+    end
 
     # -----------------------------
     # System Maintenance

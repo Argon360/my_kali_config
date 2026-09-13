@@ -36,9 +36,11 @@ if command -v qdbus6 &>/dev/null && qdbus6 org.kde.KWin &>/dev/null; then
         kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "TopRight" "Grid"
         kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "BottomRight" "ShowDesktop"
         kwriteconfig6 --file kwinrc --group "Windows" --key "FocusPolicy" "FocusFollowsMouse"
-        kwriteconfig6 --file kwinrc --group "Windows" --key "DelayFocusInterval" "0"
-        kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaise" "true"
-        kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaiseInterval" "250"
+        kwriteconfig6 --file kwinrc --group "Windows" --key "DelayFocusInterval" "500"
+        kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaise" "false"
+        kwriteconfig6 --file kwinrc --group "Windows" --key "ClickRaise" "true"
+        kwriteconfig6 --file kwinrc --group "Windows" --key "NextFocusPrefersMouse" "false"
+        kwriteconfig6 --file kwinrc --group "Windows" --key "FocusStealingPreventionLevel" "2"
         qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
     fi
 
@@ -90,10 +92,10 @@ if command -v gsettings &>/dev/null; then
         gsettings set org.gnome.mutter dynamic-workspaces true 2>/dev/null || true
     fi
 
-    # Window Focus Behavior (Hover to activate window)
+    # Window Focus Behavior (Hover to activate window, Click to raise)
     if gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.wm.preferences$"; then
         gsettings set org.gnome.desktop.wm.preferences focus-mode 'sloppy' 2>/dev/null || true
-        gsettings set org.gnome.desktop.wm.preferences auto-raise true 2>/dev/null || true
-        gsettings set org.gnome.desktop.wm.preferences auto-raise-delay 250 2>/dev/null || true
+        gsettings set org.gnome.desktop.wm.preferences auto-raise false 2>/dev/null || true
+        gsettings set org.gnome.desktop.wm.preferences auto-raise-delay 500 2>/dev/null || true
     fi
 fi

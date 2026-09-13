@@ -226,7 +226,6 @@ function moveMaximizedClientToNewDesktop(client) {
 	if (!currentD) return;
 
 	const desktops = compat.workspaceDesktops();
-	const isBaseDesktop = (desktops.indexOf(currentD) === 0);
 
 	const otherWindows = compat.windowList(workspace).filter(c => {
 		if (c === client) return false;
@@ -236,8 +235,9 @@ function moveMaximizedClientToNewDesktop(client) {
 		return compat.clientOnDesktop(c, currentD);
 	});
 
-	// Only stay in-place if client is already the only window on a non-base desktop
-	if (!isBaseDesktop && otherWindows.length === 0) {
+	// If client is already the only window on this workspace, stay in-place
+	if (otherWindows.length === 0) {
+		log("Window", client.caption || "window", "maximized; alone on current workspace, staying in-place");
 		return;
 	}
 

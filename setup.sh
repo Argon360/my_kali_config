@@ -96,7 +96,9 @@ install_packages() {
         openconnect
         vivaldi
         inetutils
+        mpv
     )
+
 
     # Distro-specific package name adjustments & Extras
     if [ "$PM" == "pacman" ]; then
@@ -317,9 +319,15 @@ setup_desktop_environments() {
             kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "TopRight" "Grid"
             kwriteconfig6 --file kwinrc --group "ElectricBorders" --key "BottomRight" "ShowDesktop"
             kwriteconfig6 --file kwinrc --group "Windows" --key "FocusPolicy" "FocusFollowsMouse"
-            kwriteconfig6 --file kwinrc --group "Windows" --key "DelayFocusInterval" "300"
-            kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaise" "true"
-            kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaiseInterval" "300"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "DelayFocusInterval" "500"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaise" "false"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "ClickRaise" "true"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "NextFocusPrefersMouse" "false"
+            kwriteconfig6 --file kwinrc --group "Windows" --key "FocusStealingPreventionLevel" "2"
+
+            # Task Switcher (Alt+Tab): show windows from all virtual desktops
+            kwriteconfig6 --file kwinrc --group "TabBox" --key "DesktopMode" "0"
+            kwriteconfig6 --file kwinrc --group "TabBoxAlternative" --key "DesktopMode" "0"
 
             # Default Terminal: Kitty everywhere (file manager, KRunner, global)
             kwriteconfig6 --file kdeglobals --group General --key TerminalApplication kitty
@@ -390,8 +398,100 @@ except Exception:
             if command -v qdbus6 &>/dev/null; then
                 qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
             fi
+
+            # Task Manager: show running apps from all virtual desktops on the panel
+            if [ -f "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" ] && command -v python3 &>/dev/null; then
+                python3 -c '
+import re, os
+path = os.path.expanduser("~/.config/plasma-org.kde.plasma.desktop-appletsrc")
+if os.path.exists(path):
+    with open(path, "r", encoding="utf-8", errors="ignore") as f:
+        content = f.read()
+    task_applets = set()
+    current_sec = None
+    for line in content.splitlines():
+        m = re.match(r"^(\[Containments\]\[\d+\]\[Applets\]\[\d+\])$", line.strip())
+        if m:
+            current_sec = m.group(1)
+        elif line.strip().startswith("["):
+            current_sec = None
+        elif current_sec and ("plugin=org.kde.plasma.icontasks" in line or "plugin=org.kde.plasma.taskmanager" in line):
+            task_applets.add(current_sec)
+    changed = False
+    for applet in task_applets:
+        gen_hdr = f"{applet}[Configuration][General]"
+        if gen_hdr in content:
+            if re.search(rf"^{re.escape(gen_hdr)}\n(?:(?!\[)[\s\S])*?showOnlyCurrentDesktop=", content, re.MULTILINE):
+                content = re.sub(rf"(^{re.escape(gen_hdr)}\n(?:(?!\[)[\s\S])*?showOnlyCurrentDesktop=).*?$", r"\g<1>false", content, flags=re.MULTILINE)
+                changed = True
+            else:
+                content = content.replace(gen_hdr, f"{gen_hdr}\nshowOnlyCurrentDesktop=false")
+                changed = True
+    if changed:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(content)
+' 2>/dev/null || true
+            fi
+            if command -v qdbus6 &>/dev/null; then
+                qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+var p = getApiVersion(1);
+var pns = p.panels();
+for (var i = 0; i < pns.length; ++i) {
+    var ws = pns[i].widgets();
+    for (var j = 0; j < ws.length; ++j) {
+        var w = ws[j];
+        if (w.type === "org.kde.plasma.icontasks" || w.type === "org.kde.plasma.taskmanager") {
+            w.currentConfigGroup = ["General"];
+            w.writeConfig("showOnlyCurrentDesktop", false);
+        }
+    }
+}
+' 2>/dev/null || true
+            fi
+
+            # Lock Screen Screensaver: Apple TV 4K Aerial Video
+            kwriteconfig6 --file kscreenlockerrc --group Daemon --key Autolock true
+            kwriteconfig6 --file kscreenlockerrc --group Daemon --key Timeout 5
+
+            # Install Smart Video Wallpaper plugin if missing
+            local plugin_dir="$HOME/.local/share/plasma/wallpapers/luisbocanegra.smart.video.wallpaper.reborn"
+            if [ ! -d "$plugin_dir" ] && command -v kpackagetool6 &>/dev/null && command -v git &>/dev/null; then
+                log "Installing Smart Video Wallpaper plugin for KDE lockscreen..."
+                local tmp_plugin="/tmp/plasma-smart-video-wallpaper-reborn"
+                rm -rf "$tmp_plugin"
+                git clone --depth 1 https://github.com/luisbocanegra/plasma-smart-video-wallpaper-reborn.git "$tmp_plugin" 2>/dev/null || true
+                if [ -d "$tmp_plugin" ]; then
+                    kpackagetool6 --type Plasma/Wallpaper --install "$tmp_plugin" 2>/dev/null || true
+                    rm -rf "$tmp_plugin"
+                fi
+            fi
+
+            # Configure Apple TV Aerial video for lock screen
+            local aerial_dir="$HOME/.local/share/wallpapers/aerial"
+            mkdir -p "$aerial_dir"
+            if [ -d "$plugin_dir" ]; then
+                kwriteconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin luisbocanegra.smart.video.wallpaper.reborn
+                kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group luisbocanegra.smart.video.wallpaper.reborn --group General --key MuteMode 5
+                kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group luisbocanegra.smart.video.wallpaper.reborn --group General --key PauseMode 3
+                kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group luisbocanegra.smart.video.wallpaper.reborn --group General --key RandomMode true
+                kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group luisbocanegra.smart.video.wallpaper.reborn --group General --key ResumeLastVideo --type bool false
+
+
+                # Scan aerial directory and update VideoUrls JSON
+                if command -v python3 &>/dev/null; then
+                    python3 -c '
+import os, glob, json, subprocess
+aerial_dir = os.path.expanduser("~/.local/share/wallpapers/aerial")
+videos = sorted(glob.glob(os.path.join(aerial_dir, "*.mov")) + glob.glob(os.path.join(aerial_dir, "*.mp4")))
+if videos:
+    items = [{"filename": v, "enabled": True, "duration": 0, "customDuration": 0, "playbackRate": 1.0, "alternativePlaybackRate": 1.0, "loop": True} for v in videos]
+    json_str = json.dumps(items)
+    subprocess.run(["kwriteconfig6", "--file", "kscreenlockerrc", "--group", "Greeter", "--group", "Wallpaper", "--group", "luisbocanegra.smart.video.wallpaper.reborn", "--group", "General", "--key", "VideoUrls", json_str])
+' 2>/dev/null || true
+                fi
+            fi
         fi
-        success "KDE Plasma: dynamic workspaces, hot corners, hover-to-activate, default terminal, and Super+NUM shortcuts configured"
+        success "KDE Plasma: dynamic workspaces, hot corners, hover-to-activate, default terminal, cross-workspace panel & switcher, lockscreen aerial screensaver, and Super+NUM shortcuts configured"
     fi
 
     # 2. GNOME Configuration (if active, or gsettings schemas available)
@@ -439,11 +539,11 @@ except Exception:
             gsettings set org.gnome.desktop.peripherals.touchpad two-finger-scrolling-enabled true 2>/dev/null || true
         fi
 
-        # Window Controls & Focus (Hover to activate, Auto-raise, Buttons)
+        # Window Controls & Focus (Hover to activate, Click to raise, Buttons)
         if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.wm.preferences$"; then
             gsettings set org.gnome.desktop.wm.preferences focus-mode 'sloppy' 2>/dev/null || true
-            gsettings set org.gnome.desktop.wm.preferences auto-raise true 2>/dev/null || true
-            gsettings set org.gnome.desktop.wm.preferences auto-raise-delay 300 2>/dev/null || true
+            gsettings set org.gnome.desktop.wm.preferences auto-raise false 2>/dev/null || true
+            gsettings set org.gnome.desktop.wm.preferences auto-raise-delay 500 2>/dev/null || true
             gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close' 2>/dev/null || true
         fi
 
@@ -454,7 +554,20 @@ except Exception:
             gsettings set org.gnome.desktop.interface enable-hot-corners true 2>/dev/null || true
         fi
 
-        success "GNOME: dynamic workspaces, shortcuts, hover-to-activate, touchpad gestures & window controls configured"
+        # Task Switcher (Alt+Tab) & Dock: show windows/apps from all workspaces
+        if command -v gsettings &>/dev/null; then
+            if gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.shell.app-switcher$"; then
+                gsettings set org.gnome.shell.app-switcher current-workspace-only false 2>/dev/null || true
+            fi
+            if gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.shell.window-switcher$"; then
+                gsettings set org.gnome.shell.window-switcher current-workspace-only false 2>/dev/null || true
+            fi
+            if gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.shell.extensions.dash-to-dock$"; then
+                gsettings set org.gnome.shell.extensions.dash-to-dock isolate-workspaces false 2>/dev/null || true
+            fi
+        fi
+
+        success "GNOME: dynamic workspaces, shortcuts, hover-to-activate, cross-workspace dock & switcher, touchpad gestures & window controls configured"
     fi
 
     # 3. Apply Live Touchpad Settings

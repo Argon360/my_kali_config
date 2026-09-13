@@ -265,3 +265,13 @@ alias ff='fastfetch'
 alias ffpreview='fastfetch --config ~/.config/fastfetch/config.jsonc'
 alias fffull='fastfetch --config ~/.config/fastfetch/config-full.jsonc'
 alias ffwatch='fastfetch --config ~/.config/fastfetch/config-full.jsonc --watch'
+
+# -----------------------------------------------------------------------------
+#  Screensavers & Visuals
+# -----------------------------------------------------------------------------
+alias matrix='cmatrix -C cyan -b'
+alias screensaver='cmatrix -C cyan -b'
+alias away='cmatrix -C cyan -b'
+alias bonsai='cbonsai -l -i -w 4'
+alias pipes='pipes.sh'
+
