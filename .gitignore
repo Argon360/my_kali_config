@@ -24,8 +24,10 @@
 !/docs/
 !/fastfetch/
 !/fish/
+!/inputactions/
 !/kitty/
 !/kwin/
+!/lib/
 !/nvim/
 !/systemd/
 !/zsh/

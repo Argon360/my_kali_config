@@ -224,6 +224,7 @@ deploy_configs() {
         "atuin"
         "btop"
         "environment.d"
+        "inputactions"
         "starship.toml"
     )
 
@@ -264,6 +265,11 @@ deploy_configs() {
         mkdir -p "$HOME/.local/bin"
         cp -r "$SCRIPT_DIR/bin/"* "$HOME/.local/bin/"
         chmod +x "$HOME/.local/bin/"*
+        for bin_file in "$SCRIPT_DIR/bin/"*; do
+            [ -f "$bin_file" ] || continue
+            local_bname=$(basename "$bin_file")
+            sudo ln -sf "$HOME/.local/bin/$local_bname" "/usr/local/bin/$local_bname" 2>/dev/null || true
+        done
         success "Deployed custom binaries"
     fi
 
@@ -325,9 +331,11 @@ setup_desktop_environments() {
             kwriteconfig6 --file kwinrc --group "Windows" --key "NextFocusPrefersMouse" "false"
             kwriteconfig6 --file kwinrc --group "Windows" --key "FocusStealingPreventionLevel" "2"
 
-            # Task Switcher (Alt+Tab): show windows from all virtual desktops
+            # Task Switcher (Alt+Tab): show windows from all virtual desktops and activities (prevents restored windows from hiding until focused)
             kwriteconfig6 --file kwinrc --group "TabBox" --key "DesktopMode" "0"
+            kwriteconfig6 --file kwinrc --group "TabBox" --key "ActivitiesMode" "0"
             kwriteconfig6 --file kwinrc --group "TabBoxAlternative" --key "DesktopMode" "0"
+            kwriteconfig6 --file kwinrc --group "TabBoxAlternative" --key "ActivitiesMode" "0"
 
             # Default Terminal: Kitty everywhere (file manager, KRunner, global)
             kwriteconfig6 --file kdeglobals --group General --key TerminalApplication kitty
@@ -356,6 +364,16 @@ setup_desktop_environments() {
             kwriteconfig6 --file kglobalshortcutsrc --group "kitty.desktop" --key "_k_friendly_name" "kitty"
             kwriteconfig6 --file kglobalshortcutsrc --group "kitty.desktop" --key "_launch" "Meta+T,none,kitty"
 
+            # 6. Quick Tile shortcuts: Meta+Alt+[Arrow Keys] (clear conflicting Switch Window directional focus)
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Switch Window Left" "none,Meta+Alt+Left,Switch to Window to the Left"
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Switch Window Right" "none,Meta+Alt+Right,Switch to Window to the Right"
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Switch Window Up" "none,Meta+Alt+Up,Switch to Window Above"
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Switch Window Down" "none,Meta+Alt+Down,Switch to Window Below"
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Window Quick Tile Left" "Meta+Alt+Left,Meta+Left,Quick Tile Window to the Left"
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Window Quick Tile Right" "Meta+Alt+Right,Meta+Right,Quick Tile Window to the Right"
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Window Quick Tile Top" "Meta+Alt+Up,Meta+Up,Quick Tile Window to the Top"
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Window Quick Tile Bottom" "Meta+Alt+Down,Meta+Down,Quick Tile Window to the Bottom"
+
             # Live DBus update for shortcuts if session is running
             if command -v python3 &>/dev/null && command -v qdbus6 &>/dev/null; then
                 python3 -c "
@@ -366,10 +384,30 @@ try:
     iface = dbus.Interface(kglobalaccel, 'org.kde.KGlobalAccel')
     META = 0x10000000
     ALT = 0x08000000
+    KEY_LEFT = 0x01000012
+    KEY_UP = 0x01000013
+    KEY_RIGHT = 0x01000014
+    KEY_DOWN = 0x01000015
     try:
         iface.setForeignShortcut(['kwin', 'Edit Tiles', 'kwin', 'Toggle Tiles Editor'], dbus.Array([], signature='i'))
     except Exception:
         pass
+    for sw, desc in [('Switch Window Left', 'Switch to Window to the Left'),
+                     ('Switch Window Right', 'Switch to Window to the Right'),
+                     ('Switch Window Up', 'Switch to Window Above'),
+                     ('Switch Window Down', 'Switch to Window Below')]:
+        try:
+            iface.setForeignShortcut(['kwin', sw, 'kwin', desc], dbus.Array([], signature='i'))
+        except Exception:
+            pass
+    for qt, key, desc in [('Window Quick Tile Left', KEY_LEFT, 'Quick Tile Window to the Left'),
+                          ('Window Quick Tile Right', KEY_RIGHT, 'Quick Tile Window to the Right'),
+                          ('Window Quick Tile Top', KEY_UP, 'Quick Tile Window to the Top'),
+                          ('Window Quick Tile Bottom', KEY_DOWN, 'Quick Tile Window to the Bottom')]:
+        try:
+            iface.setForeignShortcut(['kwin', qt, 'kwin', desc], dbus.Array([META + ALT + key], signature='i'))
+        except Exception:
+            pass
     for i in range(1, 10):
         try:
             iface.setForeignShortcut(['plasmashell', f'activate task manager entry {i}', 'plasmashell', f'Activate Task Manager Entry {i}'], dbus.Array([], signature='i'))
@@ -451,7 +489,7 @@ for (var i = 0; i < pns.length; ++i) {
 
             # Lock Screen Screensaver: Apple TV 4K Aerial Video
             kwriteconfig6 --file kscreenlockerrc --group Daemon --key Autolock true
-            kwriteconfig6 --file kscreenlockerrc --group Daemon --key Timeout 5
+            kwriteconfig6 --file kscreenlockerrc --group Daemon --key Timeout 1
 
             # Install Smart Video Wallpaper plugin if missing
             local plugin_dir="$HOME/.local/share/plasma/wallpapers/luisbocanegra.smart.video.wallpaper.reborn"
@@ -552,6 +590,13 @@ if videos:
             gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
             gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 10' 2>/dev/null || true
             gsettings set org.gnome.desktop.interface enable-hot-corners true 2>/dev/null || true
+        fi
+
+        # Screensaver / Inactivity Lock Timeout (1 minute = 60s)
+        if command -v gsettings &>/dev/null && gsettings list-schemas 2>/dev/null | grep -q "^org.gnome.desktop.session$"; then
+            gsettings set org.gnome.desktop.session idle-delay 60 2>/dev/null || true
+            gsettings set org.gnome.desktop.screensaver lock-enabled true 2>/dev/null || true
+            gsettings set org.gnome.desktop.screensaver lock-delay 0 2>/dev/null || true
         fi
 
         # Task Switcher (Alt+Tab) & Dock: show windows/apps from all workspaces

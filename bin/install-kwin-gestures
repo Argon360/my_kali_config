@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -e
+
+PLUGIN_SRC="$HOME/Documents/my_kali_config/lib/kwin_gestures.so"
+if [ ! -f "$PLUGIN_SRC" ]; then
+    PLUGIN_SRC="$HOME/.local/lib/kwin/kwin_gestures.so"
+fi
+DEST_DIR="/usr/lib/qt6/plugins/kwin/effects/plugins"
+DEST_FILE="$DEST_DIR/kwin_gestures.so"
+
+echo "Installing KWin Gestures plugin to $DEST_FILE..."
+sudo mkdir -p "$DEST_DIR"
+sudo cp -f "$PLUGIN_SRC" "$DEST_FILE"
+sudo chmod 755 "$DEST_FILE"
+
+# Enable plugin in kwinrc
+kwriteconfig6 --file kwinrc --group "Plugins" --key "kwin_gesturesEnabled" "true"
+
+# Reload effect live in running KWin
+if command -v qdbus6 &>/dev/null; then
+    echo "Activating effect in running KWin session..."
+    qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.loadEffect "kwin_gestures" 2>/dev/null || true
+    qdbus6 org.kde.KWin /KWin org.kde.KWin.reconfigure 2>/dev/null || true
+fi
+
+echo "KWin Gestures plugin installed and active!"

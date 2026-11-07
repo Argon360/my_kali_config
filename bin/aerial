@@ -11,6 +11,7 @@ import random
 import subprocess
 import json
 import urllib.request
+import glob
 
 ENTRIES_URL = "http://a1.phobos.apple.com/us/r1000/000/Features/atv/AutumnResources/videos/entries.json"
 CACHE_DIR = os.path.expanduser("~/.cache/aerial")
@@ -115,6 +116,12 @@ def main():
 
     args = sys.argv[1:]
     if not args:
+        local_files = glob.glob(os.path.join(WALLPAPER_DIR, "*.mov")) + glob.glob(os.path.join(WALLPAPER_DIR, "*.mp4"))
+        if local_files and random.random() < 0.7:
+            v = random.choice(local_files)
+            loc_name = os.path.basename(v).split("_")[0].title()
+            play_video(v, title=f"{loc_name} (Local 4K Aerial)")
+            return
         loc = random.choice(list(videos.keys()))
         url = random.choice(videos[loc])
         play_video(url, title=f"{loc} (Apple TV 4K)")
@@ -149,6 +156,13 @@ def main():
     if not matched_loc:
         print(f"Unknown location '{target_loc}'. Run 'aerial list' to see options.")
         sys.exit(1)
+
+    # Prefer offline local 4K video if already downloaded
+    local_files = glob.glob(os.path.join(WALLPAPER_DIR, f"*{target_loc}*.mov")) + glob.glob(os.path.join(WALLPAPER_DIR, f"*{target_loc}*.mp4"))
+    if local_files:
+        chosen_local = random.choice(local_files)
+        play_video(chosen_local, title=f"{matched_loc} (Local 4K Aerial)")
+        return
 
     url = random.choice(videos[matched_loc])
     play_video(url, title=f"{matched_loc} (Apple TV 4K)")

@@ -39,8 +39,11 @@ if command -v qdbus6 &>/dev/null && qdbus6 org.kde.KWin &>/dev/null; then
         kwriteconfig6 --file kwinrc --group "Windows" --key "DelayFocusInterval" "500"
         kwriteconfig6 --file kwinrc --group "Windows" --key "AutoRaise" "false"
         kwriteconfig6 --file kwinrc --group "Windows" --key "ClickRaise" "true"
-        kwriteconfig6 --file kwinrc --group "Windows" --key "NextFocusPrefersMouse" "false"
         kwriteconfig6 --file kwinrc --group "Windows" --key "FocusStealingPreventionLevel" "2"
+        if [ -f "/usr/lib/qt6/plugins/kwin/effects/plugins/kwin_gestures.so" ]; then
+            kwriteconfig6 --file kwinrc --group "Plugins" --key "kwin_gesturesEnabled" "true"
+            qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.loadEffect "kwin_gestures" 2>/dev/null || true
+        fi
         qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
     fi
 

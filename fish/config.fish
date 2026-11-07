@@ -109,6 +109,16 @@ if status is-interactive
     alias fcount='find . -type f | wc -l'
     alias dcount='find . -type d | wc -l'
 
+    # Auto-eza on directory change
+    function __auto_eza_on_pwd --on-variable PWD --description "Automatically list directory contents with eza upon cd"
+        status is-interactive; or return
+        if type -q eza
+            eza -a --group-directories-first --icons=auto
+        else
+            ls -A
+        end
+    end
+
     # -----------------------------
     # System / Infra
     # -----------------------------
@@ -134,6 +144,8 @@ if status is-interactive
     if type -q pipes.sh
         alias pipes='pipes.sh'
     end
+    alias wp='sync-wallpaper'
+    alias wallpaper='sync-wallpaper'
 
     # -----------------------------
     # System Maintenance

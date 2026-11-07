@@ -1,0 +1,300 @@
+#!/usr/bin/env python3
+"""
+sync-wallpaper - Seamless Wallpaper Synchronizer for Linux (KDE Plasma 6 & GNOME)
+Synchronizes Desktop Wallpaper, Lock Screen, and Login Screen (SDDM / Plasma Login)
+with curated high-resolution aesthetic wallpapers.
+"""
+
+import sys
+import os
+import glob
+import subprocess
+import random
+import shutil
+
+import pwd
+
+def get_user_home():
+    sudo_user = os.environ.get("SUDO_USER")
+    if sudo_user:
+        try:
+            return pwd.getpwnam(sudo_user).pw_dir
+        except Exception:
+            pass
+    return os.path.expanduser("~")
+
+USER_HOME = get_user_home()
+AESTHETIC_DIR = os.path.join(USER_HOME, ".local/share/wallpapers/aesthetic")
+CACHY_DIR = "/usr/share/wallpapers/cachyos-wallpapers"
+SYSTEM_DIR = "/usr/share/wallpapers"
+SHARED_SDDM_WP = "/usr/share/wallpapers/sddm_login_wallpaper.jpg"
+SDDM_CONF_USER = "/usr/share/sddm/themes/breeze/theme.conf.user"
+
+CATEGORIES = {
+    "Alena Aenami (Moody / Dusk / Atmospheric Art)": [
+        "aenami_7pm.png",
+        "aenami_any_minute_now.jpg",
+        "aenami_away.jpg",
+        "aenami_blue_hour.jpg",
+        "aenami_dawn.jpg",
+        "aenami_eclipse.jpg"
+    ],
+    "Japan & Minimalist Landscapes": [
+        "mount_fuji.jpg",
+        "cherry_blossom_mountains.jpg",
+        "eagle_mountain_sunset.jpg",
+        "mountain_lake_4k.jpg",
+        "calm_night.png"
+    ],
+    "Tokyo Night & Cyberpunk": [
+        "tokyo_street_night.jpg",
+        "tokyo_simplistic.jpg",
+        "japan_torii.png",
+        "japan_anime_city.jpg"
+    ],
+    "Nordic & Abstract Geometry": [
+        "arch_nord_dark.png",
+        "nord_space_doodle.png",
+        "ink_wave.png"
+    ]
+}
+
+def get_all_wallpapers():
+    wps = []
+    if os.path.isdir(AESTHETIC_DIR):
+        for ext in ("*.png", "*.jpg", "*.jpeg", "*.webp"):
+            wps.extend(glob.glob(os.path.join(AESTHETIC_DIR, ext)))
+    if os.path.isdir(CACHY_DIR):
+        for ext in ("*.png", "*.jpg", "*.jpeg"):
+            wps.extend(glob.glob(os.path.join(CACHY_DIR, ext)))
+    return sorted(list(set(wps)))
+
+def find_wallpaper(query):
+    query = query.strip()
+    all_wps = get_all_wallpapers()
+    
+    # 1. Exact path
+    if os.path.isfile(query):
+        return os.path.abspath(query)
+    
+    # 2. Number selection
+    if query.isdigit():
+        idx = int(query) - 1
+        flat_list = []
+        for cat, files in CATEGORIES.items():
+            for f in files:
+                p = os.path.join(AESTHETIC_DIR, f)
+                if os.path.exists(p):
+                    flat_list.append(p)
+        if 0 <= idx < len(flat_list):
+            return flat_list[idx]
+
+    # 3. Random selection
+    if query.lower() in ("random", "rand", "r"):
+        if all_wps:
+            return random.choice(all_wps)
+
+    # 4. Partial / Fuzzy name match
+    query_lower = query.lower()
+    for p in all_wps:
+        base = os.path.basename(p).lower()
+        name_no_ext = os.path.splitext(base)[0]
+        if query_lower == base or query_lower == name_no_ext:
+            return p
+        if query_lower in name_no_ext:
+            return p
+            
+    return None
+
+def set_desktop_wallpaper_plasma(image_path):
+    abs_path = os.path.abspath(image_path)
+    uri = f"file://{abs_path}"
+    script = f'''
+let allDesktops = desktops();
+for (let i = 0; i < allDesktops.length; i++) {{
+    let d = allDesktops[i];
+    d.wallpaperPlugin = "org.kde.image";
+    d.currentConfigGroup = ["Wallpaper", "org.kde.image", "General"];
+    d.writeConfig("Image", "{uri}");
+    d.writeConfig("PreviewImage", "{uri}");
+}}
+'''
+    try:
+        subprocess.run([
+            "qdbus6", "org.kde.plasmashell", "/PlasmaShell",
+            "org.kde.PlasmaShell.evaluateScript", script
+        ], capture_output=True, text=True, check=False)
+        return True
+    except Exception as e:
+        print(f"  [!] Note: Could not update Plasma desktop live via DBus: {e}", file=sys.stderr)
+        return False
+
+def set_lockscreen_wallpaper_plasma(image_path):
+    abs_path = os.path.abspath(image_path)
+    config_file = os.path.join(USER_HOME, ".config/kscreenlockerrc")
+    try:
+        subprocess.run(["kwriteconfig6", "--file", config_file, "--group", "Greeter", "--key", "WallpaperPlugin", "org.kde.image"], check=False)
+        subprocess.run(["kwriteconfig6", "--file", config_file, "--group", "Greeter", "--group", "Wallpaper", "--group", "org.kde.image", "--group", "General", "--key", "Image", abs_path], check=False)
+        subprocess.run(["kwriteconfig6", "--file", config_file, "--group", "Greeter", "--group", "Wallpaper", "--group", "org.kde.image", "--group", "General", "--key", "PreviewImage", abs_path], check=False)
+        sudo_user = os.environ.get("SUDO_USER")
+        if sudo_user and os.path.exists(config_file):
+            shutil.chown(config_file, user=sudo_user, group=sudo_user)
+        return True
+    except Exception as e:
+        print(f"  [!] Note: Could not update kscreenlockerrc: {e}", file=sys.stderr)
+        return False
+
+def set_gnome_wallpapers(image_path):
+    abs_path = os.path.abspath(image_path)
+    uri = f"file://{abs_path}"
+    try:
+        subprocess.run(["gsettings", "set", "org.gnome.desktop.background", "picture-uri", uri], check=False, capture_output=True)
+        subprocess.run(["gsettings", "set", "org.gnome.desktop.background", "picture-uri-dark", uri], check=False, capture_output=True)
+        subprocess.run(["gsettings", "set", "org.gnome.desktop.screensaver", "picture-uri", uri], check=False, capture_output=True)
+        subprocess.run(["gsettings", "set", "org.gnome.desktop.screensaver", "picture-uri-dark", uri], check=False, capture_output=True)
+        return True
+    except Exception:
+        return False
+
+def sync_login_screen_direct(image_path):
+    abs_path = os.path.abspath(image_path)
+    try:
+        os.makedirs(os.path.dirname(SHARED_SDDM_WP), exist_ok=True)
+        shutil.copyfile(abs_path, SHARED_SDDM_WP)
+        os.chmod(SHARED_SDDM_WP, 0o644)
+        
+        theme_dir = os.path.dirname(SDDM_CONF_USER)
+        if os.path.isdir(theme_dir):
+            with open(SDDM_CONF_USER, "w") as f:
+                f.write(f"[General]\nbackground={SHARED_SDDM_WP}\n")
+            os.chmod(SDDM_CONF_USER, 0o644)
+        print("  [OK] Login Screen (SDDM / Plasma Login) synchronized successfully!")
+        return True
+    except Exception as e:
+        print(f"  [!] Warning setting login screen: {e}", file=sys.stderr)
+        return False
+
+def elevate_and_sync_login_screen(image_path):
+    abs_path = os.path.abspath(image_path)
+    print("\n  🔑 Elevating with sudo to synchronize Login Screen (SDDM)...")
+    py_code = (
+        "import os, shutil; "
+        "os.makedirs('/usr/share/wallpapers', exist_ok=True); "
+        f"shutil.copyfile({repr(abs_path)}, '/usr/share/wallpapers/sddm_login_wallpaper.jpg'); "
+        "os.chmod('/usr/share/wallpapers/sddm_login_wallpaper.jpg', 0o644); "
+        "sddm_theme = '/usr/share/sddm/themes/breeze'; "
+        "os.makedirs(sddm_theme, exist_ok=True); "
+        "open('/usr/share/sddm/themes/breeze/theme.conf.user', 'w').write('[General]\\nbackground=/usr/share/wallpapers/sddm_login_wallpaper.jpg\\n'); "
+        "os.chmod('/usr/share/sddm/themes/breeze/theme.conf.user', 0o644)"
+    )
+    cmd = ["sudo", sys.executable, "-c", py_code]
+    res = subprocess.run(cmd)
+    if res.returncode == 0:
+        print("  [OK] Login Screen (SDDM / Plasma Login) synchronized successfully!")
+        return True
+    else:
+        print("  [!] Failed to update Login Screen (sudo error)", file=sys.stderr)
+        return False
+
+def restore_aerial_lockscreen():
+    print("🎬 Restoring Apple TV 4K Aerial Video Screensaver for Lock Screen...")
+    subprocess.run(["kwriteconfig6", "--file", "kscreenlockerrc", "--group", "Greeter", "--key", "WallpaperPlugin", "luisbocanegra.smart.video.wallpaper.reborn"], check=False)
+    subprocess.run(["kwriteconfig6", "--file", "kscreenlockerrc", "--group", "Greeter", "--group", "Wallpaper", "--group", "luisbocanegra.smart.video.wallpaper.reborn", "--group", "General", "--key", "RandomMode", "true"], check=False)
+    subprocess.run(["kwriteconfig6", "--file", "kscreenlockerrc", "--group", "Greeter", "--group", "Wallpaper", "--group", "luisbocanegra.smart.video.wallpaper.reborn", "--group", "General", "--key", "ResumeLastVideo", "--type", "bool", "false"], check=False)
+    print("  [OK] Lock Screen reverted to Apple TV 4K Aerial Video shuffle!")
+
+def print_menu():
+    print("\n╔══════════════════════════════════════════════════════════════════════╗")
+    print("║             🎨  AESTHETIC WALLPAPER SYNCHRONIZER                    ║")
+    print("║    Synchronize Desktop, Lock Screen, and Login Screen Wallpapers    ║")
+    print("╚══════════════════════════════════════════════════════════════════════╝\n")
+    
+    num = 1
+    for category, files in CATEGORIES.items():
+        print(f"  \033[1;36m{category}\033[0m")
+        for f in files:
+            p = os.path.join(AESTHETIC_DIR, f)
+            if os.path.exists(p):
+                name = os.path.splitext(f)[0].replace("_", " ").title()
+                print(f"    \033[1;33m[{num:2d}]\033[0m {name:<30} \033[2m({f})\033[0m")
+                num += 1
+        print()
+
+    print("  \033[1;32mCommands:\033[0m")
+    print("    wp <number|name>             # e.g. wp 1, wp fuji")
+    print("    wp <number|name> --login     # Also syncs Login Screen (SDDM) via sudo")
+    print("    wp random                    # Pick a random aesthetic wallpaper")
+    print("    wp --aerial                  # Restore Apple TV 4K Aerial video on lockscreen\n")
+
+def main():
+    raw_args = sys.argv[1:]
+    
+    if not raw_args or raw_args[0] in ("-h", "--help", "help", "list"):
+        print_menu()
+        if sys.stdin.isatty() and not raw_args:
+            try:
+                choice = input("  Select a wallpaper (number, name, 'random', or Enter to exit): ").strip()
+                if not choice:
+                    return
+                raw_args = [choice]
+            except (KeyboardInterrupt, EOFError):
+                print()
+                return
+        else:
+            return
+
+    if raw_args[0] in ("--aerial", "-a", "aerial", "video"):
+        restore_aerial_lockscreen()
+        return
+
+    # Check for --login or --all flags
+    sync_login_flag = False
+    args = []
+    for arg in raw_args:
+        if arg in ("--login", "-l", "--all", "-a"):
+            sync_login_flag = True
+        else:
+            args.append(arg)
+
+    if not args:
+        print_menu()
+        return
+
+    query = " ".join(args)
+    matched_path = find_wallpaper(query)
+    
+    if not matched_path:
+        print(f"\n❌ Error: No wallpaper found matching '{query}'.", file=sys.stderr)
+        print("   Run 'wp' to browse all available aesthetic wallpapers.\n", file=sys.stderr)
+        sys.exit(1)
+
+    name = os.path.splitext(os.path.basename(matched_path))[0].replace("_", " ").title()
+    print(f"\n🖼️  Synchronizing Wallpaper: \033[1;32m{name}\033[0m")
+    print(f"   Source: {matched_path}\n")
+
+    # 1. Desktop Wallpaper (Plasma 6)
+    set_desktop_wallpaper_plasma(matched_path)
+    print("  [OK] Desktop Wallpaper updated (Plasma 6)")
+
+    # 2. Lock Screen Wallpaper (KScreenLocker)
+    set_lockscreen_wallpaper_plasma(matched_path)
+    print("  [OK] Lock Screen Wallpaper updated (KScreenLocker)")
+
+    # 3. GNOME Cross-DE Support
+    set_gnome_wallpapers(matched_path)
+
+    # 4. Login Screen (SDDM / Plasma Login)
+    is_root = (os.geteuid() == 0)
+    if is_root:
+        sync_login_screen_direct(matched_path)
+        print("\n✨ All 3 surfaces (Desktop, Lock Screen, Login Screen) are in sync!\n")
+    elif sync_login_flag:
+        if elevate_and_sync_login_screen(matched_path):
+            print("\n✨ All 3 surfaces (Desktop, Lock Screen, Login Screen) are in sync!\n")
+    else:
+        print("\n  💡 \033[1;33mTip to also sync the Login Screen (SDDM / Plasma Login):\033[0m")
+        print(f"     Run: \033[1mwp \"{os.path.basename(matched_path)}\" --login\033[0m")
+        print("     Or:  Open \033[1mSystem Settings -> Login Screen\033[0m and click \033[1m'Apply Plasma Settings'\033[0m.\n")
+
+if __name__ == "__main__":
+    main()

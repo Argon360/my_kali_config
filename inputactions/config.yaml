@@ -1,0 +1,24 @@
+# InputActions Configuration for Wayland Touchpad Gestures
+# 3-finger swipe: scroll through windows (Alt+Tab)
+# 4-finger swipe: native KWin virtual desktop (workspace) switching
+
+touchpad:
+  gestures:
+    - type: swipe
+      direction: left_right
+      fingers: 3
+      actions:
+        - on: begin
+          input:
+            - keyboard: [ +leftalt, tab ]
+        - on: update
+          interval: -50
+          input:
+            - keyboard: [ leftshift+tab ]
+        - on: update
+          interval: 50
+          input:
+            - keyboard: [ tab ]
+        - on: end_cancel
+          input:
+            - keyboard: [ -leftalt ]

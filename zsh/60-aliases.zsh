@@ -274,4 +274,6 @@ alias screensaver='cmatrix -C cyan -b'
 alias away='cmatrix -C cyan -b'
 alias bonsai='cbonsai -l -i -w 4'
 alias pipes='pipes.sh'
+alias wp='sync-wallpaper'
+alias wallpaper='sync-wallpaper'
 
