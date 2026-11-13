@@ -729,6 +729,8 @@ setup_user_dirs() {
     # Ensure x-terminal-emulator symlink points to kitty
     ln -sf "$HOME/.local/bin/kitty" "$HOME/.local/bin/x-terminal-emulator" 2>/dev/null || \
     ln -sf "$(command -v kitty || echo '/usr/bin/kitty')" "$HOME/.local/bin/x-terminal-emulator" 2>/dev/null || true
+    # Ensure kitten is colocated with kitty in ~/.local/bin so kitten-based actions work
+    ln -sf "$(command -v kitten || echo '/usr/bin/kitten')" "$HOME/.local/bin/kitten" 2>/dev/null || true
 }
 
 # --- 8. Fix Hardcoded Paths ---

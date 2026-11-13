@@ -84,6 +84,7 @@ Start here if you want to understand *why* things are configured this way:
 
 - 📐 [Architecture & Design Principles](docs/architecture.md)
 - 🖥️ [Kitty Terminal Configuration](docs/kitty.md)
+- 🐱 [Complete Kitty Keybindings Reference](docs/kitty-keys.md) ⭐
 - 🐟 [Fish Shell Configuration](docs/fish.md)
 - 🔍 [FZF Integration](docs/fzf.md)
 - 🚀 [Starship Prompt](docs/starship.md)

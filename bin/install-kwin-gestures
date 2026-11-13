@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
+if [ -n "$SUDO_USER" ]; then
+    echo "Notice: Please run this script as your normal user (without sudo):"
+    echo "    install-kwin-gestures"
+    echo "It will automatically prompt for sudo when copying the plugin to system directories."
+    exit 1
+fi
+
 PLUGIN_SRC="$HOME/Documents/my_kali_config/lib/kwin_gestures.so"
 if [ ! -f "$PLUGIN_SRC" ]; then
     PLUGIN_SRC="$HOME/.local/lib/kwin/kwin_gestures.so"

@@ -73,6 +73,9 @@ Tested and configured for KDE Plasma 6.8+ on Wayland.
 
 ## 🖥️ Kitty Terminal Emulator
 
+> [!TIP]
+> A dedicated, in-depth breakdown of all 55+ Kitty mappings, dynamic opacity profiles, and kitten features is available in [docs/kitty-keys.md](docs/kitty-keys.md).
+
 ### Modern Features & Kittens (Kitty 0.42–0.50+)
 
 | Shortcut | Kitten / Command | Description |

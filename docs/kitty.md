@@ -36,6 +36,9 @@ Paste is intentionally *not* rebound elsewhere.
 
 ## Keybindings (kitty-owned)
 
+> [!TIP]
+> For the complete, unabridged catalog of all 55+ shortcuts, kittens, dynamic opacity profiles, and font controls, see the **[Complete Kitty Keybindings Reference](kitty-keys.md)**.
+
 ### Tabs
 | Key | Action |
 |----|------|
