@@ -11,6 +11,7 @@
 
 # 3. Allow Specific Files
 !/README.md
+!/SHORTCUTS.md
 !/setup.sh
 !/starship.toml
 

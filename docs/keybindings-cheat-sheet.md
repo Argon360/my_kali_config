@@ -1,12 +1,13 @@
-
 # ⌨️ Keybinding Cheat Sheet
 
-This document is the **single source of truth** for all keybindings used in this configuration.
+This document is a rapid cheat sheet for all keybindings used in this configuration.
+For the complete guide with Wayland gestures and KWin actions, see [SHORTCUTS.md](../SHORTCUTS.md).
 
 It covers:
-- Terminal UI (kitty)
-- Shell behavior (fish)
-- fzf integrations
+- Terminal UI (Kitty 0.50+)
+- KWin Window Tiling & Workspaces
+- Shell behavior (Fish / Zsh)
+- FZF integrations
 - Routing rules and ownership
 
 No undocumented shortcuts exist.
@@ -17,14 +18,31 @@ No undocumented shortcuts exist.
 
 | Modifier | Owner | Purpose |
 |--------|------|--------|
+| `Meta` | KWin | Desktop & workspace navigation |
+| `Meta + Alt` | KWin | Window tiling & moving to desktops |
 | `Ctrl` | fish | Shell behavior |
 | `Ctrl + Alt` | kitty | Route actions to shell |
-| `Ctrl + Shift` | kitty | UI / visual controls |
-| `Alt` | ❌ unused | Avoided (DE conflicts) |
+| `Ctrl + Shift` | kitty | UI / visual controls / kittens |
+| `Alt + 1..9` | kitty | Tab jumping |
 
 > **Paste is sacred**
-- Paste is **always** `Ctrl + Shift + V`
-- `Ctrl + V` is never rebound
+- Paste is always available via `Ctrl + Shift + V` and `Ctrl + V`
+- Never rebound or hijacked by sub-processes
+
+---
+
+## 🪟 KWin Desktop & Window Management
+
+| Key | Action |
+|----|------|
+| `Meta + Alt + ←` | Quick Tile Left (50%) |
+| `Meta + Alt + →` | Quick Tile Right (50%) |
+| `Meta + Alt + ↑` | Quick Tile Top (50%) |
+| `Meta + Alt + ↓` | Quick Tile Bottom (50%) |
+| `Meta + 1..9` | Switch to Desktop 1–9 |
+| `Meta + Alt + 1..9` | Move Window to Desktop 1–9 |
+| `Meta + W` | Toggle Desktop Overview |
+| `Alt + Tab` | Walk Through Windows |
 
 ---
 
@@ -34,10 +52,12 @@ No undocumented shortcuts exist.
 
 | Key | Action |
 |----|------|
-| `Ctrl + Shift + →` | Next tab |
-| `Ctrl + Shift + ←` | Previous tab |
-| `Ctrl + Shift + T` | New tab |
-| `Ctrl + Shift + W` | Close tab |
+| `Ctrl + Shift + →` / `Ctrl + Tab` | Next tab |
+| `Ctrl + Shift + ←` / `Ctrl + Shift + Tab` | Previous tab |
+| `Ctrl + Shift + T` / `Ctrl + T` | New tab |
+| `Ctrl + Shift + W` / `Ctrl + W` | Close tab |
+| `Alt + 1..9` | Jump directly to tab 1–9 |
+| `Ctrl + Shift + D` | Detach tab |
 
 ---
 
@@ -45,11 +65,29 @@ No undocumented shortcuts exist.
 
 | Key | Action |
 |----|------|
+| `Ctrl + Shift + H` | Horizontal split |
+| `Ctrl + Shift + V` | Vertical split |
 | `Ctrl + Alt + N` | New window |
 | `Ctrl + Alt + Q` | Close window |
+| `Ctrl + Shift + L` | Next layout |
+| `Ctrl + Shift + Z` | Zoom layout (fullscreen split) |
 | `Ctrl + Alt + Enter` | Toggle fullscreen |
-| `Ctrl + Alt + H` | Horizontal split |
-| `Ctrl + Alt + V` | Vertical split |
+| `Ctrl + Shift + M` | Detach window |
+
+---
+
+### Modern Kittens (Kitty 0.42+)
+
+| Key | Action |
+|----|------|
+| `Ctrl + Shift + K` | Command Palette (Search all actions) |
+| `Ctrl + Shift + F` | Interactive File Picker (`choose-files`) |
+| `Ctrl + Shift + B` | Broadcast keystrokes to all panes |
+| `Ctrl + Shift + R` | Interactive window split resizing |
+| `Ctrl + Shift + G` | Drag & Drop terminal files (`dnd`) |
+| `Ctrl + Shift + E` | Hint mode (URLs) |
+| `Ctrl + Shift + P` | Hint mode (Paths) |
+| `Ctrl + Shift + Y` | Hint mode (Git SHA hashes) |
 
 ---
 
@@ -57,16 +95,10 @@ No undocumented shortcuts exist.
 
 | Key | Action |
 |----|------|
+| `Ctrl + C` | Copy or Interrupt |
+| `Ctrl + V` | Paste from clipboard |
 | `Ctrl + Shift + C` | Copy |
 | `Ctrl + Shift + V` | Paste |
-
----
-
-### Visual / Utility
-
-| Key | Action |
-|----|------|
-| `Ctrl + Shift + E` | Hint mode (select text/URLs) |
 
 ---
 
@@ -98,19 +130,16 @@ No undocumented shortcuts exist.
 
 ---
 
-## 🐟 Fish — Shell Behavior
-
-> These bindings are **Ctrl-only** and work in both `default` and `insert` modes.
-
-### fzf Actions (Shell-Owned)
+## 🐟 Fish / Zsh — Shell Behavior
 
 | Key | Action |
 |----|------|
-| `Ctrl + G` / `Alt + M` | Unified FZF Command Menu (`menu`) |
-| `Ctrl + F` | File / project search |
-| `Ctrl + R` | Command history search |
-| `Ctrl + D` | Directory jump |
-| `Ctrl + K` | Process kill |
+| `Ctrl + A` | Start of line |
+| `Ctrl + E` | End of line |
+| `Ctrl + U` | Clear line before cursor |
+| `Ctrl + K` | Clear line after cursor |
+| `Ctrl + W` | Delete word backward |
+| `Ctrl + L` | Clear screen |
 
 ---
 
@@ -120,29 +149,23 @@ These actions are triggered via kitty routing:
 
 | Physical Key | Routed As | Final Action |
 |------------|----------|--------------|
-| `Ctrl + Alt + M` | `Ctrl + G` | Unified FZF Menu |
-| `Ctrl + Alt + P` | `Ctrl + F` | File search |
-| `Ctrl + Alt + H` | `Ctrl + R` | History search |
-| `Ctrl + Alt + J` | `Ctrl + D` | Directory jump |
-| `Ctrl + Alt + X` | `Ctrl + K` | Process kill |
-
-This separation ensures:
-- No Alt usage inside fish
-- No shell logic in kitty
-- No plugin surprise bindings
+| `Ctrl + Alt + M` | `\cg` | Unified FZF Menu |
+| `Ctrl + Alt + P` | `\cf` | File search |
+| `Ctrl + Alt + H` | `\cr` | History search |
+| `Ctrl + Alt + J` | `\cd` | Directory jump (Zoxide) |
+| `Ctrl + Alt + X` | `\ck` | Process kill |
 
 ---
 
-## 🚫 Explicitly Not Used
+## 🖐️ Wayland Touchpad Gestures
 
-These keys are intentionally **not bound**:
-
-| Key | Reason |
-|----|--------|
-| `Alt + *` | DE / WM conflicts |
-| `Ctrl + V` | Breaks paste semantics |
-| `Ctrl + T` | Avoids duplicate file search |
-| fzf default Alt bindings | Disabled for clarity |
+| Gesture | Action |
+|---------|--------|
+| **3-Finger Horizontal Swipe** | Window Switcher (<kbd>Alt</kbd>+<kbd>Tab</kbd>) |
+| **4-Finger Horizontal Swipe** | Slide Virtual Desktops |
+| **4-Finger Vertical Swipe** | Toggle Overview |
+| **1-Finger Tap + Drag** | Drag Lock |
+| **2-Finger Scroll** | Smooth Kinetic Scrolling |
 
 ---
 
@@ -150,7 +173,5 @@ These keys are intentionally **not bound**:
 
 - Every shortcut is intentional
 - Every binding is documented
-- There is exactly **one way** to do each action
-- No plugin overrides user intent
-
-If something isn’t bound — it’s on purpose.
+- No conflicting overlays
+- See [SHORTCUTS.md](../SHORTCUTS.md) for detailed operational notes.

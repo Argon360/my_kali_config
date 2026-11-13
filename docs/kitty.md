@@ -50,8 +50,22 @@ Paste is intentionally *not* rebound elsewhere.
 | Ctrl+Alt+N | New window |
 | Ctrl+Alt+Q | Close window |
 | Ctrl+Alt+Enter | Fullscreen |
-| Ctrl+Alt+H | Horizontal split |
-| Ctrl+Alt+V | Vertical split |
+| Ctrl+Shift+H | Horizontal split |
+| Ctrl+Shift+V | Vertical split |
+| Ctrl+Shift+L | Next layout |
+| Ctrl+Shift+Z | Toggle zoom (stack layout) |
+
+### Modern Kittens & Features (Kitty 0.42–0.50+)
+| Key | Action |
+|----|------|
+| Ctrl+Shift+K | Command Palette |
+| Ctrl+Shift+F | Fast Visual File Chooser (`choose-files`) |
+| Ctrl+Shift+B | Broadcast Keystrokes to all panes |
+| Ctrl+Shift+R | Interactive Window Resizing |
+| Ctrl+Shift+G | Terminal Drag & Drop (`dnd`) |
+| Ctrl+Shift+E | URL Hints mode |
+| Ctrl+Shift+P | Path Hints mode |
+| Ctrl+Shift+Y | Hash Hints mode |
 
 ---
 

@@ -89,10 +89,10 @@ Start here if you want to understand *why* things are configured this way:
 - 🚀 [Starship Prompt](docs/starship.md)
 - ℹ️ [Fastfetch System Info](docs/fastfetch.md)
 - 📝 [Neovim / LazyVim](docs/nvim.md)
+- ⌨️ [Full Shortcuts Reference](SHORTCUTS.md) ⭐
 - ⌨️ [Keybindings Reference](docs/keybindings.md)
+- ⌨️ [Keybinding Cheat Sheet](docs/keybindings-cheat-sheet.md)
 - 🔌 [Plugins & Fisher](docs/plugins.md)
-
-- ⌨️ [Keybinding Cheat Sheet](docs/keybinding-cheat-sheet.md)
 
 ---
 
