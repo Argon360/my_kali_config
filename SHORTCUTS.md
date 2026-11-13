@@ -50,6 +50,13 @@ Tested and configured for KDE Plasma 6.8+ on Wayland.
 | <kbd>Meta</kbd> + <kbd>Alt</kbd> + <kbd>↑</kbd> | **Tile Top** | Snaps window to top 50% of the display |
 | <kbd>Meta</kbd> + <kbd>Alt</kbd> + <kbd>↓</kbd> | **Tile Bottom** | Snaps window to bottom 50% of the display |
 
+### Window Maximization & Sizing
+
+| Shortcut | Action | Description |
+| :--- | :--- | :--- |
+| <kbd>Meta</kbd> + <kbd>↑</kbd> | **Maximize / Restore** | Toggles window between full maximized state and restored size |
+| <kbd>Meta</kbd> + <kbd>↓</kbd> | **Minimize Window** | Minimizes active window to task manager |
+
 ### Virtual Desktops & Workspace Navigation
 
 | Shortcut | Action | Description |

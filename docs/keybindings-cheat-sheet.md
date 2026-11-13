@@ -39,6 +39,8 @@ No undocumented shortcuts exist.
 | `Meta + Alt + →` | Quick Tile Right (50%) |
 | `Meta + Alt + ↑` | Quick Tile Top (50%) |
 | `Meta + Alt + ↓` | Quick Tile Bottom (50%) |
+| `Meta + ↑` | Maximize / Restore Window |
+| `Meta + ↓` | Minimize Window |
 | `Meta + 1..9` | Switch to Desktop 1–9 |
 | `Meta + Alt + 1..9` | Move Window to Desktop 1–9 |
 | `Meta + W` | Toggle Desktop Overview |

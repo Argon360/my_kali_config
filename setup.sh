@@ -104,6 +104,12 @@ install_packages() {
     if [ "$PM" == "pacman" ]; then
         PACKAGES=("${PACKAGES[@]/fd-find/fd}")
         PACKAGES+=(base-devel git-delta unp unzip ttf-jetbrains-mono-nerd dconf)
+
+        # Modernize Pacman Progress Bar (disable cartoonish ILoveCandy, enable PrettyProgressBar)
+        if [ -f /etc/pacman.conf ] && grep -q "^ILoveCandy" /etc/pacman.conf; then
+            log "Modernizing pacman progress bar in /etc/pacman.conf..."
+            sudo sed -i 's/^ILoveCandy/#ILoveCandy\nPrettyProgressBar/' /etc/pacman.conf 2>/dev/null || true
+        fi
     elif [ "$PM" == "dnf" ]; then
         log "Configuring Fedora specific repositories..."
         sudo dnf install -y dnf-plugins-core util-linux-user
@@ -374,6 +380,10 @@ setup_desktop_environments() {
             kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Window Quick Tile Top" "Meta+Alt+Up,Meta+Up,Quick Tile Window to the Top"
             kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Window Quick Tile Bottom" "Meta+Alt+Down,Meta+Down,Quick Tile Window to the Bottom"
 
+            # 7. Window Maximize (Meta+Up) & Window Minimize (Meta+Down)
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Window Maximize" "Meta+Up\tMeta+PgUp,Meta+PgUp,Maximize Window"
+            kwriteconfig6 --file kglobalshortcutsrc --group "kwin" --key "Window Minimize" "Meta+Down\tMeta+PgDown,Meta+PgDown,Minimize Window"
+
             # Live DBus update for shortcuts if session is running
             if command -v python3 &>/dev/null && command -v qdbus6 &>/dev/null; then
                 python3 -c "
@@ -388,6 +398,16 @@ try:
     KEY_UP = 0x01000013
     KEY_RIGHT = 0x01000014
     KEY_DOWN = 0x01000015
+    KEY_PAGEUP = 0x01000016
+    KEY_PAGEDOWN = 0x01000017
+    try:
+        iface.setForeignShortcut(['kwin', 'Window Maximize', 'kwin', 'Maximize Window'], dbus.Array([META + KEY_UP, META + KEY_PAGEUP], signature='i'))
+    except Exception:
+        pass
+    try:
+        iface.setForeignShortcut(['kwin', 'Window Minimize', 'kwin', 'Minimize Window'], dbus.Array([META + KEY_DOWN, META + KEY_PAGEDOWN], signature='i'))
+    except Exception:
+        pass
     try:
         iface.setForeignShortcut(['kwin', 'Edit Tiles', 'kwin', 'Toggle Tiles Editor'], dbus.Array([], signature='i'))
     except Exception:
