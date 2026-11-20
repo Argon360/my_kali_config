@@ -51,6 +51,9 @@ Kitty includes powerful built-in extensions ("kittens") that provide IDE-like ov
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd> | `kitten hints --type url` | **URL Hints Mode**: Scans visible terminal output for web links, assigns hotkey letters, and opens the chosen URL in your browser. |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> | `kitten hints --type path --program -` | **Path Hints Mode**: Detects file and folder paths on screen, attaches hotkey tags, and pastes the selected path directly into your shell. |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Y</kbd> | `kitten hints --type hash --program -` | **Git Hash Hints**: Identifies Git commit SHAs and cryptographic hashes on screen and pastes the selected hash into the shell. |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>N</kbd> | `kitten hints --type word --program -` | **Word Hints Mode**: Interactively selects any visible word on screen and inserts it directly into the prompt. |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> | `kitten hints --type line --program -` | **Line Hints Mode**: Interactively selects any line of output and pastes it into the active command prompt. |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> | `kitten unicode_input` | **Fuzzy Emoji & Nerd Symbol Picker**: Interactive searchable overlay for all Unicode emojis, Nerd Font symbols, and special characters. |
 
 ---
 
@@ -62,6 +65,9 @@ Kitty provides manual tiling without requiring an external multiplexer like tmux
 | :--- | :--- | :--- |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd> | `launch --location=hsplit` | Split active window **horizontally** (splits pane top/bottom). |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd> | `launch --location=vsplit` | Split active window **vertically** (splits pane left/right). |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>[</kbd> | `previous_window` | Focus the **previous split pane** in the tab. |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>]</kbd> | `next_window` | Focus the **next split pane** in the tab. |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Alt</kbd> + <kbd>Arrows</kbd> | `neighboring_window` | Focus neighboring pane in the specified direction. |
 | <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>N</kbd> | `new_window` | Open a new window pane within the current layout. |
 | <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Q</kbd> | `close_window` | Close the currently focused split pane. |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd> | `next_layout` | Cycle layout engine: `splits` ➔ `stack` ➔ `tall` ➔ `fat` ➔ `grid`. |
@@ -159,6 +165,10 @@ Kitty intercepts these combinations and translates them into control codes deliv
 
 | Shortcut / Control | Action | Description |
 | :--- | :--- | :--- |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>↑</kbd> | `scroll_to_prompt -1` | **Jump to Previous Command**: Instantly jump terminal scrollback to previous shell prompt. |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>↓</kbd> | `scroll_to_prompt 1` | **Jump to Next Command**: Instantly jump scrollback forward to next shell prompt. |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>`</kbd> | `show_last_command_output` | **Inspect Last Output**: View or search only the output of the previous command in an overlay. |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>\</kbd> | `show_scrollback` | **Scrollback Pager**: Open the entire terminal buffer history in a searchable pager. |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F5</kbd> | `load_config_file` | **Hot Reload Config**: Instantly reloads `kitty.conf` without closing terminal sessions. |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F6</kbd> | `debug_config` | Dumps current effective options and loaded keymaps to scrollback and clipboard. |
 | <kbd>Shift</kbd> + <kbd>Page_Up</kbd> | `scroll_page_up` | Scroll up by one full screen page. |
