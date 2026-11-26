@@ -18,7 +18,8 @@ const dedicatedWindows = new Set();
 
 const compat = {
 	addDesktop: () => {
-		workspace.createDesktop(workspace.desktops.length, undefined);
+		const nextNum = workspace.desktops.length + 1;
+		workspace.createDesktop(workspace.desktops.length, "Desktop " + nextNum);
 	},
 
 	windowAddedSignal: ws => ws.windowAdded,
@@ -164,6 +165,7 @@ function compactPreservingIndex() {
 	const oldIndex = desktops.indexOf(current);
 
 	compactFromEnd();
+	normalizeDesktopNames();
 
 	if (oldIndex === -1) return;
 
@@ -183,9 +185,24 @@ function compactPreservingIndex() {
 	}
 }
 
+function normalizeDesktopNames() {
+	const desktops = compat.workspaceDesktops();
+	for (let i = 0; i < desktops.length; i++) {
+		const d = desktops[i];
+		if (!d) continue;
+		const expected = "Desktop " + (i + 1);
+		if (!d.name || d.name === "undefined" || /^Desktop \d+$/.test(d.name)) {
+			if (d.name !== expected) {
+				d.name = expected;
+			}
+		}
+	}
+}
+
 function reconcile() {
 	ensureTrailingEmpty();
 	compactPreservingIndex();
+	normalizeDesktopNames();
 }
 
 
@@ -392,6 +409,7 @@ if (workspace.windowFinishUserMovedResized) {
 	if (compat.desktopAmount() < 1) {
 		compat.addDesktop();
 	}
+	normalizeDesktopNames();
 })();
 
 /******** Connect Signals ********/
